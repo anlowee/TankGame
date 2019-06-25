@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>startPre.jpg</file>
+        <file>../sample/photo/grassbarrier.jpg</file>
+        <file>../sample/photo/startbutton.jpg</file>
+        <file>../sample/photo/timgD353I83R.jpg</file>
+    </qresource>
+</RCC>
