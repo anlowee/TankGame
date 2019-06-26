@@ -4,14 +4,17 @@
 #include <QtGui>
 #include <QFrame>
 #include <QPixmap>
-#include "High.h"
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    connect(this->ui->btn_high, SIGNAL(clicked()), SLOT(on_btn_high_clicked()));
-    connect(this->ui->btn_readme, SIGNAL(clicked()), SLOT(on_btn_readme_clicked()));
+    a=new High(this);
+    b=new ReadmeWindow(this);
+    ui->stackedWidget->addWidget(a);
+    ui->stackedWidget->addWidget(b);
+    ui->stackedWidget->setCurrentWidget(0);
+
 }
 
 MainWindow::~MainWindow()
@@ -21,12 +24,12 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_btn_readme_clicked()
 {
-    ReadmeWindow *new_w = new ReadmeWindow;
-    new_w->show();
+    ui->stackedWidget->setCurrentWidget(b);
+
 }
 
 void MainWindow::on_btn_high_clicked()
 {
-    High *new_v = new High;
-    new_v->show();
+    ui->stackedWidget->setCurrentWidget(a);
 }
+

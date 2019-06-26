@@ -26,18 +26,48 @@ CONFIG += c++11
 
 SOURCES += \
         High.cpp \
+        level_1.cpp \
+        level_2.cpp \
+        level_3.cpp \
+        level_4.cpp \
+        level_5.cpp \
         main.cpp \
         mainwindow.cpp \
+        number_1.cpp \
+        number_2.cpp \
+        number_3.cpp \
+        number_4.cpp \
+        number_5.cpp \
         readmewindow.cpp
 
 HEADERS += \
         High.h \
+        level_1.h \
+        level_2.h \
+        level_3.h \
+        level_4.h \
+        level_5.h \
         mainwindow.h \
+        number_1.h \
+        number_2.h \
+        number_3.h \
+        number_4.h \
+        number_5.h \
         readmewindow.h
 
 FORMS += \
         High.ui \
+        level_1.ui \
+        level_2.ui \
+        level_3.ui \
+        level_4.ui \
+        level_5.ui \
         mainwindow.ui \
+        number_1.ui \
+        number_2.ui \
+        number_3.ui \
+        number_4.ui \
+        number_5.ui \
         readmewindow.ui
 
 # Default rules for deployment.

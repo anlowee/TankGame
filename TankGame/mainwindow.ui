@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>662</width>
-    <height>488</height>
+    <width>1307</width>
+    <height>768</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -26,8 +26,8 @@
    <widget class="QPushButton" name="btn_start">
     <property name="geometry">
      <rect>
-      <x>240</x>
-      <y>120</y>
+      <x>100</x>
+      <y>90</y>
       <width>181</width>
       <height>61</height>
      </rect>
@@ -48,8 +48,8 @@
    <widget class="QPushButton" name="btn_readme">
     <property name="geometry">
      <rect>
-      <x>240</x>
-      <y>220</y>
+      <x>100</x>
+      <y>210</y>
       <width>181</width>
       <height>61</height>
      </rect>
@@ -70,8 +70,8 @@
    <widget class="QPushButton" name="btn_high">
     <property name="geometry">
      <rect>
-      <x>240</x>
-      <y>320</y>
+      <x>100</x>
+      <y>330</y>
       <width>181</width>
       <height>61</height>
      </rect>
@@ -88,6 +88,18 @@
     <property name="text">
      <string>HIGH</string>
     </property>
+   </widget>
+   <widget class="QStackedWidget" name="stackedWidget">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>20</y>
+      <width>1181</width>
+      <height>571</height>
+     </rect>
+    </property>
+    <widget class="QWidget" name="ReadmeWindow"/>
+    <widget class="QWidget" name="High"/>
    </widget>
   </widget>
  </widget>
