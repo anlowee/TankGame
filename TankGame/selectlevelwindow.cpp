@@ -1,7 +1,8 @@
 #include "selectlevelwindow.h"
 #include "ui_selectlevelwindow.h"
 #include "displaywindow.h"
-#include<QPainter>
+#include <QPainter>
+#include <QStyleOption>
 
 SelectLevelWindow::SelectLevelWindow(QWidget *parent) :
     QWidget(parent),

@@ -15,6 +15,9 @@ public:
     explicit ReadmeWindow(QWidget *parent = nullptr);
     ~ReadmeWindow();
 
+private slots:
+    void paintEvent(QPaintEvent *event);
+
 private:
     Ui::ReadmeWindow *ui;
 };
