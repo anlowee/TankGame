@@ -15,6 +15,9 @@ public:
     explicit SelectLevelWindow(QWidget *parent = nullptr);
     ~SelectLevelWindow();
 
+private slots:
+    void on_SelectLevelWindow_customContextMenuRequested(const QPoint &pos);
+
 private:
     Ui::SelectLevelWindow *ui;
 };

@@ -12,3 +12,8 @@ SelectLevelWindow::~SelectLevelWindow()
 {
     delete ui;
 }
+
+void SelectLevelWindow::on_SelectLevelWindow_customContextMenuRequested(const QPoint &pos)
+{
+
+}

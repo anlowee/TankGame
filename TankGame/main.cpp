@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    QString imgPath = "C:\\Users\\anlow\\Desktop\\Widget\\TankGame\\TankGame\\startPre.jpg";
+    QString imgPath = "startPre.jpg";
     QPixmap pixmap(imgPath);
     QSplashScreen splash(pixmap);
     splash.show();

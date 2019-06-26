@@ -27,15 +27,18 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-        readmewindow.cpp
+        readmewindow.cpp \
+        selectlevelwindow.cpp
 
 HEADERS += \
         mainwindow.h \
-        readmewindow.h
+        readmewindow.h \
+        selectlevelwindow.h
 
 FORMS += \
         mainwindow.ui \
-        readmewindow.ui
+        readmewindow.ui \
+        selectlevelwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

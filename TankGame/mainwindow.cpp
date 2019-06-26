@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "readmewindow.h"
+#include  "selectlevelwindow.h"
 #include <QtGui>
 #include <QFrame>
 #include <QPixmap>
@@ -23,4 +24,10 @@ void MainWindow::on_btn_readme_clicked()
 {
     ReadmeWindow *new_w = new ReadmeWindow;
     new_w->show();
+}
+
+void MainWindow::on_btn_start_clicked()
+{
+    SelectLevelWindow *new_w = new SelectLevelWindow;
+     new_w->show();
 }
