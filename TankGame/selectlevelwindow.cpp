@@ -1,12 +1,9 @@
 #include "selectlevelwindow.h"
 #include "ui_selectlevelwindow.h"
 #include "displaywindow.h"
-<<<<<<< HEAD
 #include <QPainter>
 #include <QStyleOption>
-=======
 #include "mymap.h"
->>>>>>> Map
 
 SelectLevelWindow::SelectLevelWindow(QWidget *parent) :
     QWidget(parent),
