@@ -1,5 +1,6 @@
 #include "selectlevelwindow.h"
 #include "ui_selectlevelwindow.h"
+#include "displaywindow.h"
 
 SelectLevelWindow::SelectLevelWindow(QWidget *parent) :
     QWidget(parent),
@@ -13,7 +14,9 @@ SelectLevelWindow::~SelectLevelWindow()
     delete ui;
 }
 
-void SelectLevelWindow::on_SelectLevelWindow_customContextMenuRequested(const QPoint &pos)
-{
 
+void SelectLevelWindow::on_pushButton_clicked()
+{
+    DisplayWindow *new_w = new DisplayWindow;
+    new_w->show();
 }

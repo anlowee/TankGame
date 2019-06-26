@@ -25,17 +25,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        displaywindow.cpp \
         main.cpp \
         mainwindow.cpp \
         readmewindow.cpp \
         selectlevelwindow.cpp
 
 HEADERS += \
+        displaywindow.h \
         mainwindow.h \
         readmewindow.h \
         selectlevelwindow.h
 
 FORMS += \
+        displaywindow.ui \
         mainwindow.ui \
         readmewindow.ui \
         selectlevelwindow.ui

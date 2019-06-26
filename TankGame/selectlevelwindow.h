@@ -16,7 +16,9 @@ public:
     ~SelectLevelWindow();
 
 private slots:
-    void on_SelectLevelWindow_customContextMenuRequested(const QPoint &pos);
+
+
+    void on_pushButton_clicked();
 
 private:
     Ui::SelectLevelWindow *ui;
