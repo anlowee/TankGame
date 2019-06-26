@@ -1,6 +1,7 @@
 #include "selectlevelwindow.h"
 #include "ui_selectlevelwindow.h"
 #include "displaywindow.h"
+#include "mymap.h"
 
 SelectLevelWindow::SelectLevelWindow(QWidget *parent) :
     QWidget(parent),
@@ -19,4 +20,9 @@ void SelectLevelWindow::on_pushButton_clicked()
 {
     DisplayWindow *new_w = new DisplayWindow;
     new_w->show();
+    //for debug
+    MyMap *new_m = new MyMap;
+    new_m->CreateMap();
+    new_m->DrawMap();
+    //----------
 }
