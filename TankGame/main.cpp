@@ -3,7 +3,7 @@
 #include <QPixmap>
 #include <QSplashScreen>
 #include <QDateTime>
-
+#include "High.h"
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -23,7 +23,6 @@ int main(int argc, char *argv[])
 
     MainWindow w;
     w.show();
-
     splash.finish(&w);
     return a.exec();
 }

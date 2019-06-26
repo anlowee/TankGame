@@ -25,15 +25,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        High.cpp \
         main.cpp \
         mainwindow.cpp \
         readmewindow.cpp
 
 HEADERS += \
+        High.h \
         mainwindow.h \
         readmewindow.h
 
 FORMS += \
+        High.ui \
         mainwindow.ui \
         readmewindow.ui
 
