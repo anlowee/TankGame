@@ -2,6 +2,7 @@
 #define SELECTLEVELWINDOW_H
 
 #include <QWidget>
+#include <QPaintEvent>
 
 namespace Ui {
 class SelectLevelWindow;
@@ -17,7 +18,7 @@ public:
 
 private slots:
 
-
+    void paintEvent(QPaintEvent *event);
     void on_pushButton_clicked();
 
 private:
