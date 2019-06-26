@@ -2,6 +2,7 @@
 #define DISPLAYWINDOW_H
 
 #include <QWidget>
+#include <QPaintEvent>
 
 namespace Ui {
 class DisplayWindow;
