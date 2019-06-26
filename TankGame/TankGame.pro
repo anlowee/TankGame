@@ -28,12 +28,14 @@ SOURCES += \
         displaywindow.cpp \
         main.cpp \
         mainwindow.cpp \
+        mymap.cpp \
         readmewindow.cpp \
         selectlevelwindow.cpp
 
 HEADERS += \
         displaywindow.h \
         mainwindow.h \
+        mymap.h \
         readmewindow.h \
         selectlevelwindow.h
 
