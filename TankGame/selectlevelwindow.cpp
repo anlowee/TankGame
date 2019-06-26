@@ -7,7 +7,6 @@ SelectLevelWindow::SelectLevelWindow(QWidget *parent) :
     ui(new Ui::SelectLevelWindow)
 {
     ui->setupUi(this);
-    connect(this->ui->pushButton, SIGNAL(clicked()), this, SLOT(on_pushButton_clicked()));
 }
 
 SelectLevelWindow::~SelectLevelWindow()
