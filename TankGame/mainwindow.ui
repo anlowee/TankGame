@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1307</width>
-    <height>768</height>
+    <width>662</width>
+    <height>488</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -94,18 +94,6 @@
     <property name="text">
      <string>HIGH</string>
     </property>
-   </widget>
-   <widget class="QStackedWidget" name="stackedWidget">
-    <property name="geometry">
-     <rect>
-      <x>300</x>
-      <y>20</y>
-      <width>1181</width>
-      <height>571</height>
-     </rect>
-    </property>
-    <widget class="QWidget" name="ReadmeWindow"/>
-    <widget class="QWidget" name="High"/>
    </widget>
   </widget>
  </widget>

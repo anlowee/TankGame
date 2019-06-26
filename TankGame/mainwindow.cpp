@@ -5,7 +5,7 @@
 #include <QtGui>
 #include <QFrame>
 #include <QPixmap>
-
+#include"High.h"
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -28,4 +28,10 @@ void MainWindow::on_btn_start_clicked()
 {
     SelectLevelWindow *new_w = new SelectLevelWindow;
      new_w->show();
+}
+
+void MainWindow::on_btn_high_clicked()
+{
+    High *new_w= new High;
+    new_w->show();
 }

@@ -5,5 +5,16 @@
         <file>../sample/photo/startbutton.jpg</file>
         <file>../sample/photo/timgD353I83R.jpg</file>
         <file>../sample/photo/steel.jpg</file>
+        <file>../sample/photo/High_pic/HIgh_beatlevels/High_beatlevels_1.jpg</file>
+        <file>../sample/photo/High_pic/HIgh_beatlevels/High_beatlevels_2.jpg</file>
+        <file>../sample/photo/High_pic/HIgh_beatlevels/High_beatlevels_3.jpg</file>
+        <file>../sample/photo/High_pic/HIgh_beatlevels/High_beatlevels_4.jpg</file>
+        <file>../sample/photo/High_pic/HIgh_beatlevels/High_beatlevels_5.jpg</file>
+        <file>../sample/photo/High_pic/High_beatnumbers/High_beatnumbers_1.jpg</file>
+        <file>../sample/photo/High_pic/High_beatnumbers/High_beatnumbers_2.jpg</file>
+        <file>../sample/photo/High_pic/High_beatnumbers/High_beatnumbers_3.jpg</file>
+        <file>../sample/photo/High_pic/High_beatnumbers/High_beatnumbers_4.jpg</file>
+        <file>../sample/photo/High_pic/High_beatnumbers/High_beatnumbers_5.jpg</file>
+        <file>../sample/photo/High_pic/High_background.jpg</file>
     </qresource>
 </RCC>
