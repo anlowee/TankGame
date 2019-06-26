@@ -2,6 +2,7 @@
 #define READMEWINDOW_H
 
 #include <QWidget>
+#include <QPaintEvent>
 
 namespace Ui {
 class ReadmeWindow;
