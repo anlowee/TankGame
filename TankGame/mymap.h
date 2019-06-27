@@ -3,15 +3,20 @@
 
 #include <QObject>
 #include <QWidget>
+#include "base.h"
+#include "displaywindow.h"
+#include "myglobal.h"
+#include <fstream>
+#include <QImage>
 
-class MyMap : public QObject
+class MyMap : public QObject, public Base, public MyGlobal
 {
     Q_OBJECT
 public:
     explicit MyMap(QObject *parent = nullptr);
-    char logicMap[1005][1005];
     void CreateMap();
-    void DrawMap();
+
+private:
 
 signals:
 
