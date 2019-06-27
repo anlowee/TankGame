@@ -19,14 +19,14 @@
   <widget class="QLabel" name="beatnumbers">
    <property name="geometry">
     <rect>
-     <x>150</x>
-     <y>100</y>
-     <width>101</width>
-     <height>61</height>
+     <x>130</x>
+     <y>120</y>
+     <width>171</width>
+     <height>71</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">border-image: url(:/sample/photo/startbutton.jpg);</string>
+    <string notr="true">border-image: url(:/sample/photo/High_pic/High_labelbg.png);</string>
    </property>
    <property name="text">
     <string/>
@@ -35,14 +35,15 @@
   <widget class="QLabel" name="beatlevels">
    <property name="geometry">
     <rect>
-     <x>830</x>
-     <y>100</y>
-     <width>111</width>
-     <height>61</height>
+     <x>800</x>
+     <y>120</y>
+     <width>191</width>
+     <height>71</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">border-image: url(:/sample/photo/startbutton.jpg);</string>
+    <string notr="true">
+border-image: url(:/sample/photo/High_pic/High_labelbg.png);</string>
    </property>
    <property name="text">
     <string/>
@@ -132,10 +133,10 @@ border-image: url(:/sample/photo/High_pic/High_beatnumbers/High_beatnumbers_1.jp
   <widget class="QPushButton" name="pushButton_6">
    <property name="geometry">
     <rect>
-     <x>730</x>
+     <x>710</x>
      <y>480</y>
-     <width>81</width>
-     <height>61</height>
+     <width>101</width>
+     <height>71</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -148,7 +149,7 @@ border-image: url(:/sample/photo/High_pic/High_beatnumbers/High_beatnumbers_1.jp
   <widget class="QPushButton" name="pushButton_7">
    <property name="geometry">
     <rect>
-     <x>970</x>
+     <x>950</x>
      <y>480</y>
      <width>81</width>
      <height>61</height>
@@ -212,11 +213,17 @@ border-image: url(:/sample/photo/High_pic/High_beatnumbers/High_beatnumbers_1.jp
   <widget class="QStackedWidget" name="stackedWidget">
    <property name="geometry">
     <rect>
-     <x>370</x>
-     <y>90</y>
-     <width>391</width>
-     <height>281</height>
+     <x>340</x>
+     <y>80</y>
+     <width>421</width>
+     <height>351</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-image: url(:/sample/photo/High_pic/3.jpg);</string>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
    </property>
    <widget class="QWidget" name="num_1"/>
    <widget class="QWidget" name="num_2"/>

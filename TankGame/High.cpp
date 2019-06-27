@@ -15,6 +15,8 @@
 #include"level_5.h"
 #include <QPainter>
 #include <QStyleOption>
+#include <QPalette>
+#include <QFont>
 High::High(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::High)
@@ -25,6 +27,13 @@ High::High(QWidget *parent) :
             ui->beatlevels->setText(QString::fromLocal8Bit("beatlevels"));
             ui->beatnumbers->setAlignment(Qt::AlignCenter|Qt::AlignHCenter);
              ui->beatlevels->setAlignment(Qt::AlignCenter|Qt::AlignHCenter);
+          QPalette a;
+          a.setColor(QPalette::WindowText,Qt::white);
+          ui->beatlevels->setPalette(a);
+          ui->beatnumbers->setPalette(a);
+         QFont font("黑体",10,75);
+         ui->beatlevels->setFont(font);
+         ui->beatnumbers->setFont(font);
              a1 = new level_1(this);
              a2 = new level_2(this);
              a3 = new level_3(this);

@@ -16,5 +16,8 @@
         <file>../sample/photo/High_pic/High_beatnumbers/High_beatnumbers_4.jpg</file>
         <file>../sample/photo/High_pic/High_beatnumbers/High_beatnumbers_5.jpg</file>
         <file>../sample/photo/High_pic/High_background.jpg</file>
+        <file>../sample/photo/High_pic/3.jpg</file>
+        <file>../sample/photo/High_pic/1.jpg</file>
+        <file>../sample/photo/High_pic/High_labelbg.png</file>
     </qresource>
 </RCC>
