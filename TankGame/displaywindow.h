@@ -3,12 +3,21 @@
 
 #include <QWidget>
 #include <QPaintEvent>
+#include <QtDebug>
+#include <QRect>
+#include "base.h"
+#define PICWIDTH 32
+#define PICHEIGHT 32
+#define CELLWIDTH 32
+#define CELLHEIGHT 32
+#define INUM 32 //line
+#define JNUM 32 //row
 
 namespace Ui {
 class DisplayWindow;
 }
 
-class DisplayWindow : public QWidget
+class DisplayWindow : public QWidget, protected Base
 {
     Q_OBJECT
 
@@ -18,6 +27,9 @@ public:
 
 private:
     Ui::DisplayWindow *ui;
+
+private slots:
+    void paintEvent(QPaintEvent *event);
 };
 
 #endif // DISPLAYWINDOW_H

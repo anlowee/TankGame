@@ -10,8 +10,6 @@ class Base
 {
 public:
     Base();
-    virtual void Display(QPainter &paint) = 0; //paint
-    virtual void Move() = 0;
     bool IsDisappear() {return m_bDisappear;}
     bool IsCollide(const Base &base)const;
     void SetDisappear(bool tmp) {m_bDisappear = tmp;}

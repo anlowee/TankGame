@@ -38,6 +38,7 @@ SOURCES += \
         mybag.cpp \
         mybullet.cpp \
         myenemy.cpp \
+        myglobal.cpp \
         mymap.cpp \
         myplayer.cpp \
         mytank.cpp \
@@ -65,6 +66,7 @@ HEADERS += \
         mybag.h \
         mybullet.h \
         myenemy.h \
+        myglobal.h \
         mymap.h \
         myplayer.h \
         mytank.h \
