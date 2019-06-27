@@ -13,6 +13,8 @@
 #include"level_3.h"
 #include"level_4.h"
 #include"level_5.h"
+#include <QPainter>
+#include <QStyleOption>
 High::High(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::High)
@@ -104,4 +106,11 @@ void High::on_pushButton_10_clicked()
      ui->stackedWidget->setCurrentWidget(b4);
 }
 
+void High::paintEvent(QPaintEvent *event)
+{
+    QStyleOption opt;
+    opt.init(this);
+    QPainter p(this);
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
 

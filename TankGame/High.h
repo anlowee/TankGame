@@ -7,6 +7,7 @@
 #include<QPixmap>
 #include<QString>
 #include<QStackedWidget>
+#include <QPaintEvent>
 #include "level_1.h"
 #include "level_2.h"
 #include "level_3.h"
@@ -48,6 +49,8 @@ private slots:
     void on_pushButton_9_clicked();
 
     void on_pushButton_10_clicked();
+
+    void paintEvent(QPaintEvent *event);
 
 private:
     Ui::High *ui;
