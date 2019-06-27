@@ -26,6 +26,7 @@ CONFIG += c++11
 
 SOURCES += \
         High.cpp \
+        base.cpp \
         displaywindow.cpp \
         level_1.cpp \
         level_2.cpp \
@@ -34,7 +35,12 @@ SOURCES += \
         level_5.cpp \
         main.cpp \
         mainwindow.cpp \
+        mybag.cpp \
+        mybullet.cpp \
+        myenemy.cpp \
         mymap.cpp \
+        myplayer.cpp \
+        mytank.cpp \
         number_1.cpp \
         number_2.cpp \
         number_3.cpp \
@@ -45,6 +51,7 @@ SOURCES += \
 
 HEADERS += \
         High.h \
+        base.h \
         displaywindow.h \
         level_1.h \
         level_2.h \
@@ -52,7 +59,12 @@ HEADERS += \
         level_4.h \
         level_5.h \
         mainwindow.h \
+        mybag.h \
+        mybullet.h \
+        myenemy.h \
         mymap.h \
+        myplayer.h \
+        mytank.h \
         number_1.h \
         number_2.h \
         number_3.h \
