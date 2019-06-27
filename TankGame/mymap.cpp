@@ -25,7 +25,6 @@ void MyMap::CreateMap()
             //3-Marsh-M
             //4-Rock-R
             //5-Water-W
-            //6-Factory-F
             switch (n)
             {
                 case 0:MyGlobal::logicMap[i][j] = 'G'; break;
