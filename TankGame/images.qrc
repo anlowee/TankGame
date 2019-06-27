@@ -19,5 +19,19 @@
         <file>../sample/photo/High_pic/3.jpg</file>
         <file>../sample/photo/High_pic/1.jpg</file>
         <file>../sample/photo/High_pic/High_labelbg.png</file>
+        <file>../sample/photo/Shop_pic/Shop_bg.jpg</file>
+        <file>../sample/photo/Shop_pic/Shop_defence.jpg</file>
+        <file>../sample/photo/Shop_pic/Shop_faster.jpg</file>
+        <file>../sample/photo/Shop_pic/Shop_recover1.jpg</file>
+        <file>../sample/photo/Shop_pic/Shop_reinforce.jpg</file>
+        <file>../sample/photo/Shop_pic/Tank_budget_bg.jpg</file>
+        <file>../sample/photo/Shop_pic/Tank_reinforce_bg.jpg</file>
+        <file>../sample/photo/Shop_pic/Shop_reinforce_plus.jpg</file>
+        <file>../sample/photo/Shop_pic/Shop_defence_plus.jpg</file>
+        <file>../sample/photo/Shop_pic/Shop_faster_plus.jpg</file>
+        <file>../sample/photo/Shop_pic/Shop_recover.jpg</file>
+        <file>../sample/photo/Shop_pic/Shop_button.jpg</file>
+        <file>../sample/photo/Shop_pic/Shop_weapon.jpg</file>
+        <file>../sample/photo/Shop_pic/Shop_weapon_plus.jpg</file>
     </qresource>
 </RCC>

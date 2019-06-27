@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Shop</class>
+ <widget class="QWidget" name="Shop">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1053</width>
+    <height>639</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">border-image: url(:/sample/photo/Shop_pic/Shop_bg.jpg);</string>
+  </property>
+  <widget class="QStackedWidget" name="stackedWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1051</width>
+     <height>641</height>
+    </rect>
+   </property>
+   <widget class="QWidget" name="page">
+    <widget class="QPushButton" name="reinforceButton">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>40</y>
+       <width>93</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Reinforce</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="budgetButton">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>40</y>
+       <width>93</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Budget</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page_2"/>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

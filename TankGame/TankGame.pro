@@ -41,7 +41,10 @@ SOURCES += \
         number_4.cpp \
         number_5.cpp \
         readmewindow.cpp \
-        selectlevelwindow.cpp
+        selectlevelwindow.cpp \
+        shop.cpp \
+        tank_budget.cpp \
+        tank_reinforce.cpp
 
 HEADERS += \
         High.h \
@@ -59,7 +62,10 @@ HEADERS += \
         number_4.h \
         number_5.h \
         readmewindow.h \
-        selectlevelwindow.h
+        selectlevelwindow.h \
+        shop.h \
+        tank_budget.h \
+        tank_reinforce.h
 
 FORMS += \
         High.ui \
@@ -76,7 +82,10 @@ FORMS += \
         number_4.ui \
         number_5.ui \
         readmewindow.ui \
-        selectlevelwindow.ui
+        selectlevelwindow.ui \
+        shop.ui \
+        tank_budget.ui \
+        tank_reinforce.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
