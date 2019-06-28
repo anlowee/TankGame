@@ -113,7 +113,6 @@ void DisplayWindow::MoveTank(QPainter &p)
         d = 0;
         if (y - NORMALSPEED >= 0 && MyGlobal::boolMap[(y - NORMALSPEED)/32][x/32])
         {
-            //qDebug() << "Up";
             p.drawImage(x, y - NORMALSPEED, imgTank1Up);
             y -= NORMALSPEED;
         }
@@ -123,7 +122,6 @@ void DisplayWindow::MoveTank(QPainter &p)
         d = 1;
         if (y + NORMALSPEED <= 992 && MyGlobal::boolMap[(y + NORMALSPEED)/32][x/32])
         {
-            //qDebug() << "Down";
             p.drawImage(x, y + NORMALSPEED, imgTank1Down);
             y += NORMALSPEED;
         }
@@ -133,7 +131,6 @@ void DisplayWindow::MoveTank(QPainter &p)
         d = 2;
         if (x - NORMALSPEED >= 0 && MyGlobal::boolMap[y/32][(x - NORMALSPEED)/32])
         {
-            //qDebug() << "Left";
             p.drawImage(x - NORMALSPEED, y, imgTank1Left);
             x -= NORMALSPEED;
         }
@@ -143,7 +140,6 @@ void DisplayWindow::MoveTank(QPainter &p)
         d = 3;
         if (x + NORMALSPEED <= 992 && MyGlobal::boolMap[y/32][(x + NORMALSPEED)/32])
         {
-            //qDebug() << "Right";
             p.drawImage(x + NORMALSPEED, y, imgTank1Right);
             x += NORMALSPEED;
         }
@@ -187,8 +183,6 @@ inline bool IsOutofRange(int x, int y)
 
 void DisplayWindow::MoveBullet(QPainter &p)
 {
-    qDebug() << cntBullets;
-
     //load bullet img
     QImage imgBullet1("bullet1.png");
 
@@ -196,8 +190,6 @@ void DisplayWindow::MoveBullet(QPainter &p)
     {
         int x = a_Bullets[i].GetX();
         int y = a_Bullets[i].GetY();
-
-        qDebug() << x << " " << y;
 
         if (IsOutofRange(x, y))
         {
@@ -210,8 +202,6 @@ void DisplayWindow::MoveBullet(QPainter &p)
         int x = a_Bullets[i].GetX();
         int y = a_Bullets[i].GetY();
         int d = a_Bullets[i].GetDir();
-
-        qDebug() << x << " " << y << " " << d;
 
         switch (d)
         {
