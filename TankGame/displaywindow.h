@@ -25,6 +25,7 @@ class DisplayWindow : public QWidget, protected Base
 public:
     explicit DisplayWindow(QWidget *parent = nullptr);
     ~DisplayWindow();
+    static int keyValue;
 
 private:
     Ui::DisplayWindow *ui;
@@ -35,7 +36,6 @@ private:
 
 protected:
     void keyPressEvent(QKeyEvent *event);
-    static int keyValue;
 
 };
 

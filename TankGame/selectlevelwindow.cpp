@@ -4,6 +4,11 @@
 #include <QPainter>
 #include <QStyleOption>
 #include "mymap.h"
+#include "myplayer.h"
+
+int MyPlayer::plyX;
+int MyPlayer::plyY;
+int MyPlayer::plyD;
 
 SelectLevelWindow::SelectLevelWindow(QWidget *parent) :
     QWidget(parent),
@@ -23,12 +28,13 @@ void SelectLevelWindow::on_pushButton_clicked()
     MyMap *new_m =  new MyMap;
     new_m->CreateMap();
     DisplayWindow *new_w = new DisplayWindow;
+    DisplayWindow::keyValue = NULL;
+    qsrand(time(NULL));
+    MyPlayer::plyX = (rand()%32)*PICWIDTH;
+    MyPlayer::plyY = (rand()%32)*PICHEIGHT;
+    MyPlayer::plyD = rand()%4;
+
     new_w->show();
-    //for debug
-    //MyMap *new_m = new MyMap;
-    //new_m->CreateMap();
-    //new_m->DrawMap();
-    //----------
 }
 
 void SelectLevelWindow::paintEvent(QPaintEvent *event)

@@ -15,10 +15,7 @@
 #include "mybullet.h"
 
 int DisplayWindow::keyValue;
-int MyPlayer::plyX = (rand()%32)*PICWIDTH;
-int MyPlayer::plyY = (rand()%32)*PICHEIGHT;
-int MyPlayer::plyD = rand()%4;
-bool MyPlayer::status = false;
+
 MyBullet a_Bullets[10000];
 static int cntBullets = 0;
 
@@ -153,11 +150,18 @@ void DisplayWindow::MoveTank(QPainter &p)
     }
     if (keyValue == 74)
     {
-        cntBullets++;
         a_Bullets[cntBullets].SetX(x);
         a_Bullets[cntBullets].SetY(y);
         a_Bullets[cntBullets].SetDir(d);
-        //a_Bullets[cntBullets].SetDisappear(false);
+        cntBullets++;
+
+        switch (d)
+        {
+            case 0:keyValue = 87; break;
+            case 1:keyValue = 83; break;
+            case 2:keyValue = 65; break;
+            case 3:keyValue = 68; break;
+        }
     }
 }
 
@@ -186,10 +190,7 @@ void DisplayWindow::MoveBullet(QPainter &p)
     qDebug() << cntBullets;
 
     //load bullet img
-    QImage imgBullet1Up("tank8up.png");
-    QImage imgBullet1Down("tank8down.png");
-    QImage imgBullet1Left("tank8left.png");
-    QImage imgBulletRight("tank8right.png");
+    QImage imgBullet1("bullet1.png");
 
     for (int i = 0; i < cntBullets; i++)
     {
@@ -215,19 +216,19 @@ void DisplayWindow::MoveBullet(QPainter &p)
         switch (d)
         {
             case 0:
-                p.drawImage(x, y - BULLETSPEED, imgBullet1Up);
+                p.drawImage(x, y - BULLETSPEED, imgBullet1);
                 y -= BULLETSPEED;
                 break;
             case 1:
-                p.drawImage(x, y + BULLETSPEED, imgBullet1Down);
+                p.drawImage(x, y + BULLETSPEED, imgBullet1);
                 y += BULLETSPEED;
                 break;
             case 2:
-                p.drawImage(x - BULLETSPEED, y, imgBullet1Left);
+                p.drawImage(x - BULLETSPEED, y, imgBullet1);
                 x -= BULLETSPEED;
                 break;
             case 3:
-                p.drawImage(x + BULLETSPEED, y, imgBulletRight);
+                p.drawImage(x + BULLETSPEED, y, imgBullet1);
                 x += BULLETSPEED;
                 break;
         }
