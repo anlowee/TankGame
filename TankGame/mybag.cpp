@@ -1,18 +1,15 @@
 #include "mybag.h"
 
 int MyBag::addMoney(){
-    int money=0;
-    money=money+10;
-    return money;
+    m_money=m_money+10;
+    return m_money;
 }
 int MyBag:: getMedicine(){
-    int medicine=0;
-    medicine=medicine+1;
-    return medicine;
+    m_medicine=m_medicine+1;
+    return m_medicine;
 }
 int MyBag:: getResurrent(){
-    int resurrent=0;
-    resurrent=resurrent+1;
-    return resurrent;
+    m_resurrent=m_resurrent+1;
+    return m_resurrent;
 }
 //int MyBag:: myResurrent();
