@@ -12,4 +12,4 @@ int MyBag:: getResurrent(){
     m_resurrent=m_resurrent+1;
     return m_resurrent;
 }
-//int MyBag:: myResurrent();
+

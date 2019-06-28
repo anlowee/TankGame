@@ -6,7 +6,6 @@ double MyEnemy::getHealth(){
 int MyEnemy::addMoney(){
     if(m_health<=0.0){
         this->addMoney();
-        return this->m_money;
     }
-
+    return this->m_money;
 }
