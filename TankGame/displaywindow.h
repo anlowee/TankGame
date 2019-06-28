@@ -5,6 +5,7 @@
 #include <QPaintEvent>
 #include <QtDebug>
 #include <QRect>
+#include <QKeyEvent>
 #include "base.h"
 #define PICWIDTH 32
 #define PICHEIGHT 32
@@ -27,6 +28,10 @@ public:
 
 private:
     Ui::DisplayWindow *ui;
+
+protected:
+    void keyPressEvent(QKeyEvent *event);
+    static int keyValue;
 
 private slots:
     void paintEvent(QPaintEvent *event);

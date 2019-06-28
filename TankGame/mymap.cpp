@@ -5,6 +5,7 @@
 #include "myglobal.h"
 
 char MyGlobal::logicMap[1005][1005];
+bool MyGlobal::boolMap[1005][1005];
 
 MyMap::MyMap(QObject *parent) : QObject(parent)
 {
@@ -27,13 +28,13 @@ void MyMap::CreateMap()
             //5-Water-W
             switch (n)
             {
-                case 0:MyGlobal::logicMap[i][j] = 'G'; break;
-                case 1:MyGlobal::logicMap[i][j] = 'T'; break;
-                case 2:MyGlobal::logicMap[i][j] = 'S'; break;
-                case 3:MyGlobal::logicMap[i][j] = 'M'; break;
-                case 4:MyGlobal::logicMap[i][j] = 'R'; break;
-                case 5:MyGlobal::logicMap[i][j] = 'W'; break;
-                default:MyGlobal::logicMap[i][j] = 'G';
+                case 0:MyGlobal::logicMap[i][j] = 'G'; MyGlobal::boolMap[i][j] = true; break;
+                case 1:MyGlobal::logicMap[i][j] = 'T'; MyGlobal::boolMap[i][j] = true; break;
+                case 2:MyGlobal::logicMap[i][j] = 'S'; MyGlobal::boolMap[i][j] = true; break;
+                case 3:MyGlobal::logicMap[i][j] = 'M'; MyGlobal::boolMap[i][j] = true; break;
+                case 4:MyGlobal::logicMap[i][j] = 'R'; MyGlobal::boolMap[i][j] = false; break;
+                case 5:MyGlobal::logicMap[i][j] = 'W'; MyGlobal::boolMap[i][j] = false; break;
+                default:MyGlobal::logicMap[i][j] = 'G'; MyGlobal::boolMap[i][j] = true;
             }
         }
 }

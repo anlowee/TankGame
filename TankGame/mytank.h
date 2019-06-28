@@ -2,7 +2,7 @@
 #define MYTANK_H
 #include "base.h"
 
-class MyTank:protected Base
+class MyTank:public Base
 {
 public:
     MyTank();

@@ -18,3 +18,9 @@ bool Base::IsCollide(const Base &base) const
     //false-not collide
     return bisCollide;
 }
+
+void Base::SetPos(int x, int y)
+{
+    Base::m_pos.setX(x);
+    Base::m_pos.setY(y);
+}

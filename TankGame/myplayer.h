@@ -3,13 +3,15 @@
 #include "mytank.h"
 #include "mybag.h"
 
-class MyPlayer:protected MyTank, protected MyBag
+class MyPlayer:public MyTank, public MyBag
 {
 public:
     MyPlayer();
+    static int plyX;
+    static int plyY;
+    static int plyD;
 
 protected:
-
 };
 
 #endif // MYPLAYER_H

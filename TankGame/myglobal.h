@@ -7,6 +7,7 @@ class MyGlobal
 public:
     MyGlobal();
     static char logicMap[1005][1005];
+    static bool boolMap[1005][1005];
 };
 
 #endif // MYGLOBAL_H
