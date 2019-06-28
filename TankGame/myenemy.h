@@ -7,7 +7,8 @@ class MyEnemy:protected MyTank, protected MyBag
 {
 public:
     MyEnemy();
-
+double getHealth();
+int addMoney();
 protected:
 
 };

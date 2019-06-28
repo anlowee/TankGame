@@ -20,12 +20,14 @@ SelectLevelWindow::~SelectLevelWindow()
 
 void SelectLevelWindow::on_pushButton_clicked()
 {
+    MyMap *new_m =  new MyMap;
+    new_m->CreateMap();
     DisplayWindow *new_w = new DisplayWindow;
     new_w->show();
     //for debug
-    MyMap *new_m = new MyMap;
-    new_m->CreateMap();
-    new_m->DrawMap();
+    //MyMap *new_m = new MyMap;
+    //new_m->CreateMap();
+    //new_m->DrawMap();
     //----------
 }
 
