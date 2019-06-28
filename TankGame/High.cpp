@@ -107,12 +107,12 @@ void High::on_pushButton_8_clicked()
 
 void High::on_pushButton_9_clicked()
 {
-     ui->stackedWidget->setCurrentWidget(b3);
+     ui->stackedWidget->setCurrentWidget(b4);
 }
 
 void High::on_pushButton_10_clicked()
 {
-     ui->stackedWidget->setCurrentWidget(b4);
+     ui->stackedWidget->setCurrentWidget(b5);
 }
 
 void High::paintEvent(QPaintEvent *event)

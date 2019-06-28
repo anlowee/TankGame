@@ -15,6 +15,9 @@ public:
     explicit Tank_reinforce(QWidget *parent = nullptr);
     ~Tank_reinforce();
 
+private slots:
+    void on_backButton_clicked();
+
 private:
     Ui::Tank_reinforce *ui;
 };

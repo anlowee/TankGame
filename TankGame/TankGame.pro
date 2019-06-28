@@ -47,8 +47,34 @@ SOURCES += \
         number_4.cpp \
         number_5.cpp \
         readmewindow.cpp \
+        recover_1.cpp \
+        recover_2.cpp \
         selectlevelwindow.cpp \
         shop.cpp \
+        tank_1.cpp \
+        tank_10.cpp \
+        tank_10s.cpp \
+        tank_11.cpp \
+        tank_11s.cpp \
+        tank_12.cpp \
+        tank_12s.cpp \
+        tank_1s.cpp \
+        tank_2.cpp \
+        tank_2s.cpp \
+        tank_3.cpp \
+        tank_3s.cpp \
+        tank_4.cpp \
+        tank_4s.cpp \
+        tank_5.cpp \
+        tank_5s.cpp \
+        tank_6.cpp \
+        tank_6s.cpp \
+        tank_7.cpp \
+        tank_7s.cpp \
+        tank_8.cpp \
+        tank_8s.cpp \
+        tank_9.cpp \
+        tank_9s.cpp \
         tank_budget.cpp \
         tank_reinforce.cpp
 
@@ -74,8 +100,34 @@ HEADERS += \
         number_4.h \
         number_5.h \
         readmewindow.h \
+        recover_1.h \
+        recover_2.h \
         selectlevelwindow.h \
         shop.h \
+        tank_1.h \
+        tank_10.h \
+        tank_10s.h \
+        tank_11.h \
+        tank_11s.h \
+        tank_12.h \
+        tank_12s.h \
+        tank_1s.h \
+        tank_2.h \
+        tank_2s.h \
+        tank_3.h \
+        tank_3s.h \
+        tank_4.h \
+        tank_4s.h \
+        tank_5.h \
+        tank_5s.h \
+        tank_6.h \
+        tank_6s.h \
+        tank_7.h \
+        tank_7s.h \
+        tank_8.h \
+        tank_8s.h \
+        tank_9.h \
+        tank_9s.h \
         tank_budget.h \
         tank_reinforce.h
 
@@ -94,8 +146,34 @@ FORMS += \
         number_4.ui \
         number_5.ui \
         readmewindow.ui \
+        recover_1.ui \
+        recover_2.ui \
         selectlevelwindow.ui \
         shop.ui \
+        tank_1.ui \
+        tank_10.ui \
+        tank_10s.ui \
+        tank_11.ui \
+        tank_11s.ui \
+        tank_12.ui \
+        tank_12s.ui \
+        tank_1s.ui \
+        tank_2.ui \
+        tank_2s.ui \
+        tank_3.ui \
+        tank_3s.ui \
+        tank_4.ui \
+        tank_4s.ui \
+        tank_5.ui \
+        tank_5s.ui \
+        tank_6.ui \
+        tank_6s.ui \
+        tank_7.ui \
+        tank_7s.ui \
+        tank_8.ui \
+        tank_8s.ui \
+        tank_9.ui \
+        tank_9s.ui \
         tank_budget.ui \
         tank_reinforce.ui
 
@@ -107,4 +185,12 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     images.qrc
 
-DISTFILES +=
+DISTFILES += \
+    Shop_defence.jpg \
+    Shop_defence_plus.jpg \
+    Shop_faster.jpg \
+    Shop_faster_plus.jpg \
+    Shop_recover.jpg \
+    Shop_recover1.jpg \
+    Shop_reinforce.jpg \
+    Shop_reinforce_plus.jpg

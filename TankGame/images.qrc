@@ -33,5 +33,65 @@
         <file>../sample/photo/Shop_pic/Shop_button.jpg</file>
         <file>../sample/photo/Shop_pic/Shop_weapon.jpg</file>
         <file>../sample/photo/Shop_pic/Shop_weapon_plus.jpg</file>
+        <file>../sample/photo/small tank/tank1/tank1.png</file>
+        <file>../sample/photo/small tank/tank1/tank1down.png</file>
+        <file>../sample/photo/small tank/tank1/tank1left.png</file>
+        <file>../sample/photo/small tank/tank1/tank1right.png</file>
+        <file>../sample/photo/small tank/tank1/tank1up.png</file>
+        <file>../sample/photo/small tank/tank2/tank2.png</file>
+        <file>../sample/photo/small tank/tank2/tank2down.png</file>
+        <file>../sample/photo/small tank/tank2/tank2left.png</file>
+        <file>../sample/photo/small tank/tank2/tank2right.png</file>
+        <file>../sample/photo/small tank/tank2/tank2up.png</file>
+        <file>../sample/photo/small tank/tank3/tank3.png</file>
+        <file>../sample/photo/small tank/tank3/tank3down.png</file>
+        <file>../sample/photo/small tank/tank3/tank3left.png</file>
+        <file>../sample/photo/small tank/tank3/tank3right.png</file>
+        <file>../sample/photo/small tank/tank3/tank3up.png</file>
+        <file>../sample/photo/small tank/tank4/tank4.png</file>
+        <file>../sample/photo/small tank/tank4/tank4down.png</file>
+        <file>../sample/photo/small tank/tank4/tank4left.png</file>
+        <file>../sample/photo/small tank/tank4/tank4right.png</file>
+        <file>../sample/photo/small tank/tank4/tank4up.png</file>
+        <file>../sample/photo/small tank/tank5/tank5.png</file>
+        <file>../sample/photo/small tank/tank5/tank5down.png</file>
+        <file>../sample/photo/small tank/tank5/tank5left.png</file>
+        <file>../sample/photo/small tank/tank5/tank5right.png</file>
+        <file>../sample/photo/small tank/tank5/tank5up.png</file>
+        <file>../sample/photo/small tank/tank6/tank6.png</file>
+        <file>../sample/photo/small tank/tank6/tank6down.png</file>
+        <file>../sample/photo/small tank/tank6/tank6left.png</file>
+        <file>../sample/photo/small tank/tank6/tank6right.png</file>
+        <file>../sample/photo/small tank/tank6/tank6up.png</file>
+        <file>../sample/photo/small tank/tank7/tank7.png</file>
+        <file>../sample/photo/small tank/tank7/tank7down.png</file>
+        <file>../sample/photo/small tank/tank7/tank7left.png</file>
+        <file>../sample/photo/small tank/tank7/tank7right.png</file>
+        <file>../sample/photo/small tank/tank7/tank7up.png</file>
+        <file>../sample/photo/small tank/tank8/tank8.png</file>
+        <file>../sample/photo/small tank/tank8/tank8down.png</file>
+        <file>../sample/photo/small tank/tank8/tank8left.png</file>
+        <file>../sample/photo/small tank/tank8/tank8right.png</file>
+        <file>../sample/photo/small tank/tank8/tank8up.png</file>
+        <file>../sample/photo/small tank/tank9/tank9.png</file>
+        <file>../sample/photo/small tank/tank9/tank9down.png</file>
+        <file>../sample/photo/small tank/tank9/tank9left.png</file>
+        <file>../sample/photo/small tank/tank9/tank9right.png</file>
+        <file>../sample/photo/small tank/tank9/tank9up.png</file>
+        <file>../sample/photo/small tank/tank10/tank10.png</file>
+        <file>../sample/photo/small tank/tank10/tank10down.png</file>
+        <file>../sample/photo/small tank/tank10/tank10left.png</file>
+        <file>../sample/photo/small tank/tank10/tank10right.png</file>
+        <file>../sample/photo/small tank/tank10/tank10up.png</file>
+        <file>../sample/photo/small tank/tank11/tank11.png</file>
+        <file>../sample/photo/small tank/tank11/tank11down.png</file>
+        <file>../sample/photo/small tank/tank11/tank11left.png</file>
+        <file>../sample/photo/small tank/tank11/tank11right.png</file>
+        <file>../sample/photo/small tank/tank11/tank11up.png</file>
+        <file>../sample/photo/small tank/tank12/tank12.png</file>
+        <file>../sample/photo/small tank/tank12/tank12down.png</file>
+        <file>../sample/photo/small tank/tank12/tank12left.png</file>
+        <file>../sample/photo/small tank/tank12/tank12right.png</file>
+        <file>../sample/photo/small tank/tank12/tank12up.png</file>
     </qresource>
 </RCC>

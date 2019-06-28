@@ -6,8 +6,8 @@ Shop::Shop(QWidget *parent) :
     ui(new Ui::Shop)
 {
     ui->setupUi(this);
-    Tank_budget *a = new Tank_budget(this);
-    Tank_reinforce *b = new Tank_reinforce(this);
+    a = new Tank_budget(this);
+    b = new Tank_reinforce(this);
     ui->stackedWidget->addWidget(a);
     ui->stackedWidget->addWidget(b);
 }
@@ -25,5 +25,13 @@ void Shop::on_reinforceButton_clicked()
 
 void Shop::on_budgetButton_clicked()
 {
+
     ui->stackedWidget->setCurrentWidget(a);
+}
+void Shop::paintEvent(QPaintEvent *event)
+{
+    QStyleOption opt;
+    opt.init(this);
+    QPainter p(this);
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }

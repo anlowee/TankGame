@@ -5,6 +5,8 @@
 #include "tank_budget.h"
 #include "tank_reinforce.h"
 #include <QStackedWidget>
+#include <QPainter>
+#include <QStyleOption>
 namespace Ui {
 class Shop;
 }
@@ -22,6 +24,8 @@ private slots:
     void on_reinforceButton_clicked();
 
     void on_budgetButton_clicked();
+
+    void paintEvent(QPaintEvent *event);
 
 private:
     Ui::Shop *ui;

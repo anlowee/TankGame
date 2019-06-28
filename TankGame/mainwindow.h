@@ -24,6 +24,8 @@ private slots:
 
     void on_btn_high_clicked();
 
+    void on_shopButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
