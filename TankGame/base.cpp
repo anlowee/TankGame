@@ -5,6 +5,11 @@ Base::Base()
 
 }
 
+Base::Base(int x, int y, int dir):m_x(x), m_y(y), m_dir(dir)
+{
+
+}
+
 bool Base::IsCollide(const Base &base) const
 {
     bool bisCollide = true;
@@ -17,10 +22,4 @@ bool Base::IsCollide(const Base &base) const
     //true-collide
     //false-not collide
     return bisCollide;
-}
-
-void Base::SetPos(int x, int y)
-{
-    Base::m_pos.setX(x);
-    Base::m_pos.setY(y);
 }

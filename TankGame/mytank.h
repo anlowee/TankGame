@@ -1,6 +1,7 @@
 #ifndef MYTANK_H
 #define MYTANK_H
 #include "base.h"
+#define NORMALSPEED 2
 
 class MyTank:public Base
 {

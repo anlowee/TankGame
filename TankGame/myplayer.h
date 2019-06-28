@@ -10,6 +10,7 @@ public:
     static int plyX;
     static int plyY;
     static int plyD;
+    static bool status;
 
 protected:
 };

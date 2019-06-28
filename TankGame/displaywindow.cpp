@@ -2,29 +2,39 @@
 #include "ui_displaywindow.h"
 #include "mymap.h"
 #include <QPainter>
+#include <QPixmap>
 #include <QStyleOption>
 #include <QImage>
 #include <QTime>
 #include <QKeyEvent>
 #include <iostream>
+#include <QPropertyAnimation>
+#include <QtCore>
 #include "myglobal.h"
 #include "myplayer.h"
+#include "mybullet.h"
 
 int DisplayWindow::keyValue;
-int MyPlayer::plyX = 0;
-int MyPlayer::plyY = 0;
-int MyPlayer::plyD = 1;
+int MyPlayer::plyX = (rand()%32)*PICWIDTH;
+int MyPlayer::plyY = (rand()%32)*PICHEIGHT;
+int MyPlayer::plyD = rand()%4;
+bool MyPlayer::status = false;
+MyBullet a_Bullets[10000];
+static int cntBullets = 0;
+
+inline void DeleteBullets(MyBullet*, int, int&);
+inline bool IsOutofRange(int, int);
 
 DisplayWindow::DisplayWindow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::DisplayWindow)
 {
-    setFocusPolicy(Qt::StrongFocus);
     ui->setupUi(this);
 
-    //MyPlayer *new_p = new MyPlayer;
-    //qDebug() << "==Press a key";
-    //this->grabKeyboard();
+    setFocusPolicy(Qt::StrongFocus);
+    QTimer *new_t = new QTimer(this);
+    connect(new_t, SIGNAL(timeout()), this, SLOT(update()));
+    new_t->start(4);//240 fps
 }
 
 DisplayWindow::~DisplayWindow()
@@ -36,22 +46,35 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
 {
     QPainter p(this);
 
-    //Create Map
+    //paint Map
+    PaintMap(p);
 
+    //Move Player
+    MoveTank(p);
+
+    //Move Bullets
+    MoveBullet(p);
+}
+
+void DisplayWindow::keyPressEvent(QKeyEvent *event)
+{
+    keyValue = event->key();
+    //W-87
+    //S-83
+    //A-65
+    //D-68
+    //J-74
+    //K-75
+    //L-76
+}
+
+void DisplayWindow::PaintMap(QPainter &p)
+{
     //load map img
     QImage imgGrass("grass.png");
     QImage imgRock("rock.png");
-    QImage imgSnow("snow.png");
-    QImage imgMarsh("marsh.png");
-    QImage imgTree("tree.png");
-    QImage imgWater("water.png");
 
-    //load tank img
-    QImage imgTank1Up("tank1up.png");
-    QImage imgTank1Down("tank1down.png");
-    QImage imgTank1Left("tank1left.png");
-    QImage imgTank1Right("tank1right.png");
-
+    //paint map
     for (int i = 0; i < INUM; i++)
         for (int j = 0; j < JNUM; j++)
         {
@@ -61,151 +84,155 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
             switch (n)
             {
                 case 'G':p.drawImage(x, y, imgGrass); break;
-                case 'T':p.drawImage(x, y, imgTree); break;
-                case 'S':p.drawImage(x, y, imgSnow); break;
-                case 'M':p.drawImage(x, y, imgMarsh); break;
                 case 'R':p.drawImage(x, y, imgRock); break;
-                case 'W':p.drawImage(x, y, imgWater); break;
                 default:p.drawImage(x, y, imgGrass);
             }
         }
+}
 
-    //Display move
-    int keyValue = DisplayWindow::keyValue;
+void DisplayWindow::MoveTank(QPainter &p)
+{
+    //load tank img
+    QImage imgTank1Up("tank1up.png");
+    QImage imgTank1Down("tank1down.png");
+    QImage imgTank1Left("tank1left.png");
+    QImage imgTank1Right("tank1right.png");
+
+    //paint current pos&dir
     int &x = MyPlayer::plyX;
     int &y = MyPlayer::plyY;
     int &d = MyPlayer::plyD;
-    int i = x/32, j = y/32;
-
-    qDebug() << x << " " << y << " " << d;
-
     switch (d)
     {
         case 0:p.drawImage(x, y, imgTank1Up); break;
         case 1:p.drawImage(x, y, imgTank1Down); break;
         case 2:p.drawImage(x, y, imgTank1Left); break;
         case 3:p.drawImage(x, y, imgTank1Right); break;
-        default:p.drawImage(x, y, imgTank1Up);
     }
 
-    switch (keyValue)
+    //react keyPessEvent
+    if (keyValue == 87)
     {
-        case 87:
-            if (d == 0 && y > 0 && MyGlobal::boolMap[i][j - 1])
-            {
-                char n = MyGlobal::logicMap[i][j];
-                switch (n)
-                {
-                    case 'G':p.drawImage(x, y, imgGrass); break;
-                    case 'T':p.drawImage(x, y, imgTree); break;
-                    case 'S':p.drawImage(x, y, imgSnow); break;
-                    case 'M':p.drawImage(x, y, imgMarsh); break;
-                    case 'R':p.drawImage(x, y, imgRock); break;
-                    case 'W':p.drawImage(x, y, imgWater); break;
-                    default:p.drawImage(x, y, imgGrass);
-                }
-
-                y -= PICHEIGHT;
-                p.drawImage(x, y, imgTank1Up);
-            }
-            else
-            {
-                d = 0;
-                p.drawImage(x, y, imgTank1Up);
-            }
-            break;
-        case 83:
-            if (d == 1 && y < 992 && MyGlobal::boolMap[i][j + 1])
-            {
-                char n = MyGlobal::logicMap[i][j];
-                switch (n)
-                {
-                    case 'G':p.drawImage(x, y, imgGrass); break;
-                    case 'T':p.drawImage(x, y, imgTree); break;
-                    case 'S':p.drawImage(x, y, imgSnow); break;
-                    case 'M':p.drawImage(x, y, imgMarsh); break;
-                    case 'R':p.drawImage(x, y, imgRock); break;
-                    case 'W':p.drawImage(x, y, imgWater); break;
-                    default:p.drawImage(x, y, imgGrass);
-                }
-
-                y += PICHEIGHT;
-                p.drawImage(x, y, imgTank1Down);
-            }
-            else
-            {
-                d = 1;
-                p.drawImage(x, y, imgTank1Down);
-            }
-            break;
-        case 65:
-            if (d == 2 && x > 0 && MyGlobal::boolMap[i - 1][j])
-            {
-                char n = MyGlobal::logicMap[i][j];
-                switch (n)
-                {
-                    case 'G':p.drawImage(x, y, imgGrass); break;
-                    case 'T':p.drawImage(x, y, imgTree); break;
-                    case 'S':p.drawImage(x, y, imgSnow); break;
-                    case 'M':p.drawImage(x, y, imgMarsh); break;
-                    case 'R':p.drawImage(x, y, imgRock); break;
-                    case 'W':p.drawImage(x, y, imgWater); break;
-                    default:p.drawImage(x, y, imgGrass);
-                }
-
-                x -= PICWIDTH;
-                p.drawImage(x, y, imgTank1Left);
-            }
-            else
-            {
-                d = 2;
-                p.drawImage(x, y, imgTank1Left);
-            }
-            break;
-        case 68:
-            if (d == 3 && x < 992 && MyGlobal::boolMap[i + 1][j])
-            {
-                char n = MyGlobal::logicMap[i][j];
-                switch (n)
-                {
-                    case 'G':p.drawImage(x, y, imgGrass); break;
-                    case 'T':p.drawImage(x, y, imgTree); break;
-                    case 'S':p.drawImage(x, y, imgSnow); break;
-                    case 'M':p.drawImage(x, y, imgMarsh); break;
-                    case 'R':p.drawImage(x, y, imgRock); break;
-                    case 'W':p.drawImage(x, y, imgWater); break;
-                    default:p.drawImage(x, y, imgGrass);
-                }
-
-                x += PICWIDTH;
-                p.drawImage(x, y, imgTank1Right);
-            }
-            else
-            {
-                d = 3;
-                p.drawImage(x, y, imgTank1Right);
-            }
-            break;
+        d = 0;
+        if (y - NORMALSPEED >= 0 && MyGlobal::boolMap[(y - NORMALSPEED)/32][x/32])
+        {
+            //qDebug() << "Up";
+            p.drawImage(x, y - NORMALSPEED, imgTank1Up);
+            y -= NORMALSPEED;
+        }
+    }
+    if (keyValue == 83)
+    {
+        d = 1;
+        if (y + NORMALSPEED <= 992 && MyGlobal::boolMap[(y + NORMALSPEED)/32][x/32])
+        {
+            //qDebug() << "Down";
+            p.drawImage(x, y + NORMALSPEED, imgTank1Down);
+            y += NORMALSPEED;
+        }
+    }
+    if (keyValue == 65)
+    {
+        d = 2;
+        if (x - NORMALSPEED >= 0 && MyGlobal::boolMap[y/32][(x - NORMALSPEED)/32])
+        {
+            //qDebug() << "Left";
+            p.drawImage(x - NORMALSPEED, y, imgTank1Left);
+            x -= NORMALSPEED;
+        }
+    }
+    if (keyValue == 68)
+    {
+        d = 3;
+        if (x + NORMALSPEED <= 992 && MyGlobal::boolMap[y/32][(x + NORMALSPEED)/32])
+        {
+            //qDebug() << "Right";
+            p.drawImage(x + NORMALSPEED, y, imgTank1Right);
+            x += NORMALSPEED;
+        }
+    }
+    if (keyValue == 74)
+    {
+        cntBullets++;
+        a_Bullets[cntBullets].SetX(x);
+        a_Bullets[cntBullets].SetY(y);
+        a_Bullets[cntBullets].SetDir(d);
+        //a_Bullets[cntBullets].SetDisappear(false);
     }
 }
 
-void DisplayWindow::keyPressEvent(QKeyEvent *event)
+inline void DeleteBullets(MyBullet *a, int index, int &cnt)
 {
-    qDebug() << "==Press a key";
-    DisplayWindow::keyValue = event->key();
-    //qDebug() << keyValue;
-    //W-87
-    //S-83
-    //A-65
-    //D-68
-    switch(DisplayWindow::keyValue)
+    for (int i = index; i < cnt - 1; i++)
     {
-        case 87:qDebug() << "W"; break;
-        case 83:qDebug() << "S"; break;
-        case 65:qDebug() << "A"; break;
-        case 68:qDebug() << "D"; break;
-        default:qDebug() << DisplayWindow::keyValue;
+        int x = a[i + 1].GetX();
+        int y = a[i + 1].GetY();
+        int d = a[i + 1].GetDir();
+        a[i].SetX(x);
+        a[i].SetY(y);
+        a[i].SetDir(d);
     }
-    this->update();
+    cnt--;
+}
 
+inline bool IsOutofRange(int x, int y)
+{
+    bool ans = x <= 0 || x >= 1024 || y <= 0 || y >= 1024 || !MyGlobal::boolMap[y/32][x/32];
+    return ans;
+}
+
+void DisplayWindow::MoveBullet(QPainter &p)
+{
+    qDebug() << cntBullets;
+
+    //load bullet img
+    QImage imgBullet1Up("tank8up.png");
+    QImage imgBullet1Down("tank8down.png");
+    QImage imgBullet1Left("tank8left.png");
+    QImage imgBulletRight("tank8right.png");
+
+    for (int i = 0; i < cntBullets; i++)
+    {
+        int x = a_Bullets[i].GetX();
+        int y = a_Bullets[i].GetY();
+
+        qDebug() << x << " " << y;
+
+        if (IsOutofRange(x, y))
+        {
+            DeleteBullets(a_Bullets, i, cntBullets);
+        }
+    }
+
+    for (int i = 0; i < cntBullets; i++)
+    {
+        int x = a_Bullets[i].GetX();
+        int y = a_Bullets[i].GetY();
+        int d = a_Bullets[i].GetDir();
+
+        qDebug() << x << " " << y << " " << d;
+
+        switch (d)
+        {
+            case 0:
+                p.drawImage(x, y - BULLETSPEED, imgBullet1Up);
+                y -= BULLETSPEED;
+                break;
+            case 1:
+                p.drawImage(x, y + BULLETSPEED, imgBullet1Down);
+                y += BULLETSPEED;
+                break;
+            case 2:
+                p.drawImage(x - BULLETSPEED, y, imgBullet1Left);
+                x -= BULLETSPEED;
+                break;
+            case 3:
+                p.drawImage(x + BULLETSPEED, y, imgBulletRight);
+                x += BULLETSPEED;
+                break;
+        }
+
+        a_Bullets[i].SetX(x);
+        a_Bullets[i].SetY(y);
+    }
 }

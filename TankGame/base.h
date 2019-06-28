@@ -10,17 +10,21 @@ class Base
 {
 public:
     Base();
+    Base(int x, int y, int dir);
     bool IsDisappear() {return m_bDisappear;}
     bool IsCollide(const Base &base)const;
     void SetDisappear(bool tmp) {m_bDisappear = tmp;}
-    int GetPosX() {return m_pos.x();}
-    int GetPosY() {return m_pos.y();}
     void SetPos(int x, int y);
     int GetDir() {return m_dir;}
+    int GetX() {return m_x;}
+    int GetY() {return m_y;}
     void SetDir(int dir) {m_dir = dir;}
+    void SetX(int x) {m_x = x;}
+    void SetY(int y) {m_y = y;}
 
 protected:
-    QPoint m_pos;
+    int m_x;
+    int m_y;
     QRect m_rectSphere;//used to judge iscollide
     int m_dir;
     bool m_bDisappear;//dead then disappear

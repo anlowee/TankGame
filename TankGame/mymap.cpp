@@ -9,32 +9,25 @@ bool MyGlobal::boolMap[1005][1005];
 
 MyMap::MyMap(QObject *parent) : QObject(parent)
 {
-
+    qsrand(time(NULL));
 }
 
 void MyMap::CreateMap()
 {
-    int seed = 0;
     for (int i = 0; i < INUM; i++)
         for (int j = 0; j < JNUM; j++)
         {
-            qsrand((++seed)*time(NULL));
-            int n = qrand()%6;
+            /*
+            int n = qrand()%2;
             //0-Grass-G
-            //1-Tree-T
-            //2-Snow-S
-            //3-Marsh-M
-            //4-Rock-R
-            //5-Water-W
+            //1-Rock-R
             switch (n)
             {
                 case 0:MyGlobal::logicMap[i][j] = 'G'; MyGlobal::boolMap[i][j] = true; break;
-                case 1:MyGlobal::logicMap[i][j] = 'T'; MyGlobal::boolMap[i][j] = true; break;
-                case 2:MyGlobal::logicMap[i][j] = 'S'; MyGlobal::boolMap[i][j] = true; break;
-                case 3:MyGlobal::logicMap[i][j] = 'M'; MyGlobal::boolMap[i][j] = true; break;
-                case 4:MyGlobal::logicMap[i][j] = 'R'; MyGlobal::boolMap[i][j] = false; break;
-                case 5:MyGlobal::logicMap[i][j] = 'W'; MyGlobal::boolMap[i][j] = false; break;
+                case 1:MyGlobal::logicMap[i][j] = 'R'; MyGlobal::boolMap[i][j] = false; break;
                 default:MyGlobal::logicMap[i][j] = 'G'; MyGlobal::boolMap[i][j] = true;
             }
+            */
+            MyGlobal::logicMap[i][j] = 'G'; MyGlobal::boolMap[i][j] = true;
         }
 }

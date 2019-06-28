@@ -109,4 +109,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     images.qrc
 
-DISTFILES +=
+DISTFILES += \
+    ../build-TankGame-Desktop_Qt_5_13_0_MSVC2017_32bit-Debug/tank1down.png \
+    ../build-TankGame-Desktop_Qt_5_13_0_MSVC2017_32bit-Debug/tank1left.png \
+    ../build-TankGame-Desktop_Qt_5_13_0_MSVC2017_32bit-Debug/tank1right.png \
+    ../build-TankGame-Desktop_Qt_5_13_0_MSVC2017_32bit-Debug/tank1up.png

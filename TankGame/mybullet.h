@@ -1,11 +1,13 @@
 #ifndef MYBULLET_H
 #define MYBULLET_H
 #include "base.h"
+#define BULLETSPEED 10
 
-class MyBullet:protected Base
+class MyBullet:public Base
 {
 public:
     MyBullet();
+    MyBullet(int x, int y, int dir);
 
 protected:
     int m_bulletForm;//choose one of outlooks
