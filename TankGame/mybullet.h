@@ -2,6 +2,8 @@
 #define MYBULLET_H
 #include "base.h"
 #define BULLETSPEED 10
+#define BULLETWIDTH 16
+#define BULLETHEIGHT 16
 
 class MyBullet:public Base
 {

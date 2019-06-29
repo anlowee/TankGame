@@ -33,6 +33,7 @@ private:
     void PaintMap(QPainter &p);
     void MoveBullet(QPainter &p);
     void MoveTank(QPainter &p);
+    void MoveEnemyTank(QPainter &p);
 
 protected:
     void keyPressEvent(QKeyEvent *event);

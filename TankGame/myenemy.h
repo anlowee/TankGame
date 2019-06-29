@@ -3,7 +3,7 @@
 #include "mytank.h"
 #include "mybag.h"
 
-class MyEnemy:protected MyTank, protected MyBag
+class MyEnemy:public MyTank, public MyBag
 {
 public:
     MyEnemy();

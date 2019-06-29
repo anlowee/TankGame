@@ -3,6 +3,7 @@
 #include <QPoint>
 #include <QRect>
 #include <QPainter>
+#define ENEMYNUMBER 10
 
 enum Dir {UP, DOWN, LEFT, RIGHT};
 
@@ -12,7 +13,6 @@ public:
     Base();
     Base(int x, int y, int dir);
     bool IsDisappear() {return m_bDisappear;}
-    bool IsCollide(const Base &base)const;
     void SetDisappear(bool tmp) {m_bDisappear = tmp;}
     void SetPos(int x, int y);
     int GetDir() {return m_dir;}
