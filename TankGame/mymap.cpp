@@ -6,6 +6,7 @@
 
 char MyGlobal::logicMap[1005][1005];
 bool MyGlobal::boolMap[1005][1005];
+int MyGlobal::objMap[1005][1005];
 
 MyMap::MyMap(QObject *parent) : QObject(parent)
 {
@@ -28,6 +29,11 @@ void MyMap::CreateMap()
                 default:MyGlobal::logicMap[i][j] = 'G'; MyGlobal::boolMap[i][j] = true;
             }
             */
-            MyGlobal::logicMap[i][j] = 'G'; MyGlobal::boolMap[i][j] = true;
+            MyGlobal::logicMap[i][j] = 'G';
+            MyGlobal::boolMap[i][j] = true;
+            //0-nothing
+            //1-blood
+            //2-coin
+            MyGlobal::objMap[i][j] = 0;
         }
 }

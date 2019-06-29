@@ -21,6 +21,12 @@ public:
     void SetDir(int dir) {m_dir = dir;}
     void SetX(int x) {m_x = x;}
     void SetY(int y) {m_y = y;}
+    double GetAtk() {return m_atk;}
+    double GetDef() {return m_def;}
+    double GetHlt() {return m_health;}
+    void SetAtk(double x) {m_atk = x;}
+    void SetDef(double x) {m_def = x;}
+    void SetHlt(double x) {m_health = x;}
 
 protected:
     int m_x;

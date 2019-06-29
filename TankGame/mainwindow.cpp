@@ -4,6 +4,7 @@
 #include  "selectlevelwindow.h"
 #include <QtGui>
 #include <QFrame>
+#include <QSoundEffect>
 #include <QPixmap>
 #include"High.h"
 MainWindow::MainWindow(QWidget *parent) :
@@ -11,6 +12,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    //display bgm
+    QSoundEffect *new_bgm = new QSoundEffect;
+    QString dir = QCoreApplication::applicationDirPath();
+    QString filename(dir + "/bgm.wav");
+    new_bgm->setLoopCount(QSoundEffect::Infinite);
+    new_bgm->setSource(QUrl::fromLocalFile(filename));
+    new_bgm->setVolume(1.0);
+    new_bgm->play();
 }
 
 MainWindow::~MainWindow()

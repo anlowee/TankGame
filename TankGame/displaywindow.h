@@ -26,10 +26,16 @@ public:
     explicit DisplayWindow(QWidget *parent = nullptr);
     ~DisplayWindow();
     static int keyValue;
+    int cntBullets;
+    int cntEnemy;
+    bool b_isPlayerStart;
+    //int playerAtkSpeed;
+    //int enemyAtkSpeed;
 
 private:
     Ui::DisplayWindow *ui;
     void paintEvent(QPaintEvent *event);
+    void closeEvent(QCloseEvent *event);
     void PaintMap(QPainter &p);
     void MoveBullet(QPainter &p);
     void MoveTank(QPainter &p);
@@ -37,6 +43,10 @@ private:
 
 protected:
     void keyPressEvent(QKeyEvent *event);
+
+private slots:
+    void EnemyAtk();
+    void PlayerAtk();
 
 };
 

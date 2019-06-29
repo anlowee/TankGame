@@ -11,8 +11,13 @@ public:
     static int plyY;
     static int plyD;
     static bool status;
+    static double plyAtk;
+    static double plyDef;
+    static double plyHlt;
+    static int plyMoney;
 
-protected:
+private:
+
 };
 
 #endif // MYPLAYER_H
