@@ -13,7 +13,8 @@
 int MyPlayer::plyX;
 int MyPlayer::plyY;
 int MyPlayer::plyD;
-int MyPlayer::plyMoney = 0;
+int MyPlayer::plyMoney;
+int MyPlayer::plyKill;
 double MyPlayer::plyAtk;
 double MyPlayer::plyDef;
 double MyPlayer::plyHlt;
@@ -59,6 +60,15 @@ void CreatPos(int mark)
 
 void SelectLevelWindow::on_pushButton_clicked()
 {
+    //load
+    freopen("save.sav", "r", stdin);
+    int mny, kil;
+    std::cin >> mny >> kil;
+    MyPlayer::plyMoney = mny;
+    MyPlayer::plyKill = kil;
+    fclose(stdin);
+
+    //pre
     MyMap *new_m =  new MyMap;
     new_m->CreateMap();
     DisplayWindow *new_w = new DisplayWindow;

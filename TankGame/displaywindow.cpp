@@ -1,6 +1,7 @@
 #include "displaywindow.h"
 #include "ui_displaywindow.h"
 #include "mymap.h"
+#include "Windows.h"
 #include <QPainter>
 #include <QPixmap>
 #include <QStyleOption>
@@ -9,6 +10,7 @@
 #include <QKeyEvent>
 #include <QSoundEffect>
 #include <iostream>
+#include <stdlib.h>
 #include <QPropertyAnimation>
 #include <QMessageBox>
 #include <QtCore>
@@ -58,7 +60,7 @@ DisplayWindow::DisplayWindow(QWidget *parent) :
     //set player atk max frequency
     QTimer *playerAtk = new QTimer(this);
     connect(playerAtk, SIGNAL(timeout()), this, SLOT(PlayerAtk()));
-    playerAtk->start(750);
+    playerAtk->start(500);
 }
 
 DisplayWindow::~DisplayWindow()
@@ -70,6 +72,13 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
 {
     QPainter p(this);
 
+    //display parameter
+    ui->lbl_health->setNum(MyPlayer::plyHlt);
+    ui->lbl_money->setNum(MyPlayer::plyMoney);
+    ui->lbl_killenemy->setNum(MyPlayer::plyKill + ENEMYNUMBER - cntEnemy);
+
+    //QString txtHealth; txtHealth.arg(MyPlayer::plyHlt, 0, 'f', 1);
+    //ui->lbl_health->setText(txtHealth);
     //you win game
     if (cntEnemy == 0)
         close();
@@ -684,6 +693,12 @@ void DisplayWindow::closeEvent(QCloseEvent *event)
     int choose;
     if (cntEnemy == 0)
     {
+        //save
+        freopen("save.sav", "w", stdout);
+        std::cout << MyPlayer::plyMoney << " " << MyPlayer::plyKill+ENEMYNUMBER - cntEnemy;
+        fclose(stdout);
+
+        //win
         choose= QMessageBox::question(this, tr("quit game"),
                                      QString(tr("Game Over, YOU WIN")),
                                      QMessageBox::Yes);
@@ -700,10 +715,23 @@ void DisplayWindow::closeEvent(QCloseEvent *event)
             event->ignore();
         else
         if (choose== QMessageBox::Yes)
+        {
+            //save
+            freopen("save.sav", "w", stdout);
+            std::cout << MyPlayer::plyMoney << " " << MyPlayer::plyKill+ENEMYNUMBER - cntEnemy;
+            fclose(stdout);
+
             event->accept();
+        }
     }
     else
     {
+        //save
+        freopen("save.sav", "w", stdout);
+        std::cout << MyPlayer::plyMoney << " " << MyPlayer::plyKill+ENEMYNUMBER - cntEnemy;
+        fclose(stdout);
+
+        //lost
         choose= QMessageBox::question(this, tr("quit game"),
                                      QString(tr("Game Over, YOU DEAD")),
                                      QMessageBox::Yes);

@@ -15,6 +15,7 @@ public:
     static double plyDef;
     static double plyHlt;
     static int plyMoney;
+    static int plyKill;
 
 private:
 
