@@ -1,8 +1,8 @@
 #ifndef MYTANK_H
 #define MYTANK_H
 #include "base.h"
-#define NORMALSPEED 5
-#define ENEMYSPEED 1
+#define NORMALSPEED 6
+#define ENEMYSPEED 2
 #define PLAYERLIFE 100.0
 #define ENEMYLIFE 60.0
 #define PLAYERATK 30.0

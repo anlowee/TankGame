@@ -28,6 +28,7 @@ CONFIG += c++11
 SOURCES += \
         High.cpp \
         base.cpp \
+        diamondsquare.cpp \
         displaywindow.cpp \
         level_1.cpp \
         level_2.cpp \
@@ -57,6 +58,7 @@ SOURCES += \
 HEADERS += \
         High.h \
         base.h \
+        diamondsquare.h \
         displaywindow.h \
         level_1.h \
         level_2.h \

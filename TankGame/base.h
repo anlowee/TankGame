@@ -3,7 +3,7 @@
 #include <QPoint>
 #include <QRect>
 #include <QPainter>
-#define ENEMYNUMBER 10
+#define ENEMYNUMBER 5
 
 enum Dir {UP, DOWN, LEFT, RIGHT};
 
