@@ -23,7 +23,7 @@
 #define MARSHSPEED 1
 
 int DisplayWindow::keyValue;
-static int optTime = QTime::currentTime().msec();
+bool DisplayWindow::b_isTPM;
 
 struct BoomPos
 {
@@ -37,6 +37,7 @@ extern MyEnemy a_EnemyTank[100];
 inline void DeleteBullets(MyBullet*, int, int&);
 inline bool IsOutofRange(int, int, int);
 inline int IsCollide(int, int);
+inline int Is2PCollide(int, int);
 inline int IsEnemyCollide(int, int, int);
 
 DisplayWindow::DisplayWindow(QWidget *parent) :
@@ -46,6 +47,8 @@ DisplayWindow::DisplayWindow(QWidget *parent) :
     ui->setupUi(this);
 
     setFocusPolicy(Qt::StrongFocus);
+
+    //qDebug() << isTPM;
 
     //set fps
     QTimer *new_t = new QTimer(this);
@@ -61,6 +64,14 @@ DisplayWindow::DisplayWindow(QWidget *parent) :
     QTimer *playerAtk = new QTimer(this);
     connect(playerAtk, SIGNAL(timeout()), this, SLOT(PlayerAtk()));
     playerAtk->start(500);
+
+    //set player2 atk max frequency
+    if (b_isTPM)
+    {
+        QTimer *player2Atk = new QTimer(this);
+        connect(player2Atk, SIGNAL(timeout()), this, SLOT(Player2Atk()));
+        player2Atk->start(500);
+    }
 }
 
 DisplayWindow::~DisplayWindow()
@@ -88,6 +99,10 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
 
     //Move Player
     MoveTank(p);
+
+    //Move 2P
+    if (b_isTPM)
+        MoveTank2P(p);
 
     //Move Enemy
     MoveEnemyTank(p);
@@ -278,6 +293,137 @@ void DisplayWindow::MoveTank(QPainter &p)
     keyValue = NULL;
 }
 
+void DisplayWindow::MoveTank2P(QPainter &p)
+{
+    //load tank img
+    QImage imgTank7Up("tank7up.png");
+    QImage imgTank7Down("tank7down.png");
+    QImage imgTank7Left("tank7left.png");
+    QImage imgTank7Right("tank7right.png");
+    QImage imgTankBoom("tankboom.png");
+
+    //paint current pos&dir
+    int &x = MyPlayer::ply2X;
+    int &y = MyPlayer::ply2Y;
+    int &d = MyPlayer::ply2D;
+    switch (d)
+    {
+        case 0:p.drawImage(x, y, imgTank7Up); break;
+        case 1:p.drawImage(x, y, imgTank7Down); break;
+        case 2:p.drawImage(x, y, imgTank7Left); break;
+        case 3:p.drawImage(x, y, imgTank7Right); break;
+    }
+
+    //is dead
+    if (MyPlayer::ply2Hlt <= 0)
+    {
+        p.drawImage(x, y, imgTankBoom);
+        close();
+    }
+
+    int n_isCollide = Is2PCollide(x, y);
+
+    //react keyPessEvent
+    if (keyValue == 16777235)
+    {
+        b_isPlayer2Start = true;
+        d = 0;
+        bool b_isCollideMap = MyGlobal::boolMap[(y - NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y - NORMALSPEED + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y - NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y - NORMALSPEED + PICHEIGHT -COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH];
+
+        bool b_isOnMarsh = (MyGlobal::logicMap[(y - NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y - NORMALSPEED + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y - NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y - NORMALSPEED + PICHEIGHT -COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M');
+
+        int additionalSpeed = 0;
+        if (b_isOnMarsh)
+            additionalSpeed = 3*MARSHSPEED;
+
+        if (y - NORMALSPEED + additionalSpeed >= 0 && b_isCollideMap && n_isCollide != 0)
+        {
+            p.drawImage(x, y - NORMALSPEED + additionalSpeed, imgTank7Up);
+            y -= NORMALSPEED - additionalSpeed;
+        }
+    }
+    if (keyValue == 16777237)
+    {
+        b_isPlayer2Start = true;
+        d = 1;
+        bool b_isCollideMap = MyGlobal::boolMap[(y + NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + NORMALSPEED + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + NORMALSPEED + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH];
+
+        bool b_isOnMarsh = (MyGlobal::logicMap[(y + NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + NORMALSPEED + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + NORMALSPEED + PICHEIGHT -COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M');
+
+        int additionalSpeed = 0;
+        if (b_isOnMarsh)
+            additionalSpeed = 3*MARSHSPEED;
+
+        if (y + NORMALSPEED - additionalSpeed <= 992 && b_isCollideMap && n_isCollide != 1)
+        {
+            p.drawImage(x, y + NORMALSPEED - additionalSpeed, imgTank7Down);
+            y += NORMALSPEED - additionalSpeed;
+        }
+    }
+    if (keyValue == 16777234)
+    {
+        b_isPlayer2Start = true;
+        d = 2;
+        bool b_isCollideMap = MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH];
+
+        bool b_isOnMarsh = (MyGlobal::logicMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M');
+
+        int additionalSpeed = 0;
+        if (b_isOnMarsh)
+            additionalSpeed = 3*MARSHSPEED;
+
+        if (x - NORMALSPEED + additionalSpeed >= 0 && b_isCollideMap && n_isCollide != 2)
+        {
+            p.drawImage(x - NORMALSPEED + additionalSpeed, y, imgTank7Left);
+            x -= NORMALSPEED - additionalSpeed;
+        }
+    }
+    if (keyValue == 16777236)
+    {
+        b_isPlayer2Start = true;
+        d = 3;
+        bool b_isCollideMap = MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH];
+
+        bool b_isOnMarsh = (MyGlobal::logicMap[(y + COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M');
+
+        int additionalSpeed = 0;
+        if (b_isOnMarsh)
+            additionalSpeed = 3*MARSHSPEED;
+
+        if (x + NORMALSPEED - additionalSpeed <= 992 && b_isCollideMap && n_isCollide != 3)
+        {
+            p.drawImage(x + NORMALSPEED - additionalSpeed, y, imgTank7Right);
+            x += NORMALSPEED - additionalSpeed;
+        }
+    }
+
+    keyValue = NULL;
+}
+
 void DisplayWindow::PlayerAtk()
 {
     if (!b_isPlayerStart)
@@ -294,6 +440,22 @@ void DisplayWindow::PlayerAtk()
     cntBullets++;
 }
 
+void DisplayWindow::Player2Atk()
+{
+    if (!b_isPlayer2Start)
+        return ;
+
+    int &x = MyPlayer::ply2X;
+    int &y = MyPlayer::ply2Y;
+    int &d = MyPlayer::ply2D;
+
+    a_Bullets[cntBullets].SetX(x);
+    a_Bullets[cntBullets].SetY(y);
+    a_Bullets[cntBullets].SetDir(d);
+    a_Bullets[cntBullets].SetCreator(-2);
+    cntBullets++;
+}
+
 void DisplayWindow::MoveEnemyTank(QPainter &p)
 {
     //load tank img
@@ -303,7 +465,7 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
     QImage imgTank6Right("tank6right.png");
     QImage imgTankBoom("tankboom.png");
 
-    //set boom time
+    //set boom time------------------------------------------------bugs
     for (int i = 0; i < ENEMYNUMBER-cntEnemy; i++)
     {
         int x = s_boomPos[i].x;
@@ -524,6 +686,78 @@ inline int IsCollide(int x, int y)
         }
     }
 
+    //is collide 2P
+    if (DisplayWindow::b_isTPM)
+    {
+        int xE = MyPlayer::ply2X;
+        int yE = MyPlayer::ply2Y;
+
+        int playerMidX = x + PICWIDTH/2, playerMidY = y + PICHEIGHT/2;
+        int enemyMidX = xE + PICWIDTH/2, enemyMidY = yE + PICHEIGHT/2;
+        double dir = (enemyMidX == playerMidX) ? 100.0 : (enemyMidY - playerMidY)*1.0/(enemyMidX - playerMidX);
+
+        if (abs(playerMidX - enemyMidX) <= PICWIDTH && abs(playerMidY - enemyMidY) <= PICHEIGHT)
+        {
+            if (enemyMidY < playerMidY && (dir > 1 || dir < -1))
+                return 0;//2p is in front of player
+            if (enemyMidY > playerMidY && (dir > 1 || dir < -1))
+                return 1;//2p is behind  player
+            if (enemyMidX < playerMidX && (dir > -1 && dir < 1))
+                return 2;//2p is left to player
+            if (enemyMidX > playerMidX && (dir > -1 && dir < 1))
+                return 3;//2p is right to player
+        }
+    }
+
+    return -1;
+}
+
+inline int Is2PCollide(int x, int y)
+{
+    //is get blood
+    int j = (x + PICWIDTH/2)/32, i = (y + PICHEIGHT/2)/32;
+    if (MyGlobal::objMap[i][j] == 1)
+    {
+       MyPlayer::ply2Hlt += BLOOD;
+       if (MyPlayer::ply2Hlt > 100)
+           MyPlayer::ply2Hlt = 100.0;
+
+       MyGlobal::objMap[i][j] = 0;
+    }
+
+    //is get coin
+    if (MyGlobal::objMap[i][j] == 2)
+    {
+       MyPlayer::ply2Money++;
+       MyGlobal::objMap[i][j] = 0;
+    }
+
+    //is collide other tank
+    for (int i = 0; i < ENEMYNUMBER; i++)
+    {
+        if (a_EnemyTank[i].IsDisappear())
+            continue;
+
+        int xE = a_EnemyTank[i].GetX();
+        int yE = a_EnemyTank[i].GetY();
+
+        int playerMidX = x + PICWIDTH/2, playerMidY = y + PICHEIGHT/2;
+        int enemyMidX = xE + PICWIDTH/2, enemyMidY = yE + PICHEIGHT/2;
+        double dir = (enemyMidX == playerMidX) ? 100.0 : (enemyMidY - playerMidY)*1.0/(enemyMidX - playerMidX);
+
+        if (abs(playerMidX - enemyMidX) <= PICWIDTH && abs(playerMidY - enemyMidY) <= PICHEIGHT)
+        {
+            if (enemyMidY < playerMidY && (dir > 1 || dir < -1))
+                return 0;//enemy is in front of player
+            if (enemyMidY > playerMidY && (dir > 1 || dir < -1))
+                return 1;//enemy is behind  player
+            if (enemyMidX < playerMidX && (dir > -1 && dir < 1))
+                return 2;//enemy is left to player
+            if (enemyMidX > playerMidX && (dir > -1 && dir < 1))
+                return 3;//enemy is right to player
+        }
+    }
+
     return -1;
 }
 
@@ -574,6 +808,28 @@ inline int IsEnemyCollide(int x, int y, int index)
             return 2;//enemy is left to player
         if (enemyMidX > playerMidX && (dir > -1 && dir < 1))
             return 3;//enemy is right to player
+    }
+
+    if (DisplayWindow::b_isTPM)
+    {
+        int xE = MyPlayer::ply2X;
+        int yE = MyPlayer::ply2Y;
+
+        int playerMidX = x + PICWIDTH/2, playerMidY = y + PICHEIGHT/2;
+        int enemyMidX = xE + PICWIDTH/2, enemyMidY = yE + PICHEIGHT/2;
+        double dir = (enemyMidX == playerMidX) ? 100.0 : (enemyMidY - playerMidY)*1.0/(enemyMidX - playerMidX);
+
+        if (abs(playerMidX - enemyMidX) <= PICWIDTH && abs(playerMidY - enemyMidY) <= PICHEIGHT)
+        {
+            if (enemyMidY < playerMidY && (dir > 1 || dir < -1))
+                return 0;//enemy is in front of player2
+            if (enemyMidY > playerMidY && (dir > 1 || dir < -1))
+                return 1;//enemy is behind  player2
+            if (enemyMidX < playerMidX && (dir > -1 && dir < 1))
+                return 2;//enemy is left to player2
+            if (enemyMidX > playerMidX && (dir > -1 && dir < 1))
+                return 3;//enemy is right to player2
+        }
     }
 
     return -1;
@@ -634,6 +890,17 @@ inline bool IsOutofRange(int x, int y, int creator)
             MyPlayer::plyHlt = MyPlayer::plyHlt - ENEMYATK + PLAYERDEF;
             return true;
         }
+
+        if (DisplayWindow::b_isTPM && creator != -2)
+        {
+            int xP = MyPlayer::ply2X;
+            int yP = MyPlayer::ply2Y;
+            if ((x + BULLETWIDTH/2 >= xP && x + BULLETWIDTH/2 <= xP + PICWIDTH) && (y + BULLETHEIGHT/2 >= yP && y + BULLETHEIGHT/2 <= yP + PICHEIGHT))
+            {
+                MyPlayer::ply2Hlt = MyPlayer::ply2Hlt - ENEMYATK + PLAYERDEF;
+                return true;
+            }
+        }
     }
 
     return false;
@@ -691,51 +958,104 @@ void DisplayWindow::MoveBullet(QPainter &p)
 void DisplayWindow::closeEvent(QCloseEvent *event)
 {
     int choose;
-    if (cntEnemy == 0)
+    if (!DisplayWindow::b_isTPM)
     {
-        //save
-        freopen("save.sav", "w", stdout);
-        std::cout << MyPlayer::plyMoney << " " << MyPlayer::plyKill+ENEMYNUMBER - cntEnemy;
-        fclose(stdout);
-
-        //win
-        choose= QMessageBox::question(this, tr("quit game"),
-                                     QString(tr("Game Over, YOU WIN")),
-                                     QMessageBox::Yes);
-        if (choose== QMessageBox::Yes)
-            event->accept();
-    }
-    else
-    if (MyPlayer::plyHlt > 0)
-    {
-        choose= QMessageBox::question(this, tr("quit game"),
-                                     QString(tr("are you sure?")),
-                                     QMessageBox::Yes | QMessageBox::No);
-        if (choose== QMessageBox::No)
-            event->ignore();
-        else
-        if (choose== QMessageBox::Yes)
+        if (cntEnemy == 0)
         {
             //save
             freopen("save.sav", "w", stdout);
             std::cout << MyPlayer::plyMoney << " " << MyPlayer::plyKill+ENEMYNUMBER - cntEnemy;
             fclose(stdout);
 
-            event->accept();
+            //win
+            choose= QMessageBox::question(this, tr("quit game"),
+                                         QString(tr("Game Over, YOU WIN")),
+                                         QMessageBox::Yes);
+            if (choose== QMessageBox::Yes)
+                event->accept();
+        }
+        else
+        if (MyPlayer::plyHlt > 0)
+        {
+            choose= QMessageBox::question(this, tr("quit game"),
+                                         QString(tr("are you sure?")),
+                                         QMessageBox::Yes | QMessageBox::No);
+            if (choose== QMessageBox::No)
+                event->ignore();
+            else
+            if (choose== QMessageBox::Yes)
+            {
+                //save
+                freopen("save.sav", "w", stdout);
+                std::cout << MyPlayer::plyMoney << " " << MyPlayer::plyKill+ENEMYNUMBER - cntEnemy;
+                fclose(stdout);
+
+                event->accept();
+            }
+        }
+        else
+        {
+            //save
+            freopen("save.sav", "w", stdout);
+            std::cout << MyPlayer::plyMoney << " " << MyPlayer::plyKill+ENEMYNUMBER - cntEnemy;
+            fclose(stdout);
+
+            //lost
+            choose= QMessageBox::question(this, tr("quit game"),
+                                         QString(tr("Game Over, YOU DEAD")),
+                                         QMessageBox::Yes);
+            if (choose== QMessageBox::Yes)
+                event->accept();
         }
     }
     else
     {
-        //save
-        freopen("save.sav", "w", stdout);
-        std::cout << MyPlayer::plyMoney << " " << MyPlayer::plyKill+ENEMYNUMBER - cntEnemy;
-        fclose(stdout);
+        if (MyPlayer::plyHlt <= 0)
+        {
+            //save
+            freopen("save.sav", "w", stdout);
+            std::cout << MyPlayer::plyMoney << " " << MyPlayer::plyKill+ENEMYNUMBER - cntEnemy;
+            fclose(stdout);
 
-        //lost
-        choose= QMessageBox::question(this, tr("quit game"),
-                                     QString(tr("Game Over, YOU DEAD")),
-                                     QMessageBox::Yes);
-        if (choose== QMessageBox::Yes)
-            event->accept();
+            //win
+            choose= QMessageBox::question(this, tr("quit game"),
+                                         QString(tr("Game Over, 2P WIN")),
+                                         QMessageBox::Yes);
+            if (choose== QMessageBox::Yes)
+                event->accept();
+        }
+        else
+        if (MyPlayer::plyHlt > 0 && MyPlayer::ply2Hlt > 0)
+        {
+            choose= QMessageBox::question(this, tr("quit game"),
+                                         QString(tr("are you sure?")),
+                                         QMessageBox::Yes | QMessageBox::No);
+            if (choose== QMessageBox::No)
+                event->ignore();
+            else
+            if (choose== QMessageBox::Yes)
+            {
+                //save
+                freopen("save.sav", "w", stdout);
+                std::cout << MyPlayer::plyMoney << " " << MyPlayer::plyKill+ENEMYNUMBER - cntEnemy;
+                fclose(stdout);
+
+                event->accept();
+            }
+        }
+        else
+        {
+            //save
+            freopen("save.sav", "w", stdout);
+            std::cout << MyPlayer::plyMoney << " " << MyPlayer::plyKill+ENEMYNUMBER - cntEnemy;
+            fclose(stdout);
+
+            //lost
+            choose= QMessageBox::question(this, tr("quit game"),
+                                         QString(tr("Game Over, 1P WIN")),
+                                         QMessageBox::Yes);
+            if (choose== QMessageBox::Yes)
+                event->accept();
+        }
     }
 }

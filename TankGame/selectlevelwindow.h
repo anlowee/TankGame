@@ -21,6 +21,8 @@ private slots:
     void paintEvent(QPaintEvent *event);
     void on_pushButton_clicked();
 
+    void on_pushButton_2_clicked();
+
 private:
     Ui::SelectLevelWindow *ui;
 };

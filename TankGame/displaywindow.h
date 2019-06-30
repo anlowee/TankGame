@@ -29,8 +29,8 @@ public:
     int cntBullets;
     int cntEnemy;
     bool b_isPlayerStart;
-    //int playerAtkSpeed;
-    //int enemyAtkSpeed;
+    bool b_isPlayer2Start;
+    static bool b_isTPM;
 
 private:
     Ui::DisplayWindow *ui;
@@ -39,6 +39,7 @@ private:
     void PaintMap(QPainter &p);
     void MoveBullet(QPainter &p);
     void MoveTank(QPainter &p);
+    void MoveTank2P(QPainter &p);
     void MoveEnemyTank(QPainter &p);
 
 protected:
@@ -47,6 +48,7 @@ protected:
 private slots:
     void EnemyAtk();
     void PlayerAtk();
+    void Player2Atk();
 
 };
 

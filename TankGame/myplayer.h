@@ -10,12 +10,20 @@ public:
     static int plyX;
     static int plyY;
     static int plyD;
-    static bool status;
     static double plyAtk;
     static double plyDef;
     static double plyHlt;
     static int plyMoney;
     static int plyKill;
+
+    static int ply2X;
+    static int ply2Y;
+    static int ply2D;
+    static double ply2Atk;
+    static double ply2Def;
+    static double ply2Hlt;
+    static int ply2Money;
+    static int ply2Kill;
 
 private:
 
