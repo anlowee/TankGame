@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -27,6 +28,7 @@ CONFIG += c++11
 SOURCES += \
         High.cpp \
         base.cpp \
+        diamondsquare.cpp \
         displaywindow.cpp \
         level_1.cpp \
         level_2.cpp \
@@ -82,6 +84,7 @@ SOURCES += \
 HEADERS += \
         High.h \
         base.h \
+        diamondsquare.h \
         displaywindow.h \
         level_1.h \
         level_2.h \
@@ -188,6 +191,7 @@ RESOURCES += \
     images.qrc
 
 DISTFILES += \
+<<<<<<< HEAD
     Shop_defence.jpg \
     Shop_defence_plus.jpg \
     Shop_faster.jpg \
@@ -196,3 +200,9 @@ DISTFILES += \
     Shop_recover1.jpg \
     Shop_reinforce.jpg \
     Shop_reinforce_plus.jpg
+=======
+    ../build-TankGame-Desktop_Qt_5_13_0_MSVC2017_32bit-Debug/tank1down.png \
+    ../build-TankGame-Desktop_Qt_5_13_0_MSVC2017_32bit-Debug/tank1left.png \
+    ../build-TankGame-Desktop_Qt_5_13_0_MSVC2017_32bit-Debug/tank1right.png \
+    ../build-TankGame-Desktop_Qt_5_13_0_MSVC2017_32bit-Debug/tank1up.png
+>>>>>>> d94c4bb842a5bce43961b2a04a0ac0486702e7ea
