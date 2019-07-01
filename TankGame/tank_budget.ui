@@ -6,21 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1051</width>
-    <height>641</height>
+    <width>1050</width>
+    <height>633</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">border-image: url(:/sample/photo/Shop_pic/Tank_budget_bg.jpg);</string>
+   <string notr="true"/>
   </property>
-  <widget class="QPushButton" name="weaponButton">
+  <widget class="QPushButton" name="levelUpButton">
    <property name="geometry">
     <rect>
      <x>300</x>
-     <y>80</y>
+     <y>180</y>
      <width>71</width>
      <height>51</height>
     </rect>
@@ -32,43 +32,83 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="recover">
+  <widget class="QPushButton" name="backButton">
    <property name="geometry">
     <rect>
-     <x>110</x>
-     <y>80</y>
-     <width>71</width>
-     <height>51</height>
+     <x>180</x>
+     <y>550</y>
+     <width>93</width>
+     <height>28</height>
     </rect>
    </property>
-   <property name="styleSheet">
-    <string notr="true">border-image: url(:/sample/photo/Shop_pic/Shop_recover.jpg);</string>
-   </property>
    <property name="text">
-    <string/>
+    <string>Back</string>
    </property>
   </widget>
-  <widget class="QLabel" name="weapon">
+  <widget class="QStackedWidget" name="stackedWidget">
    <property name="geometry">
     <rect>
-     <x>110</x>
-     <y>180</y>
-     <width>71</width>
+     <x>130</x>
+     <y>60</y>
+     <width>81</width>
      <height>61</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">border-image: url(:/sample/photo/Shop_pic/Shop_weapon.jpg);</string>
+    <string notr="true"/>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="Recover_1"/>
+   <widget class="QWidget" name="Recover_2"/>
+  </widget>
+  <widget class="QStackedWidget" name="stackedWidget_2">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>170</y>
+     <width>81</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="currentIndex">
+    <number>11</number>
+   </property>
+   <widget class="QWidget" name="Tank_1"/>
+   <widget class="QWidget" name="Tank_2"/>
+   <widget class="QWidget" name="Tank_3"/>
+   <widget class="QWidget" name="Tank_4"/>
+   <widget class="QWidget" name="Tank_5"/>
+   <widget class="QWidget" name="Tank_6"/>
+   <widget class="QWidget" name="Tank_7"/>
+   <widget class="QWidget" name="Tank_8"/>
+   <widget class="QWidget" name="Tank_9"/>
+   <widget class="QWidget" name="Tank_10"/>
+   <widget class="QWidget" name="Tank_11"/>
+   <widget class="QWidget" name="Tank_12"/>
+  </widget>
+  <widget class="QLabel" name="recoverLabel">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>84</y>
+     <width>131</width>
+     <height>31</height>
+    </rect>
    </property>
    <property name="text">
-    <string/>
+    <string>恢复能力已达上限</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="recoverButton">
    <property name="geometry">
     <rect>
      <x>300</x>
-     <y>180</y>
+     <y>70</y>
      <width>71</width>
      <height>51</height>
     </rect>
@@ -79,6 +119,41 @@
    <property name="text">
     <string/>
    </property>
+  </widget>
+  <widget class="QLabel" name="tankLable">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>190</y>
+     <width>121</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>坦克已升至最高级</string>
+   </property>
+  </widget>
+  <widget class="QStackedWidget" name="stackedWidget_3">
+   <property name="geometry">
+    <rect>
+     <x>710</x>
+     <y>390</y>
+     <width>341</width>
+     <height>241</height>
+    </rect>
+   </property>
+   <widget class="QWidget" name="Tank_1s"/>
+   <widget class="QWidget" name="Tank_2s"/>
+   <widget class="QWidget" name="Tank_3s"/>
+   <widget class="QWidget" name="Tank_4s"/>
+   <widget class="QWidget" name="Tank_5s"/>
+   <widget class="QWidget" name="Tank_6s"/>
+   <widget class="QWidget" name="Tank_7s"/>
+   <widget class="QWidget" name="Tank_8s"/>
+   <widget class="QWidget" name="Tank_9s"/>
+   <widget class="QWidget" name="Tank_10s"/>
+   <widget class="QWidget" name="Tank_11s"/>
+   <widget class="QWidget" name="Tank_12s"/>
   </widget>
  </widget>
  <resources/>
