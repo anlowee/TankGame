@@ -6,6 +6,7 @@
 
 QT       += core gui
 QT       += multimedia
+LIBS     += User32.LIB
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -40,6 +41,7 @@ SOURCES += \
         mybag.cpp \
         mybullet.cpp \
         myenemy.cpp \
+        myfactory.cpp \
         myglobal.cpp \
         mymap.cpp \
         myplayer.cpp \
@@ -95,6 +97,7 @@ HEADERS += \
         mybag.h \
         mybullet.h \
         myenemy.h \
+        myfactory.h \
         myglobal.h \
         mymap.h \
         myplayer.h \
