@@ -27,7 +27,7 @@ bool DisplayWindow::b_isTPM;
 
 struct BoomPos
 {
-    int x, y;
+    int x, y, time;
     bool b_isBoom;
 } s_boomPos[1000];
 
@@ -39,6 +39,7 @@ inline bool IsOutofRange(int, int, int);
 inline int IsCollide(int, int);
 inline int Is2PCollide(int, int);
 inline int IsEnemyCollide(int, int, int);
+inline void IsGameOver();
 
 DisplayWindow::DisplayWindow(QWidget *parent) :
     QWidget(parent),
@@ -51,24 +52,24 @@ DisplayWindow::DisplayWindow(QWidget *parent) :
     //qDebug() << isTPM;
 
     //set fps
-    QTimer *new_t = new QTimer(this);
+    QTimer *new_t = new QTimer;
     connect(new_t, SIGNAL(timeout()), this, SLOT(update()));
     new_t->start(4);//240 fps
 
     //set enemy atk frequency
-    QTimer *enemyAtk = new QTimer(this);
+    QTimer *enemyAtk = new QTimer;
     connect(enemyAtk, SIGNAL(timeout()), this, SLOT(EnemyAtk()));
     enemyAtk->start(750);
 
     //set player atk max frequency
-    QTimer *playerAtk = new QTimer(this);
+    QTimer *playerAtk = new QTimer;
     connect(playerAtk, SIGNAL(timeout()), this, SLOT(PlayerAtk()));
     playerAtk->start(500);
 
     //set player2 atk max frequency
     if (b_isTPM)
     {
-        QTimer *player2Atk = new QTimer(this);
+        QTimer *player2Atk = new QTimer;
         connect(player2Atk, SIGNAL(timeout()), this, SLOT(Player2Atk()));
         player2Atk->start(500);
     }
@@ -88,11 +89,12 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
     ui->lbl_money->setNum(MyPlayer::plyMoney);
     ui->lbl_killenemy->setNum(MyPlayer::plyKill + ENEMYNUMBER - cntEnemy);
 
-    //QString txtHealth; txtHealth.arg(MyPlayer::plyHlt, 0, 'f', 1);
-    //ui->lbl_health->setText(txtHealth);
     //you win game
-    if (cntEnemy == 0)
+    if (cntEnemy == 0 && !DisplayWindow::b_isTPM)
+    {
+        //QMessageBox::information(this, "quit", "YOU WIN");
         close();
+    }
 
     //paint Map
     PaintMap(p);
@@ -442,8 +444,8 @@ void DisplayWindow::PlayerAtk()
 
 void DisplayWindow::Player2Atk()
 {
-    if (!b_isPlayer2Start)
-        return ;
+    //if (!b_isPlayer2Start)
+    //    return ;
 
     int &x = MyPlayer::ply2X;
     int &y = MyPlayer::ply2Y;
@@ -465,14 +467,15 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
     QImage imgTank6Right("tank6right.png");
     QImage imgTankBoom("tankboom.png");
 
-    //set boom time------------------------------------------------bugs
+    //set boom time
     for (int i = 0; i < ENEMYNUMBER-cntEnemy; i++)
     {
         int x = s_boomPos[i].x;
         int y = s_boomPos[i].y;
+        int t = s_boomPos[i].time;
         bool isBoom = s_boomPos[i].b_isBoom;
         int cut = QTime::currentTime().msec();
-        if (cut < 750 && isBoom)
+        if (cut != t && isBoom)
             p.drawImage(x, y, imgTankBoom);
         else
             s_boomPos[i].b_isBoom = false;
@@ -505,6 +508,7 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
             p.drawImage(x, y, imgTankBoom);
             s_boomPos[ENEMYNUMBER-cntEnemy-1].x = x;
             s_boomPos[ENEMYNUMBER-cntEnemy-1].y = y;
+            s_boomPos[ENEMYNUMBER-cntEnemy-1].time = QTime::currentTime().msec();
             s_boomPos[ENEMYNUMBER-cntEnemy-1].b_isBoom = true;
             continue;
         }
@@ -871,7 +875,7 @@ inline bool IsOutofRange(int x, int y, int creator)
 
             if ((x + BULLETWIDTH/2 >= xE && x + BULLETWIDTH/2 <= xE + PICWIDTH) && (y + BULLETHEIGHT/2 >= yE && y + BULLETHEIGHT/2 <= yE + PICHEIGHT))
             {
-                if (creator == -1)
+                if (creator < 0)
                 {
                     double hlt = a_EnemyTank[i].GetHlt();
                     a_EnemyTank[i].SetHlt(hlt - PLAYERATK + ENEMYDEF);
@@ -890,16 +894,16 @@ inline bool IsOutofRange(int x, int y, int creator)
             MyPlayer::plyHlt = MyPlayer::plyHlt - ENEMYATK + PLAYERDEF;
             return true;
         }
+    }
 
-        if (DisplayWindow::b_isTPM && creator != -2)
+    if (DisplayWindow::b_isTPM && creator != -2)
+    {
+        int xP = MyPlayer::ply2X;
+        int yP = MyPlayer::ply2Y;
+        if ((x + BULLETWIDTH/2 >= xP && x + BULLETWIDTH/2 <= xP + PICWIDTH) && (y + BULLETHEIGHT/2 >= yP && y + BULLETHEIGHT/2 <= yP + PICHEIGHT))
         {
-            int xP = MyPlayer::ply2X;
-            int yP = MyPlayer::ply2Y;
-            if ((x + BULLETWIDTH/2 >= xP && x + BULLETWIDTH/2 <= xP + PICWIDTH) && (y + BULLETHEIGHT/2 >= yP && y + BULLETHEIGHT/2 <= yP + PICHEIGHT))
-            {
-                MyPlayer::ply2Hlt = MyPlayer::ply2Hlt - ENEMYATK + PLAYERDEF;
-                return true;
-            }
+            MyPlayer::ply2Hlt = MyPlayer::ply2Hlt - ENEMYATK + PLAYERDEF;
+            return true;
         }
     }
 
@@ -955,107 +959,3 @@ void DisplayWindow::MoveBullet(QPainter &p)
     }
 }
 
-void DisplayWindow::closeEvent(QCloseEvent *event)
-{
-    int choose;
-    if (!DisplayWindow::b_isTPM)
-    {
-        if (cntEnemy == 0)
-        {
-            //save
-            freopen("save.sav", "w", stdout);
-            std::cout << MyPlayer::plyMoney << " " << MyPlayer::plyKill+ENEMYNUMBER - cntEnemy;
-            fclose(stdout);
-
-            //win
-            choose= QMessageBox::question(this, tr("quit game"),
-                                         QString(tr("Game Over, YOU WIN")),
-                                         QMessageBox::Yes);
-            if (choose== QMessageBox::Yes)
-                event->accept();
-        }
-        else
-        if (MyPlayer::plyHlt > 0)
-        {
-            choose= QMessageBox::question(this, tr("quit game"),
-                                         QString(tr("are you sure?")),
-                                         QMessageBox::Yes | QMessageBox::No);
-            if (choose== QMessageBox::No)
-                event->ignore();
-            else
-            if (choose== QMessageBox::Yes)
-            {
-                //save
-                freopen("save.sav", "w", stdout);
-                std::cout << MyPlayer::plyMoney << " " << MyPlayer::plyKill+ENEMYNUMBER - cntEnemy;
-                fclose(stdout);
-
-                event->accept();
-            }
-        }
-        else
-        {
-            //save
-            freopen("save.sav", "w", stdout);
-            std::cout << MyPlayer::plyMoney << " " << MyPlayer::plyKill+ENEMYNUMBER - cntEnemy;
-            fclose(stdout);
-
-            //lost
-            choose= QMessageBox::question(this, tr("quit game"),
-                                         QString(tr("Game Over, YOU DEAD")),
-                                         QMessageBox::Yes);
-            if (choose== QMessageBox::Yes)
-                event->accept();
-        }
-    }
-    else
-    {
-        if (MyPlayer::plyHlt <= 0)
-        {
-            //save
-            freopen("save.sav", "w", stdout);
-            std::cout << MyPlayer::plyMoney << " " << MyPlayer::plyKill+ENEMYNUMBER - cntEnemy;
-            fclose(stdout);
-
-            //win
-            choose= QMessageBox::question(this, tr("quit game"),
-                                         QString(tr("Game Over, 2P WIN")),
-                                         QMessageBox::Yes);
-            if (choose== QMessageBox::Yes)
-                event->accept();
-        }
-        else
-        if (MyPlayer::plyHlt > 0 && MyPlayer::ply2Hlt > 0)
-        {
-            choose= QMessageBox::question(this, tr("quit game"),
-                                         QString(tr("are you sure?")),
-                                         QMessageBox::Yes | QMessageBox::No);
-            if (choose== QMessageBox::No)
-                event->ignore();
-            else
-            if (choose== QMessageBox::Yes)
-            {
-                //save
-                freopen("save.sav", "w", stdout);
-                std::cout << MyPlayer::plyMoney << " " << MyPlayer::plyKill+ENEMYNUMBER - cntEnemy;
-                fclose(stdout);
-
-                event->accept();
-            }
-        }
-        else
-        {
-            //save
-            freopen("save.sav", "w", stdout);
-            std::cout << MyPlayer::plyMoney << " " << MyPlayer::plyKill+ENEMYNUMBER - cntEnemy;
-            fclose(stdout);
-
-            //lost
-            choose= QMessageBox::question(this, tr("quit game"),
-                                         QString(tr("Game Over, 1P WIN")),
-                                         QMessageBox::Yes);
-            if (choose== QMessageBox::Yes)
-                event->accept();
-        }
-    }
-}
