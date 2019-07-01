@@ -847,7 +847,7 @@
     </font>
    </property>
    <property name="text">
-    <string>FACTORY-HEALTH:</string>
+    <string>FACTORY:</string>
    </property>
   </widget>
   <widget class="QLabel" name="lbl_factoryhlt">
@@ -1063,7 +1063,7 @@
     </font>
    </property>
    <property name="text">
-    <string>ENEMY-REMAIN:</string>
+    <string>REMAIN:</string>
    </property>
   </widget>
   <widget class="QLabel" name="lbl_enemyremain">
