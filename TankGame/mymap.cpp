@@ -1,9 +1,9 @@
 #include "mymap.h"
 #include <QTime>
 #include <iostream>
-#include <iomanip> // used to set float precision
-#include <math.h> // pow
-#include <vector> //storing RectangleShape objects
+#include <iomanip>
+#include <math.h>
+#include <vector>
 #include <stdlib.h>
 #include <time.h>
 #include "displaywindow.h"

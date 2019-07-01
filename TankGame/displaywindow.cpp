@@ -92,8 +92,48 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
     //you win game
     if (cntEnemy == 0 && !DisplayWindow::b_isTPM)
     {
-        //QMessageBox::information(this, "quit", "YOU WIN");
         close();
+        QMessageBox::information(this, "Congratulation!", "YOU WIN");
+        return;
+    }
+
+    QImage imgTankBoom("tankboom.png");
+
+    //TWO-PLAYER who win
+    if (!DisplayWindow::b_isTPM)
+    {
+        int x = MyPlayer::plyX;
+        int y = MyPlayer::plyY;
+        if (MyPlayer::plyHlt <= 0)
+        {
+            p.drawImage(x, y, imgTankBoom);
+            close();
+            QMessageBox::information(this, "Haw", "YOU LOST");
+            return ;
+        }
+    }
+    else
+    {
+        int x = MyPlayer::plyX;
+        int y = MyPlayer::plyY;
+        if (MyPlayer::plyHlt <= 0)
+        {
+            p.drawImage(x, y, imgTankBoom);
+            close();
+            QMessageBox::information(this, "1P LOST", "2P WIN");
+            return ;
+        }
+
+        x = MyPlayer::ply2X;
+        y = MyPlayer::ply2Y;
+        if (MyPlayer::ply2Hlt <= 0)
+        {
+            p.drawImage(x, y, imgTankBoom);
+            close();
+            QMessageBox::information(this, "2P LOST", "1P WIN");
+            return ;
+        }
+
     }
 
     //paint Map
@@ -116,13 +156,6 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
 void DisplayWindow::keyPressEvent(QKeyEvent *event)
 {
     keyValue = event->key();
-    //W-87
-    //S-83
-    //A-65
-    //D-68
-    //J-74
-    //K-75
-    //L-76
 }
 
 void DisplayWindow::PaintMap(QPainter &p)
@@ -150,16 +183,18 @@ void DisplayWindow::PaintMap(QPainter &p)
                 default:p.drawImage(x, y, imgGrass);
             }
 
+            //is there a blood or money
             if (MyGlobal::objMap[i][j] == 1)
                 p.drawImage(x, y, imgBlood);
             if (MyGlobal::objMap[i][j] == 2)
                 p.drawImage(x, y, imgCoin);
 
+            //random create blood&money
             int ran = rand()%10000000;
-            if (ran < 2 && MyGlobal::boolMap[i][j] && MyGlobal::dfsMap[i][j] == MyGlobal::m_TrueBlockMark)
+            if (ran < 2 && MyGlobal::boolMap[i][j] && MyGlobal::dfsMap[i][j] == MyGlobal::m_TrueBlockMark && MyGlobal::objMap[i][j] == 0)
                 MyGlobal::objMap[i][j] = 1;
             else
-            if (ran < 4 && MyGlobal::boolMap[i][j] && MyGlobal::dfsMap[i][j] == MyGlobal::m_TrueBlockMark)
+            if (ran < 4 && MyGlobal::boolMap[i][j] && MyGlobal::dfsMap[i][j] == MyGlobal::m_TrueBlockMark && MyGlobal::objMap[i][j] == 0)
                 MyGlobal::objMap[i][j] = 2;
         }
 }
@@ -171,7 +206,6 @@ void DisplayWindow::MoveTank(QPainter &p)
     QImage imgTank1Down("tank1down.png");
     QImage imgTank1Left("tank1left.png");
     QImage imgTank1Right("tank1right.png");
-    QImage imgTankBoom("tankboom.png");
 
     //paint current pos&dir
     int &x = MyPlayer::plyX;
@@ -185,42 +219,42 @@ void DisplayWindow::MoveTank(QPainter &p)
         case 3:p.drawImage(x, y, imgTank1Right); break;
     }
 
-    //is dead
-    if (MyPlayer::plyHlt <= 0)
-    {
-        p.drawImage(x, y, imgTankBoom);
-        close();
-    }
-
     int n_isCollide = IsCollide(x, y);
 
     //react keyPessEvent
-    if (keyValue == 87)
+    if(::GetAsyncKeyState('W') & 0x8000)
     {
+        //set player's status
         b_isPlayerStart = true;
         d = 0;
+
+        //is player coliide the map(rock)
         bool b_isCollideMap = MyGlobal::boolMap[(y - NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
                 MyGlobal::boolMap[(y - NORMALSPEED + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
                 MyGlobal::boolMap[(y - NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
                 MyGlobal::boolMap[(y - NORMALSPEED + PICHEIGHT -COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH];
 
+        //is player on Marsh(slow down)
         bool b_isOnMarsh = (MyGlobal::logicMap[(y - NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] == 'M') ||
                 (MyGlobal::logicMap[(y - NORMALSPEED + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] == 'M') ||
                 (MyGlobal::logicMap[(y - NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M') ||
                 (MyGlobal::logicMap[(y - NORMALSPEED + PICHEIGHT -COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M');
 
+        //control slow down speed
         int additionalSpeed = 0;
         if (b_isOnMarsh)
-            additionalSpeed = 3*MARSHSPEED;
+            additionalSpeed = MARSHSPEED;
 
+        //move
         if (y - NORMALSPEED + additionalSpeed >= 0 && b_isCollideMap && n_isCollide != 0)
         {
             p.drawImage(x, y - NORMALSPEED + additionalSpeed, imgTank1Up);
             y -= NORMALSPEED - additionalSpeed;
         }
     }
-    if (keyValue == 83)
+    if(::GetAsyncKeyState('S') & 0x8000)
     {
+        //the same
         b_isPlayerStart = true;
         d = 1;
         bool b_isCollideMap = MyGlobal::boolMap[(y + NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
@@ -235,7 +269,7 @@ void DisplayWindow::MoveTank(QPainter &p)
 
         int additionalSpeed = 0;
         if (b_isOnMarsh)
-            additionalSpeed = 3*MARSHSPEED;
+            additionalSpeed = MARSHSPEED;
 
         if (y + NORMALSPEED - additionalSpeed <= 992 && b_isCollideMap && n_isCollide != 1)
         {
@@ -243,8 +277,9 @@ void DisplayWindow::MoveTank(QPainter &p)
             y += NORMALSPEED - additionalSpeed;
         }
     }
-    if (keyValue == 65)
+    if(::GetAsyncKeyState('A') & 0x8000)
     {
+        //the same
         b_isPlayerStart = true;
         d = 2;
         bool b_isCollideMap = MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + COLLIDEFIX)/CELLWIDTH] &&
@@ -259,7 +294,7 @@ void DisplayWindow::MoveTank(QPainter &p)
 
         int additionalSpeed = 0;
         if (b_isOnMarsh)
-            additionalSpeed = 3*MARSHSPEED;
+            additionalSpeed = MARSHSPEED;
 
         if (x - NORMALSPEED + additionalSpeed >= 0 && b_isCollideMap && n_isCollide != 2)
         {
@@ -267,8 +302,9 @@ void DisplayWindow::MoveTank(QPainter &p)
             x -= NORMALSPEED - additionalSpeed;
         }
     }
-    if (keyValue == 68)
+    if(::GetAsyncKeyState('D') & 0x8000)
     {
+        //the same
         b_isPlayerStart = true;
         d = 3;
         bool b_isCollideMap = MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + COLLIDEFIX)/CELLWIDTH] &&
@@ -283,7 +319,7 @@ void DisplayWindow::MoveTank(QPainter &p)
 
         int additionalSpeed = 0;
         if (b_isOnMarsh)
-            additionalSpeed = 3*MARSHSPEED;
+            additionalSpeed = MARSHSPEED;
 
         if (x + NORMALSPEED - additionalSpeed <= 992 && b_isCollideMap && n_isCollide != 3)
         {
@@ -291,8 +327,6 @@ void DisplayWindow::MoveTank(QPainter &p)
             x += NORMALSPEED - additionalSpeed;
         }
     }
-
-    keyValue = NULL;
 }
 
 void DisplayWindow::MoveTank2P(QPainter &p)
@@ -302,7 +336,6 @@ void DisplayWindow::MoveTank2P(QPainter &p)
     QImage imgTank7Down("tank7down.png");
     QImage imgTank7Left("tank7left.png");
     QImage imgTank7Right("tank7right.png");
-    QImage imgTankBoom("tankboom.png");
 
     //paint current pos&dir
     int &x = MyPlayer::ply2X;
@@ -316,18 +349,12 @@ void DisplayWindow::MoveTank2P(QPainter &p)
         case 3:p.drawImage(x, y, imgTank7Right); break;
     }
 
-    //is dead
-    if (MyPlayer::ply2Hlt <= 0)
-    {
-        p.drawImage(x, y, imgTankBoom);
-        close();
-    }
-
     int n_isCollide = Is2PCollide(x, y);
 
     //react keyPessEvent
-    if (keyValue == 16777235)
+    if(::GetAsyncKeyState(VK_UP) & 0x8000)
     {
+        //the same
         b_isPlayer2Start = true;
         d = 0;
         bool b_isCollideMap = MyGlobal::boolMap[(y - NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
@@ -342,7 +369,7 @@ void DisplayWindow::MoveTank2P(QPainter &p)
 
         int additionalSpeed = 0;
         if (b_isOnMarsh)
-            additionalSpeed = 3*MARSHSPEED;
+            additionalSpeed = MARSHSPEED;
 
         if (y - NORMALSPEED + additionalSpeed >= 0 && b_isCollideMap && n_isCollide != 0)
         {
@@ -350,8 +377,9 @@ void DisplayWindow::MoveTank2P(QPainter &p)
             y -= NORMALSPEED - additionalSpeed;
         }
     }
-    if (keyValue == 16777237)
+    if(::GetAsyncKeyState(VK_DOWN) & 0x8000)
     {
+        //the same
         b_isPlayer2Start = true;
         d = 1;
         bool b_isCollideMap = MyGlobal::boolMap[(y + NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
@@ -366,7 +394,7 @@ void DisplayWindow::MoveTank2P(QPainter &p)
 
         int additionalSpeed = 0;
         if (b_isOnMarsh)
-            additionalSpeed = 3*MARSHSPEED;
+            additionalSpeed = MARSHSPEED;
 
         if (y + NORMALSPEED - additionalSpeed <= 992 && b_isCollideMap && n_isCollide != 1)
         {
@@ -374,8 +402,9 @@ void DisplayWindow::MoveTank2P(QPainter &p)
             y += NORMALSPEED - additionalSpeed;
         }
     }
-    if (keyValue == 16777234)
+    if(::GetAsyncKeyState(VK_LEFT) & 0x8000)
     {
+        //the same
         b_isPlayer2Start = true;
         d = 2;
         bool b_isCollideMap = MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + COLLIDEFIX)/CELLWIDTH] &&
@@ -390,7 +419,7 @@ void DisplayWindow::MoveTank2P(QPainter &p)
 
         int additionalSpeed = 0;
         if (b_isOnMarsh)
-            additionalSpeed = 3*MARSHSPEED;
+            additionalSpeed = MARSHSPEED;
 
         if (x - NORMALSPEED + additionalSpeed >= 0 && b_isCollideMap && n_isCollide != 2)
         {
@@ -398,8 +427,9 @@ void DisplayWindow::MoveTank2P(QPainter &p)
             x -= NORMALSPEED - additionalSpeed;
         }
     }
-    if (keyValue == 16777236)
+    if(::GetAsyncKeyState(VK_RIGHT) & 0x8000)
     {
+        //the same
         b_isPlayer2Start = true;
         d = 3;
         bool b_isCollideMap = MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + COLLIDEFIX)/CELLWIDTH] &&
@@ -414,7 +444,7 @@ void DisplayWindow::MoveTank2P(QPainter &p)
 
         int additionalSpeed = 0;
         if (b_isOnMarsh)
-            additionalSpeed = 3*MARSHSPEED;
+            additionalSpeed = MARSHSPEED;
 
         if (x + NORMALSPEED - additionalSpeed <= 992 && b_isCollideMap && n_isCollide != 3)
         {
@@ -422,19 +452,20 @@ void DisplayWindow::MoveTank2P(QPainter &p)
             x += NORMALSPEED - additionalSpeed;
         }
     }
-
-    keyValue = NULL;
 }
 
 void DisplayWindow::PlayerAtk()
 {
+    //has player started
     if (!b_isPlayerStart)
         return ;
 
+    //get pos&dir
     int &x = MyPlayer::plyX;
     int &y = MyPlayer::plyY;
     int &d = MyPlayer::plyD;
 
+    //shoot
     a_Bullets[cntBullets].SetX(x);
     a_Bullets[cntBullets].SetY(y);
     a_Bullets[cntBullets].SetDir(d);
@@ -444,8 +475,9 @@ void DisplayWindow::PlayerAtk()
 
 void DisplayWindow::Player2Atk()
 {
-    //if (!b_isPlayer2Start)
-    //    return ;
+    //the same
+    if (!b_isPlayer2Start)
+        return ;
 
     int &x = MyPlayer::ply2X;
     int &y = MyPlayer::ply2Y;
@@ -467,7 +499,7 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
     QImage imgTank6Right("tank6right.png");
     QImage imgTankBoom("tankboom.png");
 
-    //set boom time
+    //display boom time
     for (int i = 0; i < ENEMYNUMBER-cntEnemy; i++)
     {
         int x = s_boomPos[i].x;
@@ -475,7 +507,7 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
         int t = s_boomPos[i].time;
         bool isBoom = s_boomPos[i].b_isBoom;
         int cut = QTime::currentTime().msec();
-        if (cut != t && isBoom)
+        if (abs(cut - t) < 500 && isBoom)
             p.drawImage(x, y, imgTankBoom);
         else
             s_boomPos[i].b_isBoom = false;
@@ -501,6 +533,7 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
             case 3:p.drawImage(x, y, imgTank6Right); break;
         }
 
+        //set boom
         if (a_EnemyTank[i].GetHlt() <= 0)
         {
             a_EnemyTank[i].SetDisappear(true);
@@ -523,6 +556,7 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
         int n_isCollide = IsEnemyCollide(x, y, i);
         if (d == 0)
         {
+            //the same
             bool b_isCollideMap = MyGlobal::boolMap[(y - ENEMYSPEED + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
                     MyGlobal::boolMap[(y - ENEMYSPEED + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
                     MyGlobal::boolMap[(y - ENEMYSPEED + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
@@ -548,6 +582,7 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
         }
         if (d == 1)
         {
+            //the same
             bool b_isCollideMap = MyGlobal::boolMap[(y + ENEMYSPEED + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
                     MyGlobal::boolMap[(y + ENEMYSPEED + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
                     MyGlobal::boolMap[(y + ENEMYSPEED + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
@@ -573,6 +608,7 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
         }
         if (d == 2)
         {
+            //the same
             bool b_isCollideMap = MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - ENEMYSPEED + COLLIDEFIX)/CELLWIDTH] &&
                     MyGlobal::boolMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x - ENEMYSPEED + COLLIDEFIX)/CELLWIDTH] &&
                     MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - ENEMYSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
@@ -598,6 +634,7 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
         }
         if (d == 3)
         {
+            //the same
             d = 3;
             bool b_isCollideMap = MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x + ENEMYSPEED + COLLIDEFIX)/CELLWIDTH] &&
                     MyGlobal::boolMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + ENEMYSPEED + COLLIDEFIX)/CELLWIDTH] &&
@@ -627,6 +664,7 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
 
 void DisplayWindow::EnemyAtk()
 {
+    //the same as player atk
     for (int i = 0; i < ENEMYNUMBER; i++)
     {
         if (a_EnemyTank[i].IsDisappear())
@@ -752,13 +790,13 @@ inline int Is2PCollide(int x, int y)
         if (abs(playerMidX - enemyMidX) <= PICWIDTH && abs(playerMidY - enemyMidY) <= PICHEIGHT)
         {
             if (enemyMidY < playerMidY && (dir > 1 || dir < -1))
-                return 0;//enemy is in front of player
+                return 0;//enemy is in front of player2
             if (enemyMidY > playerMidY && (dir > 1 || dir < -1))
-                return 1;//enemy is behind  player
+                return 1;//enemy is behind  player2
             if (enemyMidX < playerMidX && (dir > -1 && dir < 1))
-                return 2;//enemy is left to player
+                return 2;//enemy is left to player2
             if (enemyMidX > playerMidX && (dir > -1 && dir < 1))
-                return 3;//enemy is right to player
+                return 3;//enemy is right to player2
         }
     }
 
@@ -785,13 +823,13 @@ inline int IsEnemyCollide(int x, int y, int index)
         if (abs(playerMidX - enemyMidX) <= PICWIDTH && abs(playerMidY - enemyMidY) <= PICHEIGHT)
         {
             if (enemyMidY < playerMidY && (dir > 1 || dir < -1))
-                return 0;//enemy is in front of player
+                return 0;//other tank is in front of this tank
             if (enemyMidY > playerMidY && (dir > 1 || dir < -1))
-                return 1;//enemy is behind  player
+                return 1;//other tank is behind  this tank
             if (enemyMidX < playerMidX && (dir > -1 && dir < 1))
-                return 2;//enemy is left to player
+                return 2;//other tank is left to this tank
             if (enemyMidX > playerMidX && (dir > -1 && dir < 1))
-                return 3;//enemy is right to player
+                return 3;//other tank is right to this tank
         }
     }
 
@@ -805,13 +843,13 @@ inline int IsEnemyCollide(int x, int y, int index)
     if (abs(playerMidX - enemyMidX) <= PICWIDTH && abs(playerMidY - enemyMidY) <= PICHEIGHT)
     {
         if (enemyMidY < playerMidY && (dir > 1 || dir < -1))
-            return 0;//enemy is in front of player
+            return 0;//player is in front of this tank
         if (enemyMidY > playerMidY && (dir > 1 || dir < -1))
-            return 1;//enemy is behind  player
+            return 1;//player is behind this tank
         if (enemyMidX < playerMidX && (dir > -1 && dir < 1))
-            return 2;//enemy is left to player
+            return 2;//player is left to this tank
         if (enemyMidX > playerMidX && (dir > -1 && dir < 1))
-            return 3;//enemy is right to player
+            return 3;//player is right to this tank
     }
 
     if (DisplayWindow::b_isTPM)
@@ -826,13 +864,13 @@ inline int IsEnemyCollide(int x, int y, int index)
         if (abs(playerMidX - enemyMidX) <= PICWIDTH && abs(playerMidY - enemyMidY) <= PICHEIGHT)
         {
             if (enemyMidY < playerMidY && (dir > 1 || dir < -1))
-                return 0;//enemy is in front of player2
+                return 0;//2p is in front of this tank
             if (enemyMidY > playerMidY && (dir > 1 || dir < -1))
-                return 1;//enemy is behind  player2
+                return 1;//2p is behind this tank
             if (enemyMidX < playerMidX && (dir > -1 && dir < 1))
-                return 2;//enemy is left to player2
+                return 2;//2p is left to this tank
             if (enemyMidX > playerMidX && (dir > -1 && dir < 1))
-                return 3;//enemy is right to player2
+                return 3;//2p is right to this tank
         }
     }
 
@@ -841,6 +879,7 @@ inline int IsEnemyCollide(int x, int y, int index)
 
 inline void DeleteBullets(MyBullet *a, int index, int &cnt)
 {
+    //delete a bullet
     for (int i = index; i < cnt - 1; i++)
     {
         int x = a[i + 1].GetX();
@@ -858,11 +897,13 @@ inline void DeleteBullets(MyBullet *a, int index, int &cnt)
 
 inline bool IsOutofRange(int x, int y, int creator)
 {
+    //is bullet out of map or collide rock
     bool ans = x <= 0 || x >= 1024 || y <= 0 || y >= 1024 || !MyGlobal::boolMap[(y + BULLETHEIGHT/2)/32][(x + BULLETWIDTH/2)/32];
     if (ans)
         return true;
     else
     {
+        //is bullet collide enemy tank
         for (int i = 0; i < ENEMYNUMBER; i++)
         {
             if (a_EnemyTank[i].IsDisappear())
@@ -885,6 +926,7 @@ inline bool IsOutofRange(int x, int y, int creator)
         }
     }
 
+    //is bullet collide player's tank
     if (creator != -1)
     {
         int xP = MyPlayer::plyX;
@@ -896,6 +938,7 @@ inline bool IsOutofRange(int x, int y, int creator)
         }
     }
 
+    //is bullet collide 2p's tank
     if (DisplayWindow::b_isTPM && creator != -2)
     {
         int xP = MyPlayer::ply2X;
@@ -921,6 +964,7 @@ void DisplayWindow::MoveBullet(QPainter &p)
         int y = a_Bullets[i].GetY();
         int c = a_Bullets[i].GetCreator();
 
+        //is bullet supposed to be deleted
         if (IsOutofRange(x, y, c))
         {
             DeleteBullets(a_Bullets, i, cntBullets);
@@ -928,6 +972,7 @@ void DisplayWindow::MoveBullet(QPainter &p)
         }
     }
 
+    //move bullets
     for (int i = 0; i < cntBullets; i++)
     {
         int x = a_Bullets[i].GetX();

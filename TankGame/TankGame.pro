@@ -6,6 +6,7 @@
 
 QT       += core gui
 QT       += multimedia
+LIBS     += User32.LIB
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
