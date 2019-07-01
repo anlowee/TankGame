@@ -10,6 +10,7 @@
 #include "myenemy.h"
 #include "myglobal.h"
 #include "myfactory.h"
+#include <QSettings>
 
 int MyPlayer::plyX;
 int MyPlayer::plyY;
@@ -93,8 +94,31 @@ void CreatPos2P(int mark)
 void SelectLevelWindow::on_pushButton_clicked()
 {
     //load
-    MyPlayer::plyKill = 0;
-    MyPlayer::plyMoney = 0;
+    //configIni.setValue("Player/Money",MyPlayer::plyMoney);
+
+    MyPlayer::plyMoney=MyGlobal::configIni->value("Player/Money").toInt();
+    MyPlayer::plyKill=MyGlobal::configIni->value("Player/Kills").toInt();
+    /*
+    try {
+        MyPlayer::plyMoney=MyGlobal::configIni->value("Player/Money").toInt();
+    } catch (...) {
+        MyPlayer::plyMoney=0;
+        MyGlobal::configIni->setValue("Player/Money",MyPlayer::plyMoney);
+
+    }
+
+
+    try {
+        MyPlayer::plyKill=MyGlobal::configIni->value("Player/Kills").toInt();
+    } catch (...) {
+        MyPlayer::plyKill=0;
+        MyGlobal::configIni->setValue("Player/Kills",MyPlayer::plyKill);
+    }
+    */
+
+    //MyPlayer::plyKill = 0;
+    //MyPlayer::plyMoney = 0;
+    //fclose(stdin);
 
     //pre
     DisplayWindow::b_isTPM = false;

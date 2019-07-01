@@ -25,6 +25,7 @@
 
 int DisplayWindow::keyValue;
 bool DisplayWindow::b_isTPM;
+
 //0-1p win
 //1-2p win
 int flagwin;
@@ -113,6 +114,9 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
     //you win game
     if (MyFactory::ftrHlt <= 0 && !DisplayWindow::b_isTPM)
     {
+        MyPlayer::plyKill += cntKill;
+        MyGlobal::configIni->setValue("Player/Money",MyPlayer::plyMoney);
+        MyGlobal::configIni->setValue("Player/Kills",MyPlayer::plyKill);
         close();
         QMessageBox::information(this, "Congratulation!", "YOU WIN");
         return;
@@ -126,6 +130,9 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
         if (MyPlayer::plyHlt <= 0)
         {
             p.drawImage(x, y, imgTankBoom);
+            MyPlayer::plyKill += cntKill;
+            MyGlobal::configIni->setValue("Player/Money",MyPlayer::plyMoney);
+            MyGlobal::configIni->setValue("Player/Kills",MyPlayer::plyKill);
             close();
             QMessageBox::information(this, "Haw", "YOU LOST");
             return ;
@@ -139,6 +146,9 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
         if (MyPlayer::plyHlt <= 0 || flagwin == 1)
         {
             p.drawImage(x, y, imgTankBoom);
+            MyPlayer::plyKill += cntKill;
+            MyGlobal::configIni->setValue("Player/Money",MyPlayer::plyMoney);
+            MyGlobal::configIni->setValue("Player/Kills",MyPlayer::plyKill);
             close();
             QMessageBox::information(this, "1P LOST", "2P WIN");
             return ;
@@ -149,6 +159,9 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
         if (MyPlayer::ply2Hlt <= 0 || flagwin == 0)
         {
             p.drawImage(x, y, imgTankBoom);
+            MyPlayer::plyKill += cntKill;
+            MyGlobal::configIni->setValue("Player/Money",MyPlayer::plyMoney);
+            MyGlobal::configIni->setValue("Player/Kills",MyPlayer::plyKill);
             close();
             QMessageBox::information(this, "2P LOST", "1P WIN");
             return ;
