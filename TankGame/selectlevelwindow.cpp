@@ -9,6 +9,7 @@
 #include "myplayer.h"
 #include "myenemy.h"
 #include "myglobal.h"
+#include "myfactory.h"
 
 int MyPlayer::plyX;
 int MyPlayer::plyY;
@@ -26,6 +27,10 @@ double MyPlayer::plyHlt;
 double MyPlayer::ply2Atk;
 double MyPlayer::ply2Def;
 double MyPlayer::ply2Hlt;
+
+int MyFactory::ftrX;
+int MyFactory::ftrY;
+double MyFactory::ftrHlt;
 
 MyEnemy a_EnemyTank[100];//fix
 //int MyGlobal::dfsMap[1005][1005];
@@ -52,7 +57,7 @@ SelectLevelWindow::~SelectLevelWindow()
 void CreatPos(int mark)
 {
     qsrand(time(NULL));
-    for (int i = 0; i <= ENEMYNUMBER; i++)
+    for (int i = 0; i <= ENEMYNUMBER + 1; i++)
     {
         int x = rand()%32, y = rand()%32;
         while (MyGlobal::dfsMap[x][y] != mark || !b_PutMap[x][y])
@@ -70,7 +75,7 @@ void CreatPos(int mark)
 void CreatPos2P(int mark)
 {
     qsrand(time(NULL));
-    for (int i = 0; i <= ENEMYNUMBER + 1; i++)
+    for (int i = 0; i <= ENEMYNUMBER + 2; i++)
     {
         int x = rand()%32, y = rand()%32;
         while (MyGlobal::dfsMap[x][y] != mark || !b_PutMap[x][y])
@@ -106,6 +111,14 @@ void SelectLevelWindow::on_pushButton_clicked()
     CreatPos(isPut);
 
     qsrand(time(NULL));
+
+    //factory's pos
+    int i = a_PutPos[ENEMYNUMBER + 1].x;
+    int j = a_PutPos[ENEMYNUMBER + 1].y;
+    MyFactory::ftrX = j*PICWIDTH;
+    MyFactory::ftrY = i*PICHEIGHT;
+    MyFactory::ftrHlt = FACTORYHEALTH;
+    MyGlobal::objMap[i][j] = 3;
 
     //player's pos
     MyPlayer::plyX = (a_PutPos[ENEMYNUMBER].y)*PICWIDTH;
@@ -163,6 +176,14 @@ void SelectLevelWindow::on_pushButton_2_clicked()
     CreatPos2P(isPut);
 
     qsrand(time(NULL));
+
+    //factory's pos
+    int i = a_PutPos[ENEMYNUMBER + 2].x;
+    int j = a_PutPos[ENEMYNUMBER + 2].y;
+    MyFactory::ftrX = j*PICWIDTH;
+    MyFactory::ftrY = i*PICHEIGHT;
+    MyFactory::ftrHlt = FACTORYHEALTH;
+    MyGlobal::objMap[i][j] = 3;
 
     //1P's pos
     MyPlayer::plyX = (a_PutPos[ENEMYNUMBER].y)*PICWIDTH;

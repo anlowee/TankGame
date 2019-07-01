@@ -48,6 +48,7 @@ private slots:
     void EnemyAtk();
     void PlayerAtk();
     void Player2Atk();
+    void EnemyCreate();
 
 };
 

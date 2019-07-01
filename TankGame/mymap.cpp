@@ -86,6 +86,7 @@ void MyMap::CreateMap()
             //0-nothing
             //1-blood
             //2-coin
+            //3-factory
             MyGlobal::objMap[i][j] = 0;
         }
 

@@ -14,6 +14,7 @@
 #include <QPropertyAnimation>
 #include <QMessageBox>
 #include <QtCore>
+#include "myfactory.h"
 #include "myglobal.h"
 #include "myplayer.h"
 #include "mybullet.h"
@@ -24,6 +25,9 @@
 
 int DisplayWindow::keyValue;
 bool DisplayWindow::b_isTPM;
+//0-1p win
+//1-2p win
+int flagwin;
 
 struct BoomPos
 {
@@ -46,6 +50,8 @@ DisplayWindow::DisplayWindow(QWidget *parent) :
     ui(new Ui::DisplayWindow)
 {
     ui->setupUi(this);
+
+    flagwin = -1;
 
     setFocusPolicy(Qt::StrongFocus);
 
@@ -73,6 +79,11 @@ DisplayWindow::DisplayWindow(QWidget *parent) :
         connect(player2Atk, SIGNAL(timeout()), this, SLOT(Player2Atk()));
         player2Atk->start(500);
     }
+
+    //set enemy creat frequency
+    QTimer *enemyCreat = new QTimer;
+    connect(enemyCreat, SIGNAL(timeout()), this, SLOT(EnemyCreate()));
+    enemyCreat->start(15000);
 }
 
 DisplayWindow::~DisplayWindow()
@@ -84,24 +95,25 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
 {
     QPainter p(this);
 
+    QImage imgTankBoom("tankboom.png");
+
     //display parameter
     ui->lbl_health->setNum(MyPlayer::plyHlt);
     ui->lbl_money->setNum(MyPlayer::plyMoney);
     ui->lbl_killenemy->setNum(MyPlayer::plyKill + ENEMYNUMBER - cntEnemy);
+    ui->lbl_factoryhlt->setNum(MyFactory::ftrHlt);
 
     //you win game
-    if (cntEnemy == 0 && !DisplayWindow::b_isTPM)
+    if (MyFactory::ftrHlt <= 0 && !DisplayWindow::b_isTPM)
     {
         close();
         QMessageBox::information(this, "Congratulation!", "YOU WIN");
         return;
     }
 
-    QImage imgTankBoom("tankboom.png");
-
-    //TWO-PLAYER who win
     if (!DisplayWindow::b_isTPM)
     {
+        //single mode lost
         int x = MyPlayer::plyX;
         int y = MyPlayer::plyY;
         if (MyPlayer::plyHlt <= 0)
@@ -114,9 +126,10 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
     }
     else
     {
+        //TWO-PLAYER who win
         int x = MyPlayer::plyX;
         int y = MyPlayer::plyY;
-        if (MyPlayer::plyHlt <= 0)
+        if (MyPlayer::plyHlt <= 0 || flagwin == 1)
         {
             p.drawImage(x, y, imgTankBoom);
             close();
@@ -126,7 +139,7 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
 
         x = MyPlayer::ply2X;
         y = MyPlayer::ply2Y;
-        if (MyPlayer::ply2Hlt <= 0)
+        if (MyPlayer::ply2Hlt <= 0 || flagwin == 0)
         {
             p.drawImage(x, y, imgTankBoom);
             close();
@@ -166,6 +179,7 @@ void DisplayWindow::PaintMap(QPainter &p)
     QImage imgMarsh("marsh.png");
     QImage imgBlood("blood.png");
     QImage imgCoin("coin.png");
+    QImage imgFactory("factory.png");
 
     //paint map
     qsrand(time(NULL));
@@ -183,11 +197,13 @@ void DisplayWindow::PaintMap(QPainter &p)
                 default:p.drawImage(x, y, imgGrass);
             }
 
-            //is there a blood or money
+            //is there a blood or money or factory
             if (MyGlobal::objMap[i][j] == 1)
                 p.drawImage(x, y, imgBlood);
             if (MyGlobal::objMap[i][j] == 2)
                 p.drawImage(x, y, imgCoin);
+            if (MyGlobal::objMap[i][j] == 3)
+                p.drawImage(x, y, imgFactory);
 
             //random create blood&money
             int ran = rand()%10000000;
@@ -490,6 +506,11 @@ void DisplayWindow::Player2Atk()
     cntBullets++;
 }
 
+void DisplayWindow::EnemyCreate()
+{
+
+}
+
 void DisplayWindow::MoveEnemyTank(QPainter &p)
 {
     //load tank img
@@ -751,6 +772,26 @@ inline int IsCollide(int x, int y)
         }
     }
 
+    //is coliide factory
+    int xE = MyFactory::ftrX;
+    int yE = MyFactory::ftrY;
+
+    int playerMidX = x + PICWIDTH/2, playerMidY = y + PICHEIGHT/2;
+    int enemyMidX = xE + PICWIDTH/2, enemyMidY = yE + PICHEIGHT/2;
+    double dir = (enemyMidX == playerMidX) ? 100.0 : (enemyMidY - playerMidY)*1.0/(enemyMidX - playerMidX);
+
+    if (abs(playerMidX - enemyMidX) <= PICWIDTH && abs(playerMidY - enemyMidY) <= PICHEIGHT)
+    {
+        if (enemyMidY < playerMidY && (dir > 1 || dir < -1))
+            return 0;//factory is in front of player
+        if (enemyMidY > playerMidY && (dir > 1 || dir < -1))
+            return 1;//factory is behind  player
+        if (enemyMidX < playerMidX && (dir > -1 && dir < 1))
+            return 2;//factory is left to player
+        if (enemyMidX > playerMidX && (dir > -1 && dir < 1))
+            return 3;//factory is right to player
+    }
+
     return -1;
 }
 
@@ -774,7 +815,7 @@ inline int Is2PCollide(int x, int y)
        MyGlobal::objMap[i][j] = 0;
     }
 
-    //is collide other tank
+    //is collide enemy tank
     for (int i = 0; i < ENEMYNUMBER; i++)
     {
         if (a_EnemyTank[i].IsDisappear())
@@ -800,11 +841,52 @@ inline int Is2PCollide(int x, int y)
         }
     }
 
+    //is coliide player1
+    int xE = MyPlayer::plyX;
+    int yE = MyPlayer::plyY;
+
+    int playerMidX = x + PICWIDTH/2, playerMidY = y + PICHEIGHT/2;
+    int enemyMidX = xE + PICWIDTH/2, enemyMidY = yE + PICHEIGHT/2;
+    double dir = (enemyMidX == playerMidX) ? 100.0 : (enemyMidY - playerMidY)*1.0/(enemyMidX - playerMidX);
+
+    if (abs(playerMidX - enemyMidX) <= PICWIDTH && abs(playerMidY - enemyMidY) <= PICHEIGHT)
+    {
+        if (enemyMidY < playerMidY && (dir > 1 || dir < -1))
+            return 0;//1p is in front of 2p
+        if (enemyMidY > playerMidY && (dir > 1 || dir < -1))
+            return 1;//1p is behind  2p
+        if (enemyMidX < playerMidX && (dir > -1 && dir < 1))
+            return 2;//1p is left to 2p
+        if (enemyMidX > playerMidX && (dir > -1 && dir < 1))
+            return 3;//1p is right to 2p
+    }
+
+    //is coliide factory
+    xE = MyFactory::ftrX;
+    yE = MyFactory::ftrY;
+
+    playerMidX = x + PICWIDTH/2; playerMidY = y + PICHEIGHT/2;
+    enemyMidX = xE + PICWIDTH/2; enemyMidY = yE + PICHEIGHT/2;
+    dir = (enemyMidX == playerMidX) ? 100.0 : (enemyMidY - playerMidY)*1.0/(enemyMidX - playerMidX);
+
+    if (abs(playerMidX - enemyMidX) <= PICWIDTH && abs(playerMidY - enemyMidY) <= PICHEIGHT)
+    {
+        if (enemyMidY < playerMidY && (dir > 1 || dir < -1))
+            return 0;//factory is in front of 2p
+        if (enemyMidY > playerMidY && (dir > 1 || dir < -1))
+            return 1;//factory is behind  2p
+        if (enemyMidX < playerMidX && (dir > -1 && dir < 1))
+            return 2;//factory is left to 2p
+        if (enemyMidX > playerMidX && (dir > -1 && dir < 1))
+            return 3;//factory is right to 2p
+    }
+
     return -1;
 }
 
 inline int IsEnemyCollide(int x, int y, int index)
 {
+    //is enemy collide other enemy
     for (int i = 0; i < ENEMYNUMBER; i++)
     {
         if (a_EnemyTank[i].IsDisappear())
@@ -833,6 +915,7 @@ inline int IsEnemyCollide(int x, int y, int index)
         }
     }
 
+    //is enenmy collide player
     int xE = MyPlayer::plyX;
     int yE = MyPlayer::plyY;
 
@@ -852,6 +935,27 @@ inline int IsEnemyCollide(int x, int y, int index)
             return 3;//player is right to this tank
     }
 
+    //is enenmy collide factory
+    xE = MyFactory::ftrX;
+    yE = MyFactory::ftrY;
+
+    playerMidX = x + PICWIDTH/2; playerMidY = y + PICHEIGHT/2;
+    enemyMidX = xE + PICWIDTH/2; enemyMidY = yE + PICHEIGHT/2;
+    dir = (enemyMidX == playerMidX) ? 100.0 : (enemyMidY - playerMidY)*1.0/(enemyMidX - playerMidX);
+
+    if (abs(playerMidX - enemyMidX) <= PICWIDTH && abs(playerMidY - enemyMidY) <= PICHEIGHT)
+    {
+        if (enemyMidY < playerMidY && (dir > 1 || dir < -1))
+            return 0;//factory is in front of this tank
+        if (enemyMidY > playerMidY && (dir > 1 || dir < -1))
+            return 1;//factory is behind this tank
+        if (enemyMidX < playerMidX && (dir > -1 && dir < 1))
+            return 2;//factory is left to this tank
+        if (enemyMidX > playerMidX && (dir > -1 && dir < 1))
+            return 3;//factory is right to this tank
+    }
+
+    //is enemy collide 2p
     if (DisplayWindow::b_isTPM)
     {
         int xE = MyPlayer::ply2X;
@@ -924,6 +1028,26 @@ inline bool IsOutofRange(int x, int y, int creator)
                 return true;
             }
         }
+    }
+
+    //is bullet collide factory
+    int xP = MyFactory::ftrX;
+    int yP = MyFactory::ftrY;
+    if ((x + BULLETWIDTH/2 >= xP && x + BULLETWIDTH/2 <= xP + PICWIDTH) && (y + BULLETHEIGHT/2 >= yP && y + BULLETHEIGHT/2 <= yP + PICHEIGHT))
+    {
+        double atk = 0.0;
+        if (creator == -1)
+            atk = MyPlayer::plyAtk;
+        if (creator == -2)
+            atk = MyPlayer::ply2Atk;
+
+        MyFactory::ftrHlt = MyFactory::ftrHlt - atk;
+        if (creator == -1 && MyFactory::ftrHlt <= 0)
+            flagwin = 0;
+        if (creator == -2 && MyFactory::ftrHlt <= 0)
+            flagwin = 1;
+
+        return true;
     }
 
     //is bullet collide player's tank
