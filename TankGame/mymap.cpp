@@ -1,9 +1,9 @@
 #include "mymap.h"
 #include <QTime>
 #include <iostream>
-#include <iomanip> // used to set float precision
-#include <math.h> // pow
-#include <vector> //storing RectangleShape objects
+#include <iomanip>
+#include <math.h>
+#include <vector>
 #include <stdlib.h>
 #include <time.h>
 #include "displaywindow.h"
@@ -86,6 +86,7 @@ void MyMap::CreateMap()
             //0-nothing
             //1-blood
             //2-coin
+            //3-factory
             MyGlobal::objMap[i][j] = 0;
         }
 

@@ -6,6 +6,7 @@
 #include <QtDebug>
 #include <QRect>
 #include <QKeyEvent>
+#include <QTime>
 #include "base.h"
 #define PICWIDTH 32
 #define PICHEIGHT 32
@@ -28,6 +29,7 @@ public:
     static int keyValue;
     int cntBullets;
     int cntEnemy;
+    int cntKill;
     bool b_isPlayerStart;
     bool b_isPlayer2Start;
     static bool b_isTPM;
@@ -40,6 +42,7 @@ private:
     void MoveTank(QPainter &p);
     void MoveTank2P(QPainter &p);
     void MoveEnemyTank(QPainter &p);
+    QDateTime NextSpawnTime;
 
 protected:
     void keyPressEvent(QKeyEvent *event);
@@ -48,6 +51,7 @@ private slots:
     void EnemyAtk();
     void PlayerAtk();
     void Player2Atk();
+    void EnemyCreate();
 
 };
 
