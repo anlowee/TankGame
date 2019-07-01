@@ -31,7 +31,7 @@ High::High(QWidget *parent) :
           a.setColor(QPalette::WindowText,Qt::white);
           ui->beatlevels->setPalette(a);
           ui->beatnumbers->setPalette(a);
-         QFont font("黑体",10,75);
+         QFont font("Microsoft YaHei",10,75);
          ui->beatlevels->setFont(font);
          ui->beatnumbers->setFont(font);
              a1 = new level_1(this);

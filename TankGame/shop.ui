@@ -44,6 +44,9 @@
        <height>28</height>
       </rect>
      </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/sample/photo/label_bg.png);</string>
+     </property>
      <property name="text">
       <string>Reinforce</string>
      </property>
@@ -56,6 +59,9 @@
        <width>93</width>
        <height>28</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/sample/photo/label_bg.png);</string>
      </property>
      <property name="text">
       <string>Budget</string>

@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
 namespace Ui {
 class MainWindow;
 }
@@ -20,9 +19,9 @@ private slots:
 
     void on_btn_start_clicked();
 
-
-
     void on_btn_high_clicked();
+
+    void on_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;

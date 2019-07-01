@@ -1,6 +1,6 @@
 #include "shop.h"
 #include "ui_shop.h"
-
+#include <QFont>
 Shop::Shop(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Shop)
@@ -10,6 +10,9 @@ Shop::Shop(QWidget *parent) :
     b = new Tank_reinforce(this);
     ui->stackedWidget->addWidget(a);
     ui->stackedWidget->addWidget(b);
+    QFont font("Microsoft YaHei",10,75);
+    ui->reinforceButton->setFont(font);
+    ui->budgetButton->setFont(font);
 }
 
 Shop::~Shop()

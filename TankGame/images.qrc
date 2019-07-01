@@ -101,5 +101,15 @@
         <file>../sample/photo/small tank/tank12/tank12left.png</file>
         <file>../sample/photo/small tank/tank12/tank12right.png</file>
         <file>../sample/photo/small tank/tank12/tank12up.png</file>
+        <file>../sample/photo/label_bg.png</file>
+        <file>../sample/photo/honor/honor_1bg.png</file>
+        <file>../sample/photo/honor/honor_5bg.png</file>
+        <file>../sample/photo/honor/honor_6.png</file>
+        <file>../sample/photo/honor/honor_7.png</file>
+        <file>../sample/photo/honor/honor_8.png</file>
+        <file>../sample/photo/honor/honor2_bg.png</file>
+        <file>../sample/photo/honor/honor3_bg.png</file>
+        <file>../sample/photo/honor/honor4_bg.png</file>
+        <file>../sample/photo/label_bg .png</file>
     </qresource>
 </RCC>

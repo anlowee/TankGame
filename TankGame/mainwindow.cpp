@@ -6,7 +6,8 @@
 #include <QFrame>
 #include <QSoundEffect>
 #include <QPixmap>
-#include"High.h"
+#include "High.h"
+#include "shop.h"
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -44,4 +45,10 @@ void MainWindow::on_btn_high_clicked()
 {
     High *new_w= new High;
     new_w->show();
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    Shop *a = new Shop;
+    a->show();
 }

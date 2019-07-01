@@ -28,6 +28,8 @@
 #include "tank_7s.h"
 #include "tank_8s.h"
 #include "tank_9s.h"
+#include <QFont>
+#include <QPalette>
 Tank_budget::Tank_budget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Tank_budget)
@@ -90,6 +92,14 @@ Tank_budget::Tank_budget(QWidget *parent) :
     ui->stackedWidget_3->addWidget(d11);
     ui->stackedWidget_3->addWidget(d12);
     ui->stackedWidget_3->setCurrentWidget(d1);
+    QFont ft("Microsoft YaHei",10,75);
+    ui->recoverLabel->setFont(ft);
+    ui->tankLable->setFont(ft);
+    ui->backButton->setFont(ft);
+    QPalette pa;
+    pa.setColor(QPalette::WindowText,Qt::white);
+    ui->recoverLabel->setPalette(pa);
+    ui->tankLable->setPalette(pa);
 }
 
 Tank_budget::~Tank_budget()

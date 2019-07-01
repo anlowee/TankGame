@@ -9,6 +9,8 @@
 #include "fast_1.h"
 #include "fast_2.h"
 #include <QLabel>
+#include <QFont>
+#include <QPalette>
 Tank_reinforce::Tank_reinforce(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Tank_reinforce)
@@ -32,6 +34,16 @@ Tank_reinforce::Tank_reinforce(QWidget *parent) :
     ui->attackLabel->setVisible(false);
     ui->defenceLabel->setVisible(false);
     ui->fastLabel->setVisible(false);
+    QFont ft("Microsoft YaHei",10,75);
+    ui->attackLabel->setFont(ft);
+    ui->defenceLabel->setFont(ft);
+    ui->fastLabel->setFont(ft);
+    ui->backButton->setFont(ft);
+    QPalette pa;
+    pa.setColor(QPalette::WindowText,Qt::white);
+    ui->attackLabel->setPalette(pa);
+    ui->defenceLabel->setPalette(pa);
+    ui->fastLabel->setPalette(pa);
 }
 
 Tank_reinforce::~Tank_reinforce()
