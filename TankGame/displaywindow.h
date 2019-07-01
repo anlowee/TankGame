@@ -35,7 +35,6 @@ public:
 private:
     Ui::DisplayWindow *ui;
     void paintEvent(QPaintEvent *event);
-    void closeEvent(QCloseEvent *event);
     void PaintMap(QPainter &p);
     void MoveBullet(QPainter &p);
     void MoveTank(QPainter &p);

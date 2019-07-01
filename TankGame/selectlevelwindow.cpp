@@ -88,14 +88,12 @@ void CreatPos2P(int mark)
 void SelectLevelWindow::on_pushButton_clicked()
 {
     //load
-    freopen("save.sav", "r", stdin);
-    int mny, kil;
-    std::cin >> mny >> kil;
-    MyPlayer::plyMoney = mny;
-    MyPlayer::plyKill = kil;
-    fclose(stdin);
+    MyPlayer::plyKill = 0;
+    MyPlayer::plyMoney = 0;
 
     //pre
+    DisplayWindow::b_isTPM = false;
+    DisplayWindow::keyValue = NULL;
     MyMap *new_m =  new MyMap;
     new_m->CreateMap();
     DisplayWindow *new_w = new DisplayWindow;
@@ -107,7 +105,6 @@ void SelectLevelWindow::on_pushButton_clicked()
     int isPut = MyGlobal::m_TrueBlockMark;
     CreatPos(isPut);
 
-    DisplayWindow::keyValue = NULL;
     qsrand(time(NULL));
 
     //player's pos
@@ -133,7 +130,6 @@ void SelectLevelWindow::on_pushButton_clicked()
     new_w->cntBullets = 0;
     new_w->cntEnemy = ENEMYNUMBER;
     new_w->b_isPlayerStart = false;
-    DisplayWindow::b_isTPM = false;
     new_w->show();
 }
 
@@ -147,7 +143,14 @@ void SelectLevelWindow::paintEvent(QPaintEvent *event)
 
 void SelectLevelWindow::on_pushButton_2_clicked()
 {
+    //load
+    MyPlayer::plyKill = 0;
+    MyPlayer::plyMoney = 0;
+
     //pre
+    DisplayWindow::b_isTPM = true;
+    DisplayWindow::keyValue = NULL;
+
     MyMap *new_m =  new MyMap;
     new_m->CreateMap();
     DisplayWindow *new_w = new DisplayWindow;
@@ -159,7 +162,6 @@ void SelectLevelWindow::on_pushButton_2_clicked()
     int isPut = MyGlobal::m_TrueBlockMark;
     CreatPos2P(isPut);
 
-    DisplayWindow::keyValue = NULL;
     qsrand(time(NULL));
 
     //1P's pos
@@ -194,6 +196,5 @@ void SelectLevelWindow::on_pushButton_2_clicked()
     new_w->cntEnemy = ENEMYNUMBER;
     new_w->b_isPlayerStart = false;
     new_w->b_isPlayer2Start = false;
-    DisplayWindow::b_isTPM = true;
     new_w->show();
 }
