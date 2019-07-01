@@ -12,23 +12,6 @@
 #include "myfactory.h"
 #include <QSettings>
 
-int MyPlayer::plyX;
-int MyPlayer::plyY;
-int MyPlayer::plyD;
-int MyPlayer::plyMoney;
-int MyPlayer::plyKill;
-int MyPlayer::ply2X;
-int MyPlayer::ply2Y;
-int MyPlayer::ply2D;
-int MyPlayer::ply2Money;
-int MyPlayer::ply2Kill;
-double MyPlayer::plyAtk;
-double MyPlayer::plyDef;
-double MyPlayer::plyHlt;
-double MyPlayer::ply2Atk;
-double MyPlayer::ply2Def;
-double MyPlayer::ply2Hlt;
-
 int MyFactory::ftrX;
 int MyFactory::ftrY;
 double MyFactory::ftrHlt;
@@ -93,33 +76,6 @@ void CreatPos2P(int mark)
 
 void SelectLevelWindow::on_pushButton_clicked()
 {
-    //load
-    //configIni.setValue("Player/Money",MyPlayer::plyMoney);
-
-    MyPlayer::plyMoney=MyGlobal::configIni->value("Player/Money").toInt();
-    MyPlayer::plyKill=MyGlobal::configIni->value("Player/Kills").toInt();
-    /*
-    try {
-        MyPlayer::plyMoney=MyGlobal::configIni->value("Player/Money").toInt();
-    } catch (...) {
-        MyPlayer::plyMoney=0;
-        MyGlobal::configIni->setValue("Player/Money",MyPlayer::plyMoney);
-
-    }
-
-
-    try {
-        MyPlayer::plyKill=MyGlobal::configIni->value("Player/Kills").toInt();
-    } catch (...) {
-        MyPlayer::plyKill=0;
-        MyGlobal::configIni->setValue("Player/Kills",MyPlayer::plyKill);
-    }
-    */
-
-    //MyPlayer::plyKill = 0;
-    //MyPlayer::plyMoney = 0;
-    //fclose(stdin);
-
     //pre
     DisplayWindow::b_isTPM = false;
     DisplayWindow::keyValue = NULL;

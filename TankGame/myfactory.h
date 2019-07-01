@@ -1,6 +1,6 @@
 #ifndef MYFACTORY_H
 #define MYFACTORY_H
-#define FACTORYHEALTH 300.0
+#define FACTORYHEALTH 500.0
 
 class MyFactory
 {

@@ -5,8 +5,14 @@
 #include <QtGui>
 #include <QFrame>
 #include <QSoundEffect>
+#include "myplayer.h"
 #include <QPixmap>
+#include "myglobal.h"
 #include"High.h"
+
+int MyPlayer::plyMoney;
+int MyPlayer::plyKill;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -21,6 +27,10 @@ MainWindow::MainWindow(QWidget *parent) :
     new_bgm->setSource(QUrl::fromLocalFile(filename));
     new_bgm->setVolume(1.0);
     new_bgm->play();
+
+    //load
+    MyPlayer::plyMoney=MyGlobal::configIni->value("Player/Money").toInt();
+    MyPlayer::plyKill=MyGlobal::configIni->value("Player/Kills").toInt();
 }
 
 MainWindow::~MainWindow()

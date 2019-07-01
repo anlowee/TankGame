@@ -13,10 +13,12 @@
 #include"level_3.h"
 #include"level_4.h"
 #include"level_5.h"
+#include "myplayer.h"
 #include <QPainter>
 #include <QStyleOption>
 #include <QPalette>
 #include <QFont>
+
 High::High(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::High)
@@ -54,6 +56,43 @@ High::High(QWidget *parent) :
              ui->stackedWidget->addWidget(b3);
              ui->stackedWidget->addWidget(b4);
              ui->stackedWidget->addWidget(b5);
+
+       //kill achievement
+       ui->lbl_6->setVisible(false);
+       ui->lbl_7->setVisible(false);
+       ui->lbl_8->setVisible(false);
+       ui->lbl_9->setVisible(false);
+       ui->lbl_10->setVisible(false);
+       int kill = MyPlayer::plyKill;
+       if (kill > 0)
+           ui->lbl_6->setVisible(true);
+       if (kill > 100)
+           ui->lbl_7->setVisible(true);
+       if (kill > 200)
+           ui->lbl_8->setVisible(true);
+       if (kill > 500)
+           ui->lbl_9->setVisible(true);
+       if (kill > 1000)
+           ui->lbl_10->setVisible(true);
+
+       //money achievement
+       ui->lbl_1->setVisible(false);
+       ui->lbl_2->setVisible(false);
+       ui->lbl_3->setVisible(false);
+       ui->lbl_4->setVisible(false);
+       ui->lbl_5->setVisible(false);
+       int mony = MyPlayer::plyMoney;
+       if (mony > 0)
+           ui->lbl_1->setVisible(true);
+       if (mony > 50)
+           ui->lbl_2->setVisible(true);
+       if (mony > 100)
+           ui->lbl_3->setVisible(true);
+       if (mony > 150)
+           ui->lbl_4->setVisible(true);
+       if (mony > 200)
+           ui->lbl_5->setVisible(true);
+
 }
 High::~High()
 {
@@ -107,12 +146,12 @@ void High::on_pushButton_8_clicked()
 
 void High::on_pushButton_9_clicked()
 {
-     ui->stackedWidget->setCurrentWidget(b3);
+     ui->stackedWidget->setCurrentWidget(b4);
 }
 
 void High::on_pushButton_10_clicked()
 {
-     ui->stackedWidget->setCurrentWidget(b4);
+     ui->stackedWidget->setCurrentWidget(b5);
 }
 
 void High::paintEvent(QPaintEvent *event)
