@@ -32,7 +32,7 @@ int MyFactory::ftrX;
 int MyFactory::ftrY;
 double MyFactory::ftrHlt;
 
-MyEnemy a_EnemyTank[100];//fix
+MyEnemy a_EnemyTank[1000];//fix
 //int MyGlobal::dfsMap[1005][1005];
 
 bool b_PutMap[1005][1005];
@@ -137,10 +137,10 @@ void SelectLevelWindow::on_pushButton_clicked()
         a_EnemyTank[i].SetAtk(ENEMYATK);
         a_EnemyTank[i].SetDef(ENEMYDEF);
         a_EnemyTank[i].SetHlt(ENEMYLIFE);
-        a_EnemyTank[i].SetDisappear(false);
     }
 
     new_w->cntBullets = 0;
+    new_w->cntKill = 0;
     new_w->cntEnemy = ENEMYNUMBER;
     new_w->b_isPlayerStart = false;
     new_w->show();
@@ -210,10 +210,10 @@ void SelectLevelWindow::on_pushButton_2_clicked()
         a_EnemyTank[i].SetAtk(ENEMYATK);
         a_EnemyTank[i].SetDef(ENEMYDEF);
         a_EnemyTank[i].SetHlt(ENEMYLIFE);
-        a_EnemyTank[i].SetDisappear(false);
     }
 
     new_w->cntBullets = 0;
+    new_w->cntKill = 0;
     new_w->cntEnemy = ENEMYNUMBER;
     new_w->b_isPlayerStart = false;
     new_w->b_isPlayer2Start = false;

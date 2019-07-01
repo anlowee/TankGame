@@ -36,14 +36,15 @@ struct BoomPos
 } s_boomPos[1000];
 
 MyBullet a_Bullets[10000];
-extern MyEnemy a_EnemyTank[100];
+extern MyEnemy a_EnemyTank[1000];
 
 inline void DeleteBullets(MyBullet*, int, int&);
-inline bool IsOutofRange(int, int, int);
-inline int IsCollide(int, int);
-inline int Is2PCollide(int, int);
-inline int IsEnemyCollide(int, int, int);
-inline void IsGameOver();
+inline void DeleteTank(MyEnemy*, int, int&);
+inline bool IsOutofRange(int, int, int, int&);
+inline int IsCollide(int, int, int&);
+inline int Is2PCollide(int, int, int&);
+inline int IsEnemyCollide(int, int, int, int&);
+
 
 DisplayWindow::DisplayWindow(QWidget *parent) :
     QWidget(parent),
@@ -80,10 +81,15 @@ DisplayWindow::DisplayWindow(QWidget *parent) :
         player2Atk->start(500);
     }
 
+
+    NextSpawnTime=QDateTime::currentDateTime().addSecs(8+rand()%8);
+
+
     //set enemy creat frequency
     QTimer *enemyCreat = new QTimer;
     connect(enemyCreat, SIGNAL(timeout()), this, SLOT(EnemyCreate()));
-    enemyCreat->start(15000);
+    enemyCreat->start(100);
+
 }
 
 DisplayWindow::~DisplayWindow()
@@ -100,8 +106,9 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
     //display parameter
     ui->lbl_health->setNum(MyPlayer::plyHlt);
     ui->lbl_money->setNum(MyPlayer::plyMoney);
-    ui->lbl_killenemy->setNum(MyPlayer::plyKill + ENEMYNUMBER - cntEnemy);
+    ui->lbl_killenemy->setNum(cntKill);
     ui->lbl_factoryhlt->setNum(MyFactory::ftrHlt);
+    ui->lbl_enemyremain->setNum(cntEnemy);
 
     //you win game
     if (MyFactory::ftrHlt <= 0 && !DisplayWindow::b_isTPM)
@@ -235,7 +242,7 @@ void DisplayWindow::MoveTank(QPainter &p)
         case 3:p.drawImage(x, y, imgTank1Right); break;
     }
 
-    int n_isCollide = IsCollide(x, y);
+    int n_isCollide = IsCollide(x, y, cntEnemy);
 
     //react keyPessEvent
     if(::GetAsyncKeyState('W') & 0x8000)
@@ -365,7 +372,7 @@ void DisplayWindow::MoveTank2P(QPainter &p)
         case 3:p.drawImage(x, y, imgTank7Right); break;
     }
 
-    int n_isCollide = Is2PCollide(x, y);
+    int n_isCollide = Is2PCollide(x, y, cntEnemy);
 
     //react keyPessEvent
     if(::GetAsyncKeyState(VK_UP) & 0x8000)
@@ -508,7 +515,65 @@ void DisplayWindow::Player2Atk()
 
 void DisplayWindow::EnemyCreate()
 {
+    //time ctrl
+    QDateTime Now = QDateTime::currentDateTime();
 
+    if (cntEnemy >= 15) {
+        NextSpawnTime=Now.addSecs(1+rand()%3);
+        return ;
+    }
+
+
+    if (Now<NextSpawnTime) return ;
+
+    NextSpawnTime=Now.addSecs(8+rand()%8);
+
+    //randomly create
+    int cd = rand()%4;
+    int fx = MyFactory::ftrX, fy = MyFactory::ftrY;
+    int x = fx, y = fy - CELLHEIGHT;
+    int i = y/CELLHEIGHT, j = x/CELLWIDTH;
+    if (!MyGlobal::boolMap[i][j])
+    {
+        x = fx;
+        y = fy + CELLHEIGHT;
+    }
+    if (!MyGlobal::boolMap[i][j])
+    {
+        x = fx - CELLWIDTH;
+        y = fy;
+    }
+    if (!MyGlobal::boolMap[i][j])
+    {
+        x = fx + CELLWIDTH;
+        y = fy;
+    }
+
+    a_EnemyTank[cntEnemy].SetX(x);
+    a_EnemyTank[cntEnemy].SetY(y);
+    a_EnemyTank[cntEnemy].SetDir(cd);
+    a_EnemyTank[cntEnemy].SetAtk(ENEMYATK);
+    a_EnemyTank[cntEnemy].SetDef(ENEMYDEF);
+    a_EnemyTank[cntEnemy].SetHlt(ENEMYLIFE);
+    cntEnemy++;
+}
+
+inline void DeleteTank(MyEnemy* ae, int index, int &cnt)
+{
+    //delete a tank
+    for (int i = index; i < cnt - 1; i++)
+    {
+        int x = ae[i + 1].GetX();
+        int y = ae[i + 1].GetY();
+        int d = ae[i + 1].GetDir();
+        double hlt = ae[i + 1].GetHlt();
+
+        ae[i].SetX(x);
+        ae[i].SetY(y);
+        ae[i].SetDir(d);
+        ae[i].SetHlt(hlt);
+    }
+    cnt--;
 }
 
 void DisplayWindow::MoveEnemyTank(QPainter &p)
@@ -521,7 +586,7 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
     QImage imgTankBoom("tankboom.png");
 
     //display boom time
-    for (int i = 0; i < ENEMYNUMBER-cntEnemy; i++)
+    for (int i = 0; i < cntKill; i++)
     {
         int x = s_boomPos[i].x;
         int y = s_boomPos[i].y;
@@ -537,10 +602,10 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
     //random AI
     qsrand(time(NULL));
 
-    for (int i = 0; i < ENEMYNUMBER; i++)
+    for (int i = 0; i < cntEnemy; i++)
     {
-        if (a_EnemyTank[i].IsDisappear())
-            continue;
+        //if (a_EnemyTank[i].IsDisappear())
+        //    continue;
 
         int x = a_EnemyTank[i].GetX();
         int y = a_EnemyTank[i].GetY();
@@ -557,13 +622,16 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
         //set boom
         if (a_EnemyTank[i].GetHlt() <= 0)
         {
-            a_EnemyTank[i].SetDisappear(true);
-            cntEnemy--;
+            //a_EnemyTank[i].SetDisappear(true);
+            DeleteTank(a_EnemyTank, i, cntEnemy);
+            cntKill++;
+
             p.drawImage(x, y, imgTankBoom);
-            s_boomPos[ENEMYNUMBER-cntEnemy-1].x = x;
-            s_boomPos[ENEMYNUMBER-cntEnemy-1].y = y;
-            s_boomPos[ENEMYNUMBER-cntEnemy-1].time = QTime::currentTime().msec();
-            s_boomPos[ENEMYNUMBER-cntEnemy-1].b_isBoom = true;
+            s_boomPos[cntKill-1].x = x;
+            s_boomPos[cntKill-1].y = y;
+            s_boomPos[cntKill-1].time = QTime::currentTime().msec();
+            s_boomPos[cntKill-1].b_isBoom = true;
+            i--;
             continue;
         }
 
@@ -574,7 +642,7 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
             a_EnemyTank[i].SetDir(d);
         }
 
-        int n_isCollide = IsEnemyCollide(x, y, i);
+        int n_isCollide = IsEnemyCollide(x, y, i, cntEnemy);
         if (d == 0)
         {
             //the same
@@ -686,11 +754,8 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
 void DisplayWindow::EnemyAtk()
 {
     //the same as player atk
-    for (int i = 0; i < ENEMYNUMBER; i++)
+    for (int i = 0; i < cntEnemy; i++)
     {
-        if (a_EnemyTank[i].IsDisappear())
-            continue;
-
         int x = a_EnemyTank[i].GetX();
         int y = a_EnemyTank[i].GetY();
         int d = a_EnemyTank[i].GetDir();
@@ -703,7 +768,7 @@ void DisplayWindow::EnemyAtk()
     }
 }
 
-inline int IsCollide(int x, int y)
+inline int IsCollide(int x, int y, int &cnt)
 {
     //is get blood
     int j = (x + PICWIDTH/2)/32, i = (y + PICHEIGHT/2)/32;
@@ -724,7 +789,7 @@ inline int IsCollide(int x, int y)
     }
 
     //is collide other tank
-    for (int i = 0; i < ENEMYNUMBER; i++)
+    for (int i = 0; i < cnt; i++)
     {
         if (a_EnemyTank[i].IsDisappear())
             continue;
@@ -795,7 +860,7 @@ inline int IsCollide(int x, int y)
     return -1;
 }
 
-inline int Is2PCollide(int x, int y)
+inline int Is2PCollide(int x, int y, int &cnt)
 {
     //is get blood
     int j = (x + PICWIDTH/2)/32, i = (y + PICHEIGHT/2)/32;
@@ -816,7 +881,7 @@ inline int Is2PCollide(int x, int y)
     }
 
     //is collide enemy tank
-    for (int i = 0; i < ENEMYNUMBER; i++)
+    for (int i = 0; i < cnt; i++)
     {
         if (a_EnemyTank[i].IsDisappear())
             continue;
@@ -884,14 +949,11 @@ inline int Is2PCollide(int x, int y)
     return -1;
 }
 
-inline int IsEnemyCollide(int x, int y, int index)
+inline int IsEnemyCollide(int x, int y, int index, int &cnt)
 {
     //is enemy collide other enemy
-    for (int i = 0; i < ENEMYNUMBER; i++)
+    for (int i = 0; i < cnt; i++)
     {
-        if (a_EnemyTank[i].IsDisappear())
-            continue;
-
         if (i == index)
             continue;
 
@@ -999,7 +1061,7 @@ inline void DeleteBullets(MyBullet *a, int index, int &cnt)
     cnt--;
 }
 
-inline bool IsOutofRange(int x, int y, int creator)
+inline bool IsOutofRange(int x, int y, int creator, int &cnt)
 {
     //is bullet out of map or collide rock
     bool ans = x <= 0 || x >= 1024 || y <= 0 || y >= 1024 || !MyGlobal::boolMap[(y + BULLETHEIGHT/2)/32][(x + BULLETWIDTH/2)/32];
@@ -1008,7 +1070,7 @@ inline bool IsOutofRange(int x, int y, int creator)
     else
     {
         //is bullet collide enemy tank
-        for (int i = 0; i < ENEMYNUMBER; i++)
+        for (int i = 0; i < cnt; i++)
         {
             if (a_EnemyTank[i].IsDisappear())
                 continue;
@@ -1089,7 +1151,7 @@ void DisplayWindow::MoveBullet(QPainter &p)
         int c = a_Bullets[i].GetCreator();
 
         //is bullet supposed to be deleted
-        if (IsOutofRange(x, y, c))
+        if (IsOutofRange(x, y, c, cntEnemy))
         {
             DeleteBullets(a_Bullets, i, cntBullets);
             i--;
