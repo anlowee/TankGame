@@ -25,6 +25,7 @@
 
 int DisplayWindow::keyValue;
 bool DisplayWindow::b_isTPM;
+int cntKill2p;
 
 //0-1p win
 //1-2p win
@@ -53,7 +54,19 @@ DisplayWindow::DisplayWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    //is hide 2p parameter
+    if (!b_isTPM)
+    {
+        ui->lbl_2Phealth->setVisible(false);
+        ui->lbl_2Pkillenemy->setVisible(false);
+        ui->label_12->setVisible(false);
+        ui->label_13->setVisible(false);
+        ui->label_14->setVisible(false);
+        ui->label_15->setVisible(false);
+    }
+
     flagwin = -1;
+    cntKill2p = 0;
 
     setFocusPolicy(Qt::StrongFocus);
 
@@ -107,14 +120,20 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
     //display parameter
     ui->lbl_health->setNum(MyPlayer::plyHlt);
     ui->lbl_money->setNum(MyPlayer::plyMoney);
-    ui->lbl_killenemy->setNum(cntKill);
+    ui->lbl_killenemy->setNum(cntKill - cntKill2p);
     ui->lbl_factoryhlt->setNum(MyFactory::ftrHlt);
     ui->lbl_enemyremain->setNum(cntEnemy);
+
+    if (b_isTPM)
+    {
+        ui->lbl_2Phealth->setNum(MyPlayer::ply2Hlt);
+        ui->lbl_2Pkillenemy->setNum(cntKill2p);
+    }
 
     //you win game
     if (MyFactory::ftrHlt <= 0 && !DisplayWindow::b_isTPM)
     {
-        MyPlayer::plyKill += cntKill;
+        MyPlayer::plyKill += cntKill - cntKill2p;
         MyGlobal::configIni->setValue("Player/Money",MyPlayer::plyMoney);
         MyGlobal::configIni->setValue("Player/Kills",MyPlayer::plyKill);
         close();
@@ -130,7 +149,7 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
         if (MyPlayer::plyHlt <= 0)
         {
             p.drawImage(x, y, imgTankBoom);
-            MyPlayer::plyKill += cntKill;
+            MyPlayer::plyKill += cntKill - cntKill2p;
             MyGlobal::configIni->setValue("Player/Money",MyPlayer::plyMoney);
             MyGlobal::configIni->setValue("Player/Kills",MyPlayer::plyKill);
             close();
@@ -146,7 +165,7 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
         if (MyPlayer::plyHlt <= 0 || flagwin == 1)
         {
             p.drawImage(x, y, imgTankBoom);
-            MyPlayer::plyKill += cntKill;
+            MyPlayer::plyKill += cntKill - cntKill2p;
             MyGlobal::configIni->setValue("Player/Money",MyPlayer::plyMoney);
             MyGlobal::configIni->setValue("Player/Kills",MyPlayer::plyKill);
             close();
@@ -159,7 +178,7 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
         if (MyPlayer::ply2Hlt <= 0 || flagwin == 0)
         {
             p.drawImage(x, y, imgTankBoom);
-            MyPlayer::plyKill += cntKill;
+            MyPlayer::plyKill += cntKill - cntKill2p;
             MyGlobal::configIni->setValue("Player/Money",MyPlayer::plyMoney);
             MyGlobal::configIni->setValue("Player/Kills",MyPlayer::plyKill);
             close();
@@ -1100,6 +1119,10 @@ inline bool IsOutofRange(int x, int y, int creator, int &cnt)
                     double hlt = a_EnemyTank[i].GetHlt();
                     a_EnemyTank[i].SetHlt(hlt - PLAYERATK + ENEMYDEF);
                 }
+
+                if (DisplayWindow::b_isTPM && creator == -2 && a_EnemyTank[i].GetHlt() <= 0)
+                    cntKill2p++;
+
                 return true;
             }
         }
