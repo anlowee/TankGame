@@ -31,23 +31,11 @@
   <widget class="QStackedWidget" name="stackedWidget">
    <property name="geometry">
     <rect>
-     <x>9</x>
-     <y>9</y>
-     <width>1035</width>
-     <height>621</height>
+     <x>0</x>
+     <y>0</y>
+     <width>1053</width>
+     <height>639</height>
     </rect>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>1035</width>
-     <height>621</height>
-    </size>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>1035</width>
-     <height>621</height>
-    </size>
    </property>
    <property name="styleSheet">
     <string notr="true"/>
