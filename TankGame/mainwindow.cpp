@@ -7,7 +7,11 @@
 #include <QSoundEffect>
 #include <QPixmap>
 #include "High.h"
+#include "myplayer.h"
+#include "myglobal.h"
+#include "mytank.h"
 #include "shop.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -22,6 +26,18 @@ MainWindow::MainWindow(QWidget *parent) :
     new_bgm->setSource(QUrl::fromLocalFile(filename));
     new_bgm->setVolume(1.0);
     new_bgm->play();
+
+    //load save data
+    MyPlayer::plyMoney= MyGlobal::configIni->value("Player/Money", 0).toInt();
+    MyPlayer::plyKill= MyGlobal::configIni->value("Player/Kills", 0).toInt();
+    MyPlayer::plyAtk = MyGlobal::configIni->value("Player/PlayerATK", PLAYERATK).toDouble();
+    MyPlayer::plyDef = MyGlobal::configIni->value("Player/PlayerDEF", PLAYERDEF).toDouble();
+    MyPlayer::plySpeed = MyGlobal::configIni->value("Player/Speed", NORMALSPEED).toInt();
+    MyPlayer::plyMaxHlt = MyGlobal::configIni->value("Player/PlayerMaxHealth", PLAYERLIFE).toDouble();
+    //0~11
+    MyPlayer::tankForm = MyGlobal::configIni->value("Player/TankForm", 0).toInt();
+
+    //qDebug() << MyPlayer::plyMoney << MyPlayer::plyKill << MyPlayer::plyAtk << MyPlayer::plyDef << MyPlayer::plySpeed << MyPlayer::plyMaxHlt;
 }
 
 MainWindow::~MainWindow()

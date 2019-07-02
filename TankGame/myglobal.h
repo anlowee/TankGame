@@ -12,6 +12,8 @@ public:
     static int dfsMap[1005][1005];
     static int m_TrueBlockMark;
     static QSettings* configIni;
+
+    static void SaveData();
 };
 
 #endif // MYGLOBAL_H

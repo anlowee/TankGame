@@ -60,10 +60,13 @@ DisplayWindow::DisplayWindow(QWidget *parent) :
     {
         ui->lbl_2Phealth->setVisible(false);
         ui->lbl_2Pkillenemy->setVisible(false);
+        ui->lbl_2Pmoney->setVisible(false);
         ui->label_12->setVisible(false);
         ui->label_13->setVisible(false);
         ui->label_14->setVisible(false);
         ui->label_15->setVisible(false);
+        ui->label_16->setVisible(false);
+        ui->label_17->setVisible(false);
     }
 
     flagwin = -1;
@@ -131,6 +134,7 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
     if (b_isTPM)
     {
         ui->lbl_2Phealth->setNum(MyPlayer::ply2Hlt);
+        ui->lbl_2Pmoney->setNum(MyPlayer::ply2Money);
         ui->lbl_2Pkillenemy->setNum(cntKill2p);
     }
 
@@ -138,13 +142,12 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
     if (MyFactory::ftrHlt <= 0 && cntEnemy == 0 && !DisplayWindow::b_isTPM)
     {
         MyPlayer::plyKill += cntKill - cntKill2p;
-        MyGlobal::configIni->setValue("Player/Money",MyPlayer::plyMoney);
-        MyGlobal::configIni->setValue("Player/Kills",MyPlayer::plyKill);
+        MyGlobal::SaveData();
         close();
         QMessageBox::information(this, "Congratulation!", "YOU WIN");
         return;
     }
-
+    //you lost
     if (!DisplayWindow::b_isTPM)
     {
         //single mode lost
@@ -153,9 +156,6 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
         if (MyPlayer::plyHlt <= 0)
         {
             p.drawImage(x, y, imgTankBoom);
-            MyPlayer::plyKill += cntKill - cntKill2p;
-            MyGlobal::configIni->setValue("Player/Money",MyPlayer::plyMoney);
-            MyGlobal::configIni->setValue("Player/Kills",MyPlayer::plyKill);
             close();
             QMessageBox::information(this, "Haw", "YOU LOST");
             return ;
@@ -169,9 +169,6 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
         if (MyPlayer::plyHlt <= 0 || flagwin == 1)
         {
             p.drawImage(x, y, imgTankBoom);
-            MyPlayer::plyKill += cntKill - cntKill2p;
-            MyGlobal::configIni->setValue("Player/Money",MyPlayer::plyMoney);
-            MyGlobal::configIni->setValue("Player/Kills",MyPlayer::plyKill);
             close();
             QMessageBox::information(this, "1P LOST", "2P WIN");
             return ;
@@ -182,9 +179,7 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
         if (MyPlayer::ply2Hlt <= 0 || flagwin == 0)
         {
             p.drawImage(x, y, imgTankBoom);
-            MyPlayer::plyKill += cntKill - cntKill2p;
-            MyGlobal::configIni->setValue("Player/Money",MyPlayer::plyMoney);
-            MyGlobal::configIni->setValue("Player/Kills",MyPlayer::plyKill);
+            MyGlobal::SaveData();
             close();
             QMessageBox::information(this, "2P LOST", "1P WIN");
             return ;
@@ -314,16 +309,16 @@ void DisplayWindow::MoveTank(QPainter &p)
         d = 0;
 
         //is player coliide the map(rock)
-        bool b_isCollideMap = MyGlobal::boolMap[(y - NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y - NORMALSPEED + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y - NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y - NORMALSPEED + PICHEIGHT -COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH];
+        bool b_isCollideMap = MyGlobal::boolMap[(y - MyPlayer::plySpeed + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y - MyPlayer::plySpeed + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y - MyPlayer::plySpeed + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y - MyPlayer::plySpeed + PICHEIGHT -COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH];
 
         //is player on Marsh(slow down)
-        bool b_isOnMarsh = (MyGlobal::logicMap[(y - NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y - NORMALSPEED + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y - NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y - NORMALSPEED + PICHEIGHT -COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M');
+        bool b_isOnMarsh = (MyGlobal::logicMap[(y - MyPlayer::plySpeed + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y - MyPlayer::plySpeed + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y - MyPlayer::plySpeed + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y - MyPlayer::plySpeed + PICHEIGHT -COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M');
 
         //control slow down speed
         int additionalSpeed = 0;
@@ -331,10 +326,10 @@ void DisplayWindow::MoveTank(QPainter &p)
             additionalSpeed = MARSHSPEED;
 
         //move
-        if (y - NORMALSPEED + additionalSpeed >= 0 && b_isCollideMap && n_isCollide != 0)
+        if (y - MyPlayer::plySpeed + additionalSpeed >= 0 && b_isCollideMap && n_isCollide != 0)
         {
-            p.drawImage(x, y - NORMALSPEED + additionalSpeed, imgTank1Up);
-            y -= NORMALSPEED - additionalSpeed;
+            p.drawImage(x, y - MyPlayer::plySpeed + additionalSpeed, imgTank1Up);
+            y -= MyPlayer::plySpeed - additionalSpeed;
         }
     }
     if(::GetAsyncKeyState('S') & 0x8000)
@@ -342,24 +337,24 @@ void DisplayWindow::MoveTank(QPainter &p)
         //the same
         b_isPlayerStart = true;
         d = 1;
-        bool b_isCollideMap = MyGlobal::boolMap[(y + NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y + NORMALSPEED + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y + NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y + NORMALSPEED + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH];
+        bool b_isCollideMap = MyGlobal::boolMap[(y + MyPlayer::plySpeed + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + MyPlayer::plySpeed + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + MyPlayer::plySpeed + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + MyPlayer::plySpeed + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH];
 
-        bool b_isOnMarsh = (MyGlobal::logicMap[(y + NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y + NORMALSPEED + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y + NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y + NORMALSPEED + PICHEIGHT -COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M');
+        bool b_isOnMarsh = (MyGlobal::logicMap[(y + MyPlayer::plySpeed + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + MyPlayer::plySpeed + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + MyPlayer::plySpeed + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + MyPlayer::plySpeed + PICHEIGHT -COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M');
 
         int additionalSpeed = 0;
         if (b_isOnMarsh)
             additionalSpeed = MARSHSPEED;
 
-        if (y + NORMALSPEED - additionalSpeed <= 992 && b_isCollideMap && n_isCollide != 1)
+        if (y + MyPlayer::plySpeed - additionalSpeed <= 992 && b_isCollideMap && n_isCollide != 1)
         {
-            p.drawImage(x, y + NORMALSPEED - additionalSpeed, imgTank1Down);
-            y += NORMALSPEED - additionalSpeed;
+            p.drawImage(x, y + MyPlayer::plySpeed - additionalSpeed, imgTank1Down);
+            y += MyPlayer::plySpeed - additionalSpeed;
         }
     }
     if(::GetAsyncKeyState('A') & 0x8000)
@@ -367,24 +362,24 @@ void DisplayWindow::MoveTank(QPainter &p)
         //the same
         b_isPlayerStart = true;
         d = 2;
-        bool b_isCollideMap = MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH];
+        bool b_isCollideMap = MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - MyPlayer::plySpeed + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x - MyPlayer::plySpeed + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - MyPlayer::plySpeed + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x - MyPlayer::plySpeed + PICWIDTH - COLLIDEFIX)/CELLWIDTH];
 
-        bool b_isOnMarsh = (MyGlobal::logicMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M');
+        bool b_isOnMarsh = (MyGlobal::logicMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - MyPlayer::plySpeed + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x - MyPlayer::plySpeed + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - MyPlayer::plySpeed + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x - MyPlayer::plySpeed + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M');
 
         int additionalSpeed = 0;
         if (b_isOnMarsh)
             additionalSpeed = MARSHSPEED;
 
-        if (x - NORMALSPEED + additionalSpeed >= 0 && b_isCollideMap && n_isCollide != 2)
+        if (x - MyPlayer::plySpeed + additionalSpeed >= 0 && b_isCollideMap && n_isCollide != 2)
         {
-            p.drawImage(x - NORMALSPEED + additionalSpeed, y, imgTank1Left);
-            x -= NORMALSPEED - additionalSpeed;
+            p.drawImage(x - MyPlayer::plySpeed + additionalSpeed, y, imgTank1Left);
+            x -= MyPlayer::plySpeed - additionalSpeed;
         }
     }
     if(::GetAsyncKeyState('D') & 0x8000)
@@ -392,24 +387,24 @@ void DisplayWindow::MoveTank(QPainter &p)
         //the same
         b_isPlayerStart = true;
         d = 3;
-        bool b_isCollideMap = MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH];
+        bool b_isCollideMap = MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x + MyPlayer::plySpeed + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + MyPlayer::plySpeed + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x + MyPlayer::plySpeed + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + MyPlayer::plySpeed + PICWIDTH - COLLIDEFIX)/CELLWIDTH];
 
-        bool b_isOnMarsh = (MyGlobal::logicMap[(y + COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M');
+        bool b_isOnMarsh = (MyGlobal::logicMap[(y + COLLIDEFIX)/CELLHEIGHT][(x + MyPlayer::plySpeed + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + MyPlayer::plySpeed + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - MyPlayer::plySpeed + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + MyPlayer::plySpeed + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M');
 
         int additionalSpeed = 0;
         if (b_isOnMarsh)
             additionalSpeed = MARSHSPEED;
 
-        if (x + NORMALSPEED - additionalSpeed <= 992 && b_isCollideMap && n_isCollide != 3)
+        if (x + MyPlayer::plySpeed - additionalSpeed <= 992 && b_isCollideMap && n_isCollide != 3)
         {
-            p.drawImage(x + NORMALSPEED - additionalSpeed, y, imgTank1Right);
-            x += NORMALSPEED - additionalSpeed;
+            p.drawImage(x + MyPlayer::plySpeed - additionalSpeed, y, imgTank1Right);
+            x += MyPlayer::plySpeed - additionalSpeed;
         }
     }
 }
@@ -449,24 +444,24 @@ void DisplayWindow::MoveTank2P(QPainter &p)
         //the same
         b_isPlayer2Start = true;
         d = 0;
-        bool b_isCollideMap = MyGlobal::boolMap[(y - NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y - NORMALSPEED + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y - NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y - NORMALSPEED + PICHEIGHT -COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH];
+        bool b_isCollideMap = MyGlobal::boolMap[(y - MyPlayer::plySpeed + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y - MyPlayer::plySpeed + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y - MyPlayer::plySpeed + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y - MyPlayer::plySpeed + PICHEIGHT -COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH];
 
-        bool b_isOnMarsh = (MyGlobal::logicMap[(y - NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y - NORMALSPEED + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y - NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y - NORMALSPEED + PICHEIGHT -COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M');
+        bool b_isOnMarsh = (MyGlobal::logicMap[(y - MyPlayer::plySpeed + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y - MyPlayer::plySpeed + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y - MyPlayer::plySpeed + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y - MyPlayer::plySpeed + PICHEIGHT -COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M');
 
         int additionalSpeed = 0;
         if (b_isOnMarsh)
             additionalSpeed = MARSHSPEED;
 
-        if (y - NORMALSPEED + additionalSpeed >= 0 && b_isCollideMap && n_isCollide != 0)
+        if (y - MyPlayer::plySpeed + additionalSpeed >= 0 && b_isCollideMap && n_isCollide != 0)
         {
-            p.drawImage(x, y - NORMALSPEED + additionalSpeed, imgTank7Up);
-            y -= NORMALSPEED - additionalSpeed;
+            p.drawImage(x, y - MyPlayer::plySpeed + additionalSpeed, imgTank7Up);
+            y -= MyPlayer::plySpeed - additionalSpeed;
         }
     }
     if(::GetAsyncKeyState(VK_DOWN) & 0x8000)
@@ -474,24 +469,24 @@ void DisplayWindow::MoveTank2P(QPainter &p)
         //the same
         b_isPlayer2Start = true;
         d = 1;
-        bool b_isCollideMap = MyGlobal::boolMap[(y + NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y + NORMALSPEED + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y + NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y + NORMALSPEED + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH];
+        bool b_isCollideMap = MyGlobal::boolMap[(y + MyPlayer::plySpeed + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + MyPlayer::plySpeed + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + MyPlayer::plySpeed + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + MyPlayer::plySpeed + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH];
 
-        bool b_isOnMarsh = (MyGlobal::logicMap[(y + NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y + NORMALSPEED + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y + NORMALSPEED + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y + NORMALSPEED + PICHEIGHT -COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M');
+        bool b_isOnMarsh = (MyGlobal::logicMap[(y + MyPlayer::plySpeed + COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + MyPlayer::plySpeed + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + MyPlayer::plySpeed + COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + MyPlayer::plySpeed + PICHEIGHT -COLLIDEFIX)/CELLHEIGHT][(x + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M');
 
         int additionalSpeed = 0;
         if (b_isOnMarsh)
             additionalSpeed = MARSHSPEED;
 
-        if (y + NORMALSPEED - additionalSpeed <= 992 && b_isCollideMap && n_isCollide != 1)
+        if (y + MyPlayer::plySpeed - additionalSpeed <= 992 && b_isCollideMap && n_isCollide != 1)
         {
-            p.drawImage(x, y + NORMALSPEED - additionalSpeed, imgTank7Down);
-            y += NORMALSPEED - additionalSpeed;
+            p.drawImage(x, y + MyPlayer::plySpeed - additionalSpeed, imgTank7Down);
+            y += MyPlayer::plySpeed - additionalSpeed;
         }
     }
     if(::GetAsyncKeyState(VK_LEFT) & 0x8000)
@@ -499,24 +494,24 @@ void DisplayWindow::MoveTank2P(QPainter &p)
         //the same
         b_isPlayer2Start = true;
         d = 2;
-        bool b_isCollideMap = MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH];
+        bool b_isCollideMap = MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - MyPlayer::plySpeed + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x - MyPlayer::plySpeed + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - MyPlayer::plySpeed + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x - MyPlayer::plySpeed + PICWIDTH - COLLIDEFIX)/CELLWIDTH];
 
-        bool b_isOnMarsh = (MyGlobal::logicMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M');
+        bool b_isOnMarsh = (MyGlobal::logicMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - MyPlayer::plySpeed + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x - MyPlayer::plySpeed + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - MyPlayer::plySpeed + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x - MyPlayer::plySpeed + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M');
 
         int additionalSpeed = 0;
         if (b_isOnMarsh)
             additionalSpeed = MARSHSPEED;
 
-        if (x - NORMALSPEED + additionalSpeed >= 0 && b_isCollideMap && n_isCollide != 2)
+        if (x - MyPlayer::plySpeed + additionalSpeed >= 0 && b_isCollideMap && n_isCollide != 2)
         {
-            p.drawImage(x - NORMALSPEED + additionalSpeed, y, imgTank7Left);
-            x -= NORMALSPEED - additionalSpeed;
+            p.drawImage(x - MyPlayer::plySpeed + additionalSpeed, y, imgTank7Left);
+            x -= MyPlayer::plySpeed - additionalSpeed;
         }
     }
     if(::GetAsyncKeyState(VK_RIGHT) & 0x8000)
@@ -524,24 +519,24 @@ void DisplayWindow::MoveTank2P(QPainter &p)
         //the same
         b_isPlayer2Start = true;
         d = 3;
-        bool b_isCollideMap = MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
-                MyGlobal::boolMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH];
+        bool b_isCollideMap = MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x + MyPlayer::plySpeed + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + MyPlayer::plySpeed + COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + COLLIDEFIX)/CELLHEIGHT][(x + MyPlayer::plySpeed + PICWIDTH - COLLIDEFIX)/CELLWIDTH] &&
+                MyGlobal::boolMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + MyPlayer::plySpeed + PICWIDTH - COLLIDEFIX)/CELLWIDTH];
 
-        bool b_isOnMarsh = (MyGlobal::logicMap[(y + COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M') ||
-                (MyGlobal::logicMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + NORMALSPEED + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M');
+        bool b_isOnMarsh = (MyGlobal::logicMap[(y + COLLIDEFIX)/CELLHEIGHT][(x + MyPlayer::plySpeed + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + MyPlayer::plySpeed + COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + COLLIDEFIX)/CELLHEIGHT][(x - MyPlayer::plySpeed + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M') ||
+                (MyGlobal::logicMap[(y + PICHEIGHT - COLLIDEFIX)/CELLHEIGHT][(x + MyPlayer::plySpeed + PICWIDTH - COLLIDEFIX)/CELLWIDTH] == 'M');
 
         int additionalSpeed = 0;
         if (b_isOnMarsh)
             additionalSpeed = MARSHSPEED;
 
-        if (x + NORMALSPEED - additionalSpeed <= 992 && b_isCollideMap && n_isCollide != 3)
+        if (x + MyPlayer::plySpeed - additionalSpeed <= 992 && b_isCollideMap && n_isCollide != 3)
         {
-            p.drawImage(x + NORMALSPEED - additionalSpeed, y, imgTank7Right);
-            x += NORMALSPEED - additionalSpeed;
+            p.drawImage(x + MyPlayer::plySpeed - additionalSpeed, y, imgTank7Right);
+            x += MyPlayer::plySpeed - additionalSpeed;
         }
     }
 }
@@ -701,7 +696,42 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
         //set boom
         if (a_EnemyTank[i].GetHlt() <= 0)
         {
-            //a_EnemyTank[i].SetDisappear(true);
+            int ii = y/CELLHEIGHT, jj = x/CELLWIDTH;
+            int ran = rand()%100;
+            //set kill award&find a set pos
+            if (MyGlobal::boolMap[ii][jj])
+                //%5 blood
+                if (ran < 5)
+                    MyGlobal::objMap[ii][jj] = 1;
+                else
+                    if (ran < 50)
+                        MyGlobal::objMap[ii][jj] = 2;
+            else if (MyGlobal::boolMap[ii + 1][jj])
+                if (ran < 5)
+                    MyGlobal::objMap[ii][jj] = 1;
+                else
+                    if (ran < 50)
+                        MyGlobal::objMap[ii][jj] = 2;
+            else if (MyGlobal::boolMap[ii][jj + 1])
+                if (ran < 5)
+                    MyGlobal::objMap[ii][jj] = 1;
+                else
+                    if (ran < 50)
+                        MyGlobal::objMap[ii][jj] = 2;
+            else if (MyGlobal::boolMap[ii - 1][jj])
+                if (ran < 5)
+                    MyGlobal::objMap[ii][jj] = 1;
+                else
+                    if (ran < 50)
+                        MyGlobal::objMap[ii][jj] = 2;
+            else if (MyGlobal::boolMap[ii][jj - 1])
+                if (ran < 5)
+                    MyGlobal::objMap[ii][jj] = 1;
+                else
+                    if (ran < 50)
+                        MyGlobal::objMap[ii][jj] = 2;
+
+            //delete tank
             DeleteTank(a_EnemyTank, i, cntEnemy);
             cntKill++;
 
@@ -1166,7 +1196,7 @@ inline bool IsOutofRange(int x, int y, int creator, int &cnt)
                 if (creator < 0)
                 {
                     double hlt = a_EnemyTank[i].GetHlt();
-                    a_EnemyTank[i].SetHlt(hlt - PLAYERATK + ENEMYDEF);
+                    a_EnemyTank[i].SetHlt(hlt - MyPlayer::plyAtk + ENEMYDEF);
                 }
 
                 if (DisplayWindow::b_isTPM && creator == -2 && a_EnemyTank[i].GetHlt() <= 0)
@@ -1204,7 +1234,7 @@ inline bool IsOutofRange(int x, int y, int creator, int &cnt)
         int yP = MyPlayer::plyY;
         if ((x + BULLETWIDTH/2 >= xP && x + BULLETWIDTH/2 <= xP + PICWIDTH) && (y + BULLETHEIGHT/2 >= yP && y + BULLETHEIGHT/2 <= yP + PICHEIGHT))
         {
-            MyPlayer::plyHlt = MyPlayer::plyHlt - ENEMYATK + PLAYERDEF;
+            MyPlayer::plyHlt = MyPlayer::plyHlt - ENEMYATK + MyPlayer::plyDef;
             return true;
         }
     }
@@ -1216,7 +1246,7 @@ inline bool IsOutofRange(int x, int y, int creator, int &cnt)
         int yP = MyPlayer::ply2Y;
         if ((x + BULLETWIDTH/2 >= xP && x + BULLETWIDTH/2 <= xP + PICWIDTH) && (y + BULLETHEIGHT/2 >= yP && y + BULLETHEIGHT/2 <= yP + PICHEIGHT))
         {
-            MyPlayer::ply2Hlt = MyPlayer::ply2Hlt - ENEMYATK + PLAYERDEF;
+            MyPlayer::ply2Hlt = MyPlayer::ply2Hlt - ENEMYATK + MyPlayer::plyDef;
             return true;
         }
     }

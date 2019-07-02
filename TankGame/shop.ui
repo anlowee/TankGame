@@ -10,6 +10,18 @@
     <height>639</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>1053</width>
+    <height>639</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1053</width>
+    <height>639</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -19,11 +31,23 @@
   <widget class="QStackedWidget" name="stackedWidget">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1053</width>
-     <height>639</height>
+     <x>9</x>
+     <y>9</y>
+     <width>1035</width>
+     <height>621</height>
     </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>1035</width>
+     <height>621</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>1035</width>
+     <height>621</height>
+    </size>
    </property>
    <property name="styleSheet">
     <string notr="true"/>
@@ -38,11 +62,17 @@
     <widget class="QPushButton" name="reinforceButton">
      <property name="geometry">
       <rect>
-       <x>850</x>
+       <x>780</x>
        <y>50</y>
-       <width>93</width>
-       <height>28</height>
+       <width>121</width>
+       <height>51</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Showcard Gothic</family>
+       <pointsize>16</pointsize>
+      </font>
      </property>
      <property name="styleSheet">
       <string notr="true">border-image: url(:/sample/photo/label_bg.png);</string>
@@ -54,11 +84,17 @@
     <widget class="QPushButton" name="budgetButton">
      <property name="geometry">
       <rect>
-       <x>940</x>
+       <x>912</x>
        <y>50</y>
-       <width>93</width>
-       <height>28</height>
+       <width>121</width>
+       <height>51</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Showcard Gothic</family>
+       <pointsize>16</pointsize>
+      </font>
      </property>
      <property name="styleSheet">
       <string notr="true">border-image: url(:/sample/photo/label_bg.png);</string>

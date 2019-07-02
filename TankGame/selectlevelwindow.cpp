@@ -104,9 +104,7 @@ void SelectLevelWindow::on_pushButton_clicked()
     MyPlayer::plyX = (a_PutPos[ENEMYNUMBER].y)*PICWIDTH;
     MyPlayer::plyY = (a_PutPos[ENEMYNUMBER].x)*PICHEIGHT;
     MyPlayer::plyD = rand()%4;
-    MyPlayer::plyAtk = PLAYERATK;
-    MyPlayer::plyDef = PLAYERDEF;
-    MyPlayer::plyHlt = PLAYERLIFE;
+    MyPlayer::plyHlt = MyPlayer::plyMaxHlt;
 
     //enemy's pos
     for (int i = 0; i < ENEMYNUMBER; i++)
@@ -137,8 +135,8 @@ void SelectLevelWindow::paintEvent(QPaintEvent *event)
 void SelectLevelWindow::on_pushButton_2_clicked()
 {
     //load
-    MyPlayer::plyKill = 0;
-    MyPlayer::plyMoney = 0;
+    MyPlayer::ply2Kill = 0;
+    MyPlayer::ply2Money = 0;
 
     //pre
     DisplayWindow::b_isTPM = true;
@@ -169,9 +167,7 @@ void SelectLevelWindow::on_pushButton_2_clicked()
     MyPlayer::plyX = (a_PutPos[ENEMYNUMBER].y)*PICWIDTH;
     MyPlayer::plyY = (a_PutPos[ENEMYNUMBER].x)*PICHEIGHT;
     MyPlayer::plyD = rand()%4;
-    MyPlayer::plyAtk = PLAYERATK;
-    MyPlayer::plyDef = PLAYERDEF;
-    MyPlayer::plyHlt = PLAYERLIFE;
+    MyPlayer::plyHlt = MyPlayer::plyMaxHlt;
 
     //2P's pos
     MyPlayer::ply2X = (a_PutPos[ENEMYNUMBER + 1].y)*PICWIDTH;

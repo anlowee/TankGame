@@ -98,14 +98,23 @@
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>290</x>
-      <y>60</y>
+      <x>500</x>
+      <y>30</y>
       <width>93</width>
       <height>28</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>Showcard Gothic</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(:/sample/photo/startbutton.jpg);</string>
+    </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>SHOP</string>
     </property>
    </widget>
   </widget>

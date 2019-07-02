@@ -52,6 +52,7 @@ SOURCES += \
         mymap.cpp \
         myplayer.cpp \
         mytank.cpp \
+        nomoney.cpp \
         number_1.cpp \
         number_2.cpp \
         number_3.cpp \
@@ -114,6 +115,7 @@ HEADERS += \
         mymap.h \
         myplayer.h \
         mytank.h \
+        nomoney.h \
         number_1.h \
         number_2.h \
         number_3.h \
@@ -166,6 +168,7 @@ FORMS += \
         level_4.ui \
         level_5.ui \
         mainwindow.ui \
+        nomoney.ui \
         number_1.ui \
         number_2.ui \
         number_3.ui \

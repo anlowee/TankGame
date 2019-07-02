@@ -13,8 +13,11 @@ public:
     static double plyAtk;
     static double plyDef;
     static double plyHlt;
+    static double plyMaxHlt;
     static int plyMoney;
     static int plyKill;
+    static int plySpeed;
+    static int tankForm;
 
     static int ply2X;
     static int ply2Y;
