@@ -17,7 +17,14 @@ public:
     static int plyMoney;
     static int plyKill;
     static int plySpeed;
+    static int plyAtkSpeed;
     static int tankForm;
+    static QImage imgTankUp;
+    static QImage imgTankDown;
+    static QImage imgTankLeft;
+    static QImage imgTankRight;
+    static QImage imgHealth;
+    static void LoadImg();
 
     static int ply2X;
     static int ply2Y;

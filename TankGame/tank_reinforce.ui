@@ -47,7 +47,7 @@
     <string notr="true">border-image: url(:/sample/photo/Shop_pic/Shop_button.jpg);</string>
    </property>
    <property name="text">
-    <string>10金币</string>
+    <string>30金币</string>
    </property>
   </widget>
   <widget class="QPushButton" name="defenceButton">
@@ -69,7 +69,7 @@
     <string notr="true">border-image: url(:/sample/photo/Shop_pic/Shop_button.jpg);</string>
    </property>
    <property name="text">
-    <string>10金币</string>
+    <string>30金币</string>
    </property>
   </widget>
   <widget class="QPushButton" name="fastButton">
@@ -91,7 +91,7 @@
     <string notr="true">border-image: url(:/sample/photo/Shop_pic/Shop_button.jpg);</string>
    </property>
    <property name="text">
-    <string>10金币</string>
+    <string>30金币</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">
