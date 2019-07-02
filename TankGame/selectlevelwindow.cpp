@@ -117,6 +117,7 @@ void SelectLevelWindow::on_pushButton_clicked()
         a_EnemyTank[i].SetHlt(ENEMYLIFE);
     }
 
+    MyPlayer::LoadImg();
     new_w->cntBullets = 0;
     new_w->cntKill = 0;
     new_w->cntEnemy = ENEMYNUMBER;
@@ -188,6 +189,7 @@ void SelectLevelWindow::on_pushButton_2_clicked()
         a_EnemyTank[i].SetHlt(ENEMYLIFE);
     }
 
+    MyPlayer::LoadImg();
     new_w->cntBullets = 0;
     new_w->cntKill = 0;
     new_w->cntEnemy = ENEMYNUMBER;

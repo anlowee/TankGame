@@ -90,14 +90,14 @@ DisplayWindow::DisplayWindow(QWidget *parent) :
     //set player atk max frequency
     QTimer *playerAtk = new QTimer;
     connect(playerAtk, SIGNAL(timeout()), this, SLOT(PlayerAtk()));
-    playerAtk->start(500);
+    playerAtk->start(MyPlayer::plyAtkSpeed);
 
     //set player2 atk max frequency
     if (b_isTPM)
     {
         QTimer *player2Atk = new QTimer;
         connect(player2Atk, SIGNAL(timeout()), this, SLOT(Player2Atk()));
-        player2Atk->start(500);
+        player2Atk->start(MyPlayer::plyAtkSpeed);
     }
 
 
@@ -274,12 +274,6 @@ void DisplayWindow::PaintMap(QPainter &p)
 
 void DisplayWindow::MoveTank(QPainter &p)
 {
-    //load tank img
-    QImage imgTank1Up("tank1up.png");
-    QImage imgTank1Down("tank1down.png");
-    QImage imgTank1Left("tank1left.png");
-    QImage imgTank1Right("tank1right.png");
-    QImage imgHealth("life.png");
 
     //paint current pos&dir
     int &x = MyPlayer::plyX;
@@ -287,16 +281,16 @@ void DisplayWindow::MoveTank(QPainter &p)
     int &d = MyPlayer::plyD;
 
     //blood display
-    double percent = MyPlayer::plyHlt/PLAYERLIFE;
+    double percent = MyPlayer::plyHlt/MyPlayer::plyMaxHlt;
     QRectF target(x, y - 8, percent*PICWIDTH, 8);
-    p.drawImage(target, imgHealth);
+    p.drawImage(target, MyPlayer::imgHealth);
 
     switch (d)
     {
-        case 0:p.drawImage(x, y, imgTank1Up); break;
-        case 1:p.drawImage(x, y, imgTank1Down); break;
-        case 2:p.drawImage(x, y, imgTank1Left); break;
-        case 3:p.drawImage(x, y, imgTank1Right); break;
+        case 0:p.drawImage(x, y, MyPlayer::imgTankUp); break;
+        case 1:p.drawImage(x, y, MyPlayer::imgTankDown); break;
+        case 2:p.drawImage(x, y, MyPlayer::imgTankLeft); break;
+        case 3:p.drawImage(x, y, MyPlayer::imgTankRight); break;
     }
 
     int n_isCollide = IsCollide(x, y, cntEnemy);
@@ -328,7 +322,7 @@ void DisplayWindow::MoveTank(QPainter &p)
         //move
         if (y - MyPlayer::plySpeed + additionalSpeed >= 0 && b_isCollideMap && n_isCollide != 0)
         {
-            p.drawImage(x, y - MyPlayer::plySpeed + additionalSpeed, imgTank1Up);
+            p.drawImage(x, y - MyPlayer::plySpeed + additionalSpeed, MyPlayer::imgTankUp);
             y -= MyPlayer::plySpeed - additionalSpeed;
         }
     }
@@ -353,7 +347,7 @@ void DisplayWindow::MoveTank(QPainter &p)
 
         if (y + MyPlayer::plySpeed - additionalSpeed <= 992 && b_isCollideMap && n_isCollide != 1)
         {
-            p.drawImage(x, y + MyPlayer::plySpeed - additionalSpeed, imgTank1Down);
+            p.drawImage(x, y + MyPlayer::plySpeed - additionalSpeed, MyPlayer::imgTankDown);
             y += MyPlayer::plySpeed - additionalSpeed;
         }
     }
@@ -378,7 +372,7 @@ void DisplayWindow::MoveTank(QPainter &p)
 
         if (x - MyPlayer::plySpeed + additionalSpeed >= 0 && b_isCollideMap && n_isCollide != 2)
         {
-            p.drawImage(x - MyPlayer::plySpeed + additionalSpeed, y, imgTank1Left);
+            p.drawImage(x - MyPlayer::plySpeed + additionalSpeed, y, MyPlayer::imgTankLeft);
             x -= MyPlayer::plySpeed - additionalSpeed;
         }
     }
@@ -403,7 +397,7 @@ void DisplayWindow::MoveTank(QPainter &p)
 
         if (x + MyPlayer::plySpeed - additionalSpeed <= 992 && b_isCollideMap && n_isCollide != 3)
         {
-            p.drawImage(x + MyPlayer::plySpeed - additionalSpeed, y, imgTank1Right);
+            p.drawImage(x + MyPlayer::plySpeed - additionalSpeed, y, MyPlayer::imgTankRight);
             x += MyPlayer::plySpeed - additionalSpeed;
         }
     }
@@ -424,7 +418,7 @@ void DisplayWindow::MoveTank2P(QPainter &p)
     int &d = MyPlayer::ply2D;
 
     //blood display
-    double percent = MyPlayer::ply2Hlt/PLAYERLIFE;
+    double percent = MyPlayer::ply2Hlt/MyPlayer::plyMaxHlt;
     QRectF target(x, y - 8, percent*PICWIDTH, 8);
     p.drawImage(target, imgHealth);
 
@@ -885,8 +879,8 @@ inline int IsCollide(int x, int y, int &cnt)
     if (MyGlobal::objMap[i][j] == 1)
     {
        MyPlayer::plyHlt += BLOOD;
-       if (MyPlayer::plyHlt > 100)
-           MyPlayer::plyHlt = 100.0;
+       if (MyPlayer::plyHlt > MyPlayer::plyMaxHlt)
+           MyPlayer::plyHlt = MyPlayer::plyMaxHlt;
 
        MyGlobal::objMap[i][j] = 0;
     }
@@ -977,8 +971,8 @@ inline int Is2PCollide(int x, int y, int &cnt)
     if (MyGlobal::objMap[i][j] == 1)
     {
        MyPlayer::ply2Hlt += BLOOD;
-       if (MyPlayer::ply2Hlt > 100)
-           MyPlayer::ply2Hlt = 100.0;
+       if (MyPlayer::ply2Hlt > MyPlayer::plyMaxHlt)
+           MyPlayer::ply2Hlt = MyPlayer::plyMaxHlt;
 
        MyGlobal::objMap[i][j] = 0;
     }

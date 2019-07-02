@@ -107,6 +107,88 @@ Tank_budget::Tank_budget(QWidget *parent) :
     pa.setColor(QPalette::WindowText,Qt::white);
     ui->recoverLabel->setPalette(pa);
     ui->tankLable->setPalette(pa);
+
+    //is reinfore to max
+    if (i >= 2 || MyPlayer::plyMaxHlt >= 200.0)
+    {
+        ui->recoverLabel->setVisible(true);
+        ui->recoverButton->setEnabled(false);
+        ui->stackedWidget->setCurrentWidget(b);
+    }
+
+    //qDebug() << MyPlayer::tankForm;
+    switch(MyPlayer::tankForm){
+         case 1:
+            ui->stackedWidget_2->setCurrentWidget(c1);
+            ui->stackedWidget_3->setCurrentWidget(d1);
+        break;
+
+         case 2:
+        ui->stackedWidget_2->setCurrentWidget(c2);
+        ui->stackedWidget_3->setCurrentWidget(d2);
+        MyPlayer::tankForm = 2;
+        MyGlobal::SaveData();
+        break;
+         case 3:
+        ui->stackedWidget_2->setCurrentWidget(c3);
+        ui->stackedWidget_3->setCurrentWidget(d3);
+        MyPlayer::tankForm = 3;
+        MyGlobal::SaveData();
+        break;
+         case 4:
+        ui->stackedWidget_2->setCurrentWidget(c4);
+        ui->stackedWidget_3->setCurrentWidget(d4);
+        MyPlayer::tankForm = 4;
+        MyGlobal::SaveData();
+        break;
+         case 5:
+        ui->stackedWidget_2->setCurrentWidget(c5);
+        ui->stackedWidget_3->setCurrentWidget(d5);
+        MyPlayer::tankForm = 5;
+        MyGlobal::SaveData();
+        break;
+         case 6:
+        ui->stackedWidget_2->setCurrentWidget(c6);
+        ui->stackedWidget_3->setCurrentWidget(d6);
+        MyPlayer::tankForm = 6;
+        MyGlobal::SaveData();
+        break;
+         case 7:
+        ui->stackedWidget_2->setCurrentWidget(c7);
+        ui->stackedWidget_3->setCurrentWidget(d7);
+        MyPlayer::tankForm = 7;
+        MyGlobal::SaveData();
+        break;
+         case 8:
+        ui->stackedWidget_2->setCurrentWidget(c8);
+        ui->stackedWidget_3->setCurrentWidget(d8);
+        MyPlayer::tankForm = 8;
+        MyGlobal::SaveData();
+        break;
+         case 9:
+        ui->stackedWidget_2->setCurrentWidget(c9);
+        ui->stackedWidget_3->setCurrentWidget(d9);
+        MyPlayer::tankForm = 9;
+        MyGlobal::SaveData();
+        break;
+         case 10:
+        ui->stackedWidget_2->setCurrentWidget(c10);
+        ui->stackedWidget_3->setCurrentWidget(d10);
+        MyPlayer::tankForm = 10;
+        MyGlobal::SaveData();
+        break;
+         case 11:
+        ui->stackedWidget_2->setCurrentWidget(c11);
+        ui->stackedWidget_3->setCurrentWidget(d11);
+        MyPlayer::tankForm = 11;
+        MyGlobal::SaveData();
+        break;
+    default:
+         ui->tankLable->setVisible(true);
+         ui->levelUpButton->setEnabled(false);
+         ui->stackedWidget_2->setCurrentWidget(c12);
+         ui->stackedWidget_3->setCurrentWidget(d12);
+    }
 }
 
 Tank_budget::~Tank_budget()
@@ -123,7 +205,7 @@ void Tank_budget::on_backButton_clicked()
 void Tank_budget::on_recoverButton_clicked()
 {
     //is exceed max reinfore times(1)
-    if (i >= 2)
+    if (i >= 2 || MyPlayer::plyMaxHlt >= 200.0)
     {
         ui->recoverLabel->setVisible(true);
         ui->recoverButton->setEnabled(false);
@@ -150,6 +232,16 @@ void Tank_budget::on_recoverButton_clicked()
 }
 void Tank_budget::on_levelUpButton_clicked()
 {
+    if (MyPlayer::tankForm == 11)
+    {
+        ui->tankLable->setVisible(true);
+        ui->levelUpButton->setEnabled(false);
+        ui->stackedWidget_2->setCurrentWidget(c12);
+        ui->stackedWidget_3->setCurrentWidget(d12);
+        return ;
+    }
+
+
     //is have enough money
     if (MyPlayer::plyMoney < 20)
     {
@@ -159,73 +251,73 @@ void Tank_budget::on_levelUpButton_clicked()
     }
 
     //buy the new tank
-    ++j;
+    ++MyPlayer::tankForm;
     MyPlayer::plyMoney -= 20;
-    switch(j){
+    switch(MyPlayer::tankForm){
          case 2:
         ui->stackedWidget_2->setCurrentWidget(c2);
         ui->stackedWidget_3->setCurrentWidget(d2);
-        MyPlayer::tankForm = 1;
+        MyPlayer::tankForm = 2;
         MyGlobal::SaveData();
         break;
          case 3:
         ui->stackedWidget_2->setCurrentWidget(c3);
         ui->stackedWidget_3->setCurrentWidget(d3);
-        MyPlayer::tankForm = 2;
+        MyPlayer::tankForm = 3;
         MyGlobal::SaveData();
         break;
          case 4:
         ui->stackedWidget_2->setCurrentWidget(c4);
         ui->stackedWidget_3->setCurrentWidget(d4);
-        MyPlayer::tankForm = 3;
+        MyPlayer::tankForm = 4;
         MyGlobal::SaveData();
         break;
          case 5:
         ui->stackedWidget_2->setCurrentWidget(c5);
         ui->stackedWidget_3->setCurrentWidget(d5);
-        MyPlayer::tankForm = 4;
+        MyPlayer::tankForm = 5;
         MyGlobal::SaveData();
         break;
          case 6:
         ui->stackedWidget_2->setCurrentWidget(c6);
         ui->stackedWidget_3->setCurrentWidget(d6);
-        MyPlayer::tankForm = 5;
+        MyPlayer::tankForm = 6;
         MyGlobal::SaveData();
         break;
          case 7:
         ui->stackedWidget_2->setCurrentWidget(c7);
         ui->stackedWidget_3->setCurrentWidget(d7);
-        MyPlayer::tankForm = 6;
+        MyPlayer::tankForm = 7;
         MyGlobal::SaveData();
         break;
          case 8:
         ui->stackedWidget_2->setCurrentWidget(c8);
         ui->stackedWidget_3->setCurrentWidget(d8);
-        MyPlayer::tankForm = 7;
+        MyPlayer::tankForm = 8;
         MyGlobal::SaveData();
         break;
          case 9:
         ui->stackedWidget_2->setCurrentWidget(c9);
         ui->stackedWidget_3->setCurrentWidget(d9);
-        MyPlayer::tankForm = 8;
+        MyPlayer::tankForm = 9;
         MyGlobal::SaveData();
         break;
          case 10:
         ui->stackedWidget_2->setCurrentWidget(c10);
         ui->stackedWidget_3->setCurrentWidget(d10);
-        MyPlayer::tankForm = 9;
+        MyPlayer::tankForm = 10;
         MyGlobal::SaveData();
         break;
          case 11:
         ui->stackedWidget_2->setCurrentWidget(c11);
         ui->stackedWidget_3->setCurrentWidget(d11);
-        MyPlayer::tankForm = 10;
+        MyPlayer::tankForm = 11;
         MyGlobal::SaveData();
         break;
          case 12:
         ui->stackedWidget_2->setCurrentWidget(c12);
         ui->stackedWidget_3->setCurrentWidget(d12);
-        MyPlayer::tankForm = 11;
+        MyPlayer::tankForm = 12;
         MyGlobal::SaveData();
         break;
     default:

@@ -33,9 +33,10 @@ MainWindow::MainWindow(QWidget *parent) :
     MyPlayer::plyAtk = MyGlobal::configIni->value("Player/PlayerATK", PLAYERATK).toDouble();
     MyPlayer::plyDef = MyGlobal::configIni->value("Player/PlayerDEF", PLAYERDEF).toDouble();
     MyPlayer::plySpeed = MyGlobal::configIni->value("Player/Speed", NORMALSPEED).toInt();
+    MyPlayer::plyAtkSpeed = MyGlobal::configIni->value("Player/PlayerATKSpeed", 500).toInt();
     MyPlayer::plyMaxHlt = MyGlobal::configIni->value("Player/PlayerMaxHealth", PLAYERLIFE).toDouble();
     //0~11
-    MyPlayer::tankForm = MyGlobal::configIni->value("Player/TankForm", 0).toInt();
+    MyPlayer::tankForm = MyGlobal::configIni->value("Player/TankForm", 1).toInt();
 
     //qDebug() << MyPlayer::plyMoney << MyPlayer::plyKill << MyPlayer::plyAtk << MyPlayer::plyDef << MyPlayer::plySpeed << MyPlayer::plyMaxHlt;
 }

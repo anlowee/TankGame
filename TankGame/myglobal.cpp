@@ -15,6 +15,7 @@ void MyGlobal::SaveData()
     MyGlobal::configIni->setValue("Player/PlayerATK", MyPlayer::plyAtk);
     MyGlobal::configIni->setValue("Player/PlayerDEF", MyPlayer::plyDef);
     MyGlobal::configIni->setValue("Player/Speed", MyPlayer::plySpeed);
+    MyGlobal::configIni->setValue("Player/PlayerATKSpeed", MyPlayer::plyAtkSpeed);
     MyGlobal::configIni->setValue("Player/PlayerMaxHealth", MyPlayer::plyMaxHlt);
     MyGlobal::configIni->setValue("Player/TankForm", MyPlayer::tankForm);
 }

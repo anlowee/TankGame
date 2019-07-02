@@ -7,6 +7,10 @@ class MyEnemy:public MyTank, public MyBag
 {
 public:
     MyEnemy();
+    QImage imgTankUp;
+    QImage imgTankDown;
+    QImage imgTankLeft;
+    QImage imgTankRight;
 
 protected:
 
