@@ -12,9 +12,9 @@ public:
     MyBullet(int x, int y, int dir);
     int GetCreator() {return m_creator;}
     void SetCreator(int x) {m_creator = x;}
+    int m_bulletForm;//choose one of outlooks
 
 protected:
-    int m_bulletForm;//choose one of outlooks
     int m_creator;
 };
 

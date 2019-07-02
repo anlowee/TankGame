@@ -26,6 +26,7 @@
 int DisplayWindow::keyValue;
 bool DisplayWindow::b_isTPM;
 int cntKill2p;
+bool b_factoryboom;
 
 //0-1p win
 //1-2p win
@@ -67,6 +68,7 @@ DisplayWindow::DisplayWindow(QWidget *parent) :
 
     flagwin = -1;
     cntKill2p = 0;
+    b_factoryboom = false;
 
     setFocusPolicy(Qt::StrongFocus);
 
@@ -118,6 +120,8 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
     QImage imgTankBoom("tankboom.png");
 
     //display parameter
+    if (MyFactory::ftrHlt < 0)
+        MyFactory::ftrHlt = 0;
     ui->lbl_health->setNum(MyPlayer::plyHlt);
     ui->lbl_money->setNum(MyPlayer::plyMoney);
     ui->lbl_killenemy->setNum(cntKill - cntKill2p);
@@ -131,7 +135,7 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
     }
 
     //you win game
-    if (MyFactory::ftrHlt <= 0 && !DisplayWindow::b_isTPM)
+    if (MyFactory::ftrHlt <= 0 && cntEnemy == 0 && !DisplayWindow::b_isTPM)
     {
         MyPlayer::plyKill += cntKill - cntKill2p;
         MyGlobal::configIni->setValue("Player/Money",MyPlayer::plyMoney);
@@ -219,6 +223,8 @@ void DisplayWindow::PaintMap(QPainter &p)
     QImage imgBlood("blood.png");
     QImage imgCoin("coin.png");
     QImage imgFactory("factory.png");
+    QImage imgHealth("life2.png");
+    QImage imgFactoryBoom("factoryboom.png");
 
     //paint map
     qsrand(time(NULL));
@@ -241,8 +247,25 @@ void DisplayWindow::PaintMap(QPainter &p)
                 p.drawImage(x, y, imgBlood);
             if (MyGlobal::objMap[i][j] == 2)
                 p.drawImage(x, y, imgCoin);
+
+            //is factory boom
             if (MyGlobal::objMap[i][j] == 3)
-                p.drawImage(x, y, imgFactory);
+            {
+                if (b_factoryboom)
+                    p.drawImage(x, y, imgFactoryBoom);
+                else
+                    p.drawImage(x, y, imgFactory);
+                double percent = 0;
+                if (MyFactory::ftrHlt <= 0)
+                {
+                    percent = 0;
+                    b_factoryboom = true;
+                }
+                else
+                    percent = MyFactory::ftrHlt/FACTORYHEALTH;
+                QRectF target(x, y - 8, percent*PICWIDTH, 8);
+                p.drawImage(target, imgHealth);
+            }
 
             //random create blood&money
             int ran = rand()%10000000;
@@ -261,11 +284,18 @@ void DisplayWindow::MoveTank(QPainter &p)
     QImage imgTank1Down("tank1down.png");
     QImage imgTank1Left("tank1left.png");
     QImage imgTank1Right("tank1right.png");
+    QImage imgHealth("life.png");
 
     //paint current pos&dir
     int &x = MyPlayer::plyX;
     int &y = MyPlayer::plyY;
     int &d = MyPlayer::plyD;
+
+    //blood display
+    double percent = MyPlayer::plyHlt/PLAYERLIFE;
+    QRectF target(x, y - 8, percent*PICWIDTH, 8);
+    p.drawImage(target, imgHealth);
+
     switch (d)
     {
         case 0:p.drawImage(x, y, imgTank1Up); break;
@@ -391,11 +421,18 @@ void DisplayWindow::MoveTank2P(QPainter &p)
     QImage imgTank7Down("tank7down.png");
     QImage imgTank7Left("tank7left.png");
     QImage imgTank7Right("tank7right.png");
+    QImage imgHealth("life.png");
 
     //paint current pos&dir
     int &x = MyPlayer::ply2X;
     int &y = MyPlayer::ply2Y;
     int &d = MyPlayer::ply2D;
+
+    //blood display
+    double percent = MyPlayer::ply2Hlt/PLAYERLIFE;
+    QRectF target(x, y - 8, percent*PICWIDTH, 8);
+    p.drawImage(target, imgHealth);
+
     switch (d)
     {
         case 0:p.drawImage(x, y, imgTank7Up); break;
@@ -521,6 +558,7 @@ void DisplayWindow::PlayerAtk()
     int &d = MyPlayer::plyD;
 
     //shoot
+    a_Bullets[cntBullets].m_bulletForm = 0;
     a_Bullets[cntBullets].SetX(x);
     a_Bullets[cntBullets].SetY(y);
     a_Bullets[cntBullets].SetDir(d);
@@ -538,6 +576,7 @@ void DisplayWindow::Player2Atk()
     int &y = MyPlayer::ply2Y;
     int &d = MyPlayer::ply2D;
 
+    a_Bullets[cntBullets].m_bulletForm = 1;
     a_Bullets[cntBullets].SetX(x);
     a_Bullets[cntBullets].SetY(y);
     a_Bullets[cntBullets].SetDir(d);
@@ -547,6 +586,8 @@ void DisplayWindow::Player2Atk()
 
 void DisplayWindow::EnemyCreate()
 {
+    if (MyFactory::ftrHlt <= 0)
+        return ;
     //time ctrl
     QDateTime Now = QDateTime::currentDateTime();
 
@@ -558,7 +599,7 @@ void DisplayWindow::EnemyCreate()
 
     if (Now<NextSpawnTime) return ;
 
-    NextSpawnTime=Now.addSecs(8+rand()%8);
+    NextSpawnTime=Now.addSecs(6+rand()%6);
 
     //randomly create
     int cd = rand()%4;
@@ -616,6 +657,7 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
     QImage imgTank6Left("tank6left.png");
     QImage imgTank6Right("tank6right.png");
     QImage imgTankBoom("tankboom.png");
+    QImage imgHealth("life.png");
 
     //display boom time
     for (int i = 0; i < cntKill; i++)
@@ -642,6 +684,11 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
         int x = a_EnemyTank[i].GetX();
         int y = a_EnemyTank[i].GetY();
         int d = a_EnemyTank[i].GetDir();
+
+        //blood display
+        double percent = a_EnemyTank[i].GetHlt()/ENEMYLIFE;
+        QRectF target(x, y - 8, percent*PICWIDTH, 8);
+        p.drawImage(target, imgHealth);
 
         switch (d)
         {
@@ -792,6 +839,7 @@ void DisplayWindow::EnemyAtk()
         int y = a_EnemyTank[i].GetY();
         int d = a_EnemyTank[i].GetDir();
 
+        a_Bullets[cntBullets].m_bulletForm = 2;
         a_Bullets[cntBullets].SetX(x);
         a_Bullets[cntBullets].SetY(y);
         a_Bullets[cntBullets].SetDir(d);
@@ -877,7 +925,7 @@ inline int IsCollide(int x, int y, int &cnt)
     int enemyMidX = xE + PICWIDTH/2, enemyMidY = yE + PICHEIGHT/2;
     double dir = (enemyMidX == playerMidX) ? 100.0 : (enemyMidY - playerMidY)*1.0/(enemyMidX - playerMidX);
 
-    if (abs(playerMidX - enemyMidX) <= PICWIDTH && abs(playerMidY - enemyMidY) <= PICHEIGHT)
+    if (MyFactory::ftrHlt > 0 && abs(playerMidX - enemyMidX) <= PICWIDTH && abs(playerMidY - enemyMidY) <= PICHEIGHT)
     {
         if (enemyMidY < playerMidY && (dir > 1 || dir < -1))
             return 0;//factory is in front of player
@@ -966,7 +1014,7 @@ inline int Is2PCollide(int x, int y, int &cnt)
     enemyMidX = xE + PICWIDTH/2; enemyMidY = yE + PICHEIGHT/2;
     dir = (enemyMidX == playerMidX) ? 100.0 : (enemyMidY - playerMidY)*1.0/(enemyMidX - playerMidX);
 
-    if (abs(playerMidX - enemyMidX) <= PICWIDTH && abs(playerMidY - enemyMidY) <= PICHEIGHT)
+    if (MyFactory::ftrHlt > 0 && abs(playerMidX - enemyMidX) <= PICWIDTH && abs(playerMidY - enemyMidY) <= PICHEIGHT)
     {
         if (enemyMidY < playerMidY && (dir > 1 || dir < -1))
             return 0;//factory is in front of 2p
@@ -1037,7 +1085,7 @@ inline int IsEnemyCollide(int x, int y, int index, int &cnt)
     enemyMidX = xE + PICWIDTH/2; enemyMidY = yE + PICHEIGHT/2;
     dir = (enemyMidX == playerMidX) ? 100.0 : (enemyMidY - playerMidY)*1.0/(enemyMidX - playerMidX);
 
-    if (abs(playerMidX - enemyMidX) <= PICWIDTH && abs(playerMidY - enemyMidY) <= PICHEIGHT)
+    if (MyFactory::ftrHlt > 0 && abs(playerMidX - enemyMidX) <= PICWIDTH && abs(playerMidY - enemyMidY) <= PICHEIGHT)
     {
         if (enemyMidY < playerMidY && (dir > 1 || dir < -1))
             return 0;//factory is in front of this tank
@@ -1085,6 +1133,7 @@ inline void DeleteBullets(MyBullet *a, int index, int &cnt)
         int d = a[i + 1].GetDir();
         int c = a[i + 1].GetCreator();
 
+        a[i].m_bulletForm = a[i + 1].m_bulletForm;
         a[i].SetX(x);
         a[i].SetY(y);
         a[i].SetDir(d);
@@ -1131,7 +1180,7 @@ inline bool IsOutofRange(int x, int y, int creator, int &cnt)
     //is bullet collide factory
     int xP = MyFactory::ftrX;
     int yP = MyFactory::ftrY;
-    if ((x + BULLETWIDTH/2 >= xP && x + BULLETWIDTH/2 <= xP + PICWIDTH) && (y + BULLETHEIGHT/2 >= yP && y + BULLETHEIGHT/2 <= yP + PICHEIGHT))
+    if (MyFactory::ftrHlt > 0 && (x + BULLETWIDTH/2 >= xP && x + BULLETWIDTH/2 <= xP + PICWIDTH) && (y + BULLETHEIGHT/2 >= yP && y + BULLETHEIGHT/2 <= yP + PICHEIGHT))
     {
         double atk = 0.0;
         if (creator == -1)
@@ -1178,7 +1227,9 @@ inline bool IsOutofRange(int x, int y, int creator, int &cnt)
 void DisplayWindow::MoveBullet(QPainter &p)
 {
     //load bullet img
-    QImage imgBullet1("bullet1.png");
+    QImage imgBullet0("bullet1.png");
+    QImage imgBullet1("bullet2.png");
+    QImage imgBullet2("bullet3.png");
 
     for (int i = 0; i < cntBullets; i++)
     {
@@ -1197,6 +1248,13 @@ void DisplayWindow::MoveBullet(QPainter &p)
     //move bullets
     for (int i = 0; i < cntBullets; i++)
     {
+        QImage imgBullet;
+        switch(a_Bullets[i].m_bulletForm)
+        {
+            case 0:imgBullet = imgBullet0; break;
+            case 1:imgBullet = imgBullet1; break;
+            case 2:imgBullet = imgBullet2; break;
+        }
         int x = a_Bullets[i].GetX();
         int y = a_Bullets[i].GetY();
         int d = a_Bullets[i].GetDir();
@@ -1204,19 +1262,19 @@ void DisplayWindow::MoveBullet(QPainter &p)
         switch (d)
         {
             case 0:
-                p.drawImage(x, y - BULLETSPEED, imgBullet1);
+                p.drawImage(x, y - BULLETSPEED, imgBullet);
                 y -= BULLETSPEED;
                 break;
             case 1:
-                p.drawImage(x, y + BULLETSPEED, imgBullet1);
+                p.drawImage(x, y + BULLETSPEED, imgBullet);
                 y += BULLETSPEED;
                 break;
             case 2:
-                p.drawImage(x - BULLETSPEED, y, imgBullet1);
+                p.drawImage(x - BULLETSPEED, y, imgBullet);
                 x -= BULLETSPEED;
                 break;
             case 3:
-                p.drawImage(x + BULLETSPEED, y, imgBullet1);
+                p.drawImage(x + BULLETSPEED, y, imgBullet);
                 x += BULLETSPEED;
                 break;
         }
