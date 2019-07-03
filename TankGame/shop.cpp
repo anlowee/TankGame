@@ -38,3 +38,10 @@ void Shop::paintEvent(QPaintEvent *event)
     QPainter p(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
+
+
+void Shop::on_backButton_clicked()
+{
+    this->close();
+    emit sendClose();
+}

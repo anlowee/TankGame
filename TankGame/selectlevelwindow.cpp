@@ -11,6 +11,7 @@
 #include "myglobal.h"
 #include "myfactory.h"
 #include <QSettings>
+#include "mainwindow.h"
 
 int MyFactory::ftrX;
 int MyFactory::ftrY;
@@ -233,4 +234,11 @@ void SelectLevelWindow::on_pushButton_2_clicked()
     new_w->b_isPlayerStart = false;
     new_w->b_isPlayer2Start = false;
     new_w->show();
+}
+
+void SelectLevelWindow::on_pushButton_3_clicked()
+{
+    this->close();
+    back = new MainWindow(this);
+    back->show();
 }

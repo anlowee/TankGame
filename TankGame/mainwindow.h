@@ -23,6 +23,8 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void reshow();
+
 private:
     Ui::MainWindow *ui;
 };

@@ -18,7 +18,6 @@ class Shop : public QWidget
 public:
     explicit Shop(QWidget *parent = nullptr);
     ~Shop();
-
 private slots:
 
     void on_reinforceButton_clicked();
@@ -26,6 +25,12 @@ private slots:
     void on_budgetButton_clicked();
 
     void paintEvent(QPaintEvent *event);
+
+    void on_backButton_clicked();
+
+signals:
+
+    void sendClose();
 
 private:
     Ui::Shop *ui;
