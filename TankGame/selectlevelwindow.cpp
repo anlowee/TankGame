@@ -132,6 +132,7 @@ inline void EnemyCreate()
 
 void SelectLevelWindow::on_pushButton_clicked()
 {
+    this->hide();
     //pre
     DisplayWindow::b_isTPM = false;
     DisplayWindow::keyValue = NULL;
@@ -170,6 +171,7 @@ void SelectLevelWindow::on_pushButton_clicked()
     new_w->cntEnemy = ENEMYNUMBER;
     new_w->b_isPlayerStart = false;
     new_w->show();
+    connect(new_w,SIGNAL(Exit()),this,SLOT(show()));
 }
 
 void SelectLevelWindow::paintEvent(QPaintEvent *event)
@@ -182,6 +184,7 @@ void SelectLevelWindow::paintEvent(QPaintEvent *event)
 
 void SelectLevelWindow::on_pushButton_2_clicked()
 {
+    this->hide();
     //load
     MyPlayer::ply2Kill = 0;
     MyPlayer::ply2Money = 0;
@@ -234,6 +237,7 @@ void SelectLevelWindow::on_pushButton_2_clicked()
     new_w->b_isPlayerStart = false;
     new_w->b_isPlayer2Start = false;
     new_w->show();
+    connect(new_w,SIGNAL(Exit()),this,SLOT(show()));
 }
 
 void SelectLevelWindow::on_pushButton_3_clicked()

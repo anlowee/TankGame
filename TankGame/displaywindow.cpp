@@ -22,7 +22,7 @@
 #define BLOOD 30
 #define COLLIDEFIX 4
 #define MARSHSPEED 1
-
+#include "selectlevelwindow.h"
 int DisplayWindow::keyValue;
 bool DisplayWindow::b_isTPM;
 int cntKill2p;
@@ -1368,5 +1368,8 @@ void DisplayWindow::MoveBullet(QPainter &p)
         a_Bullets[i].SetX(x);
         a_Bullets[i].SetY(y);
     }
+}
+void DisplayWindow::closeEvent(QCloseEvent *event){
+    emit Exit();
 }
 

@@ -14,7 +14,6 @@
 #define CELLHEIGHT 32
 #define INUM 32 //line
 #define JNUM 32 //row
-
 namespace Ui {
 class DisplayWindow;
 }
@@ -33,6 +32,9 @@ public:
     bool b_isPlayerStart;
     bool b_isPlayer2Start;
     static bool b_isTPM;
+    void closeEvent(QCloseEvent * event);
+signals:
+    void Exit();
 
 private:
     Ui::DisplayWindow *ui;
@@ -52,7 +54,6 @@ private slots:
     void PlayerAtk();
     void Player2Atk();
     void EnemyCreate();
-
 };
 
 #endif // DISPLAYWINDOW_H

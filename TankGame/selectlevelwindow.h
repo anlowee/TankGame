@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QPaintEvent>
 #include "mainwindow.h"
+
 namespace Ui {
 class SelectLevelWindow;
 }
@@ -29,6 +30,7 @@ private slots:
 private:
     Ui::SelectLevelWindow *ui;
     MainWindow *back;
+    bool is_close;
 };
 
 #endif // SELECTLEVELWINDOW_H
