@@ -43,7 +43,7 @@ extern MyEnemy a_EnemyTank[1000];
 
 inline void DeleteBullets(MyBullet*, int, int&);
 inline void DeleteTank(MyEnemy*, int, int&);
-inline bool IsOutofRange(int, int, int, int&);
+inline bool IsOutofRange(int, int, int, int, int&);
 inline int IsCollide(int, int, int&);
 inline int Is2PCollide(int, int, int&);
 inline int IsEnemyCollide(int, int, int, int&);
@@ -80,7 +80,7 @@ DisplayWindow::DisplayWindow(QWidget *parent) :
     //set fps
     QTimer *new_t = new QTimer;
     connect(new_t, SIGNAL(timeout()), this, SLOT(update()));
-    new_t->start(4);//240 fps
+    new_t->start(1);
 
     //set enemy atk frequency
     QTimer *enemyAtk = new QTimer;
@@ -534,14 +534,34 @@ void DisplayWindow::PlayerAtk()
         return ;
 
     //get pos&dir
-    int &x = MyPlayer::plyX;
-    int &y = MyPlayer::plyY;
-    int &d = MyPlayer::plyD;
+    int x = MyPlayer::plyX;
+    int y = MyPlayer::plyY;
+    int d = MyPlayer::plyD;
 
     //shoot
+    switch (d)
+    {
+        case 0:
+            x = x + PICWIDTH/2 - BULLETWIDTH/2;
+            y = y - BULLETHEIGHT;
+            break;
+        case 1:
+            x = x + PICWIDTH/2 - BULLETWIDTH/2;
+            y = y + PICHEIGHT;
+            break;
+        case 2:
+            x = x - BULLETHEIGHT;
+            y = y + PICHEIGHT/2 - BULLETWIDTH/2;
+            break;
+        case 3:
+            x = x + PICWIDTH;
+            y = y + PICHEIGHT/2 - BULLETWIDTH/2;
+            break;
+    }
+
     a_Bullets[cntBullets].m_bulletForm = 0;
-    a_Bullets[cntBullets].SetX(x + PICWIDTH/2);
-    a_Bullets[cntBullets].SetY(y + PICHEIGHT/2);
+    a_Bullets[cntBullets].SetX(x);
+    a_Bullets[cntBullets].SetY(y);
     a_Bullets[cntBullets].SetDir(d);
     a_Bullets[cntBullets].SetCreator(-1);
     cntBullets++;
@@ -553,13 +573,34 @@ void DisplayWindow::Player2Atk()
     if (!b_isPlayer2Start)
         return ;
 
-    int &x = MyPlayer::ply2X;
-    int &y = MyPlayer::ply2Y;
-    int &d = MyPlayer::ply2D;
+    int x = MyPlayer::ply2X;
+    int y = MyPlayer::ply2Y;
+    int d = MyPlayer::ply2D;
+
+    //shoot
+    switch (d)
+    {
+        case 0:
+            x = x + PICWIDTH/2 - BULLETWIDTH/2;
+            y = y - BULLETHEIGHT;
+            break;
+        case 1:
+            x = x + PICWIDTH/2 - BULLETWIDTH/2;
+            y = y + PICHEIGHT;
+            break;
+        case 2:
+            x = x - BULLETHEIGHT;
+            y = y + PICHEIGHT/2 - BULLETWIDTH/2;
+            break;
+        case 3:
+            x = x + PICWIDTH;
+            y = y + PICHEIGHT/2 - BULLETWIDTH/2;
+            break;
+    }
 
     a_Bullets[cntBullets].m_bulletForm = 1;
-    a_Bullets[cntBullets].SetX(x + PICWIDTH/2);
-    a_Bullets[cntBullets].SetY(y + PICHEIGHT/2);
+    a_Bullets[cntBullets].SetX(x);
+    a_Bullets[cntBullets].SetY(y);
     a_Bullets[cntBullets].SetDir(d);
     a_Bullets[cntBullets].SetCreator(-2);
     cntBullets++;
@@ -900,13 +941,34 @@ void DisplayWindow::EnemyAtk()
         int y = a_EnemyTank[i].GetY();
         int d = a_EnemyTank[i].GetDir();
 
+        //shoot
+        switch (d)
+        {
+            case 0:
+                x = x + PICWIDTH/2 - BULLETWIDTH/2;
+                y = y - BULLETHEIGHT;
+                break;
+            case 1:
+                x = x + PICWIDTH/2 - BULLETWIDTH/2;
+                y = y + PICHEIGHT;
+                break;
+            case 2:
+                x = x - BULLETHEIGHT;
+                y = y + PICHEIGHT/2 - BULLETWIDTH/2;
+                break;
+            case 3:
+                x = x + PICWIDTH;
+                y = y + PICHEIGHT/2 - BULLETWIDTH/2;
+                break;
+        }
+
         if (a_EnemyTank[i].tankType == 2)
             a_Bullets[cntBullets].m_bulletForm = 3;
         else
             a_Bullets[cntBullets].m_bulletForm = 2;
 
-        a_Bullets[cntBullets].SetX(x + PICWIDTH/2);
-        a_Bullets[cntBullets].SetY(y + PICHEIGHT/2);
+        a_Bullets[cntBullets].SetX(x);
+        a_Bullets[cntBullets].SetY(y);
         a_Bullets[cntBullets].SetDir(d);
         a_Bullets[cntBullets].SetCreator(i);
         cntBullets++;
@@ -1207,10 +1269,28 @@ inline void DeleteBullets(MyBullet *a, int index, int &cnt)
     cnt--;
 }
 
-inline bool IsOutofRange(int x, int y, int creator, int &cnt)
+inline bool IsOutofRange(int x, int y, int d, int creator, int &cnt)
 {
+    switch (d)
+    {
+        case 0:
+            x = x + BULLETWIDTH/2;
+            break;
+        case 1:
+            x = x + BULLETWIDTH/2;
+            y = y + BULLETHEIGHT;
+            break;
+        case 2:
+            y = y + BULLETWIDTH/2;
+            break;
+        case 3:
+            x = x + BULLETHEIGHT;
+            y = y + BULLETWIDTH/2;
+            break;
+    }
+
     //is bullet out of map or collide rock
-    bool ans = x <= 0 || x >= 1024 || y <= 0 || y >= 1024 || !MyGlobal::boolMap[(y + BULLETHEIGHT/2)/32][(x + BULLETWIDTH/2)/32];
+    bool ans = x <= 0 || x >= 1024 || y <= 0 || y >= 1024 || !MyGlobal::boolMap[y/CELLHEIGHT][x/CELLWIDTH];
     if (ans)
         return true;
     else
@@ -1226,7 +1306,7 @@ inline bool IsOutofRange(int x, int y, int creator, int &cnt)
             int xE = a_EnemyTank[i].GetX();
             int yE = a_EnemyTank[i].GetY();
 
-            if ((x + BULLETWIDTH/2 >= xE && x + BULLETWIDTH/2 <= xE + PICWIDTH) && (y + BULLETHEIGHT/2 >= yE && y + BULLETHEIGHT/2 <= yE + PICHEIGHT))
+            if ((x >= xE && x <= xE + PICWIDTH) && (y >= yE && y <= yE + PICHEIGHT))
             {
                 if (creator < 0)
                 {
@@ -1245,7 +1325,7 @@ inline bool IsOutofRange(int x, int y, int creator, int &cnt)
     //is bullet collide factory
     int xP = MyFactory::ftrX;
     int yP = MyFactory::ftrY;
-    if (MyFactory::ftrHlt > 0 && (x + BULLETWIDTH/2 >= xP && x + BULLETWIDTH/2 <= xP + PICWIDTH) && (y + BULLETHEIGHT/2 >= yP && y + BULLETHEIGHT/2 <= yP + PICHEIGHT))
+    if (MyFactory::ftrHlt > 0 && (x >= xP && x <= xP + PICWIDTH) && (y >= yP && y <= yP + PICHEIGHT))
     {
         double atk = 0.0;
         if (creator == -1)
@@ -1267,7 +1347,7 @@ inline bool IsOutofRange(int x, int y, int creator, int &cnt)
     {
         int xP = MyPlayer::plyX;
         int yP = MyPlayer::plyY;
-        if ((x + BULLETWIDTH/2 >= xP && x + BULLETWIDTH/2 <= xP + PICWIDTH) && (y + BULLETHEIGHT/2 >= yP && y + BULLETHEIGHT/2 <= yP + PICHEIGHT))
+        if ((x >= xP && x <= xP + PICWIDTH) && (y >= yP && y <= yP + PICHEIGHT))
         {
             MyPlayer::plyHlt = MyPlayer::plyHlt - ENEMYATK + MyPlayer::plyDef;
             return true;
@@ -1279,7 +1359,7 @@ inline bool IsOutofRange(int x, int y, int creator, int &cnt)
     {
         int xP = MyPlayer::ply2X;
         int yP = MyPlayer::ply2Y;
-        if ((x + BULLETWIDTH/2 >= xP && x + BULLETWIDTH/2 <= xP + PICWIDTH) && (y + BULLETHEIGHT/2 >= yP && y + BULLETHEIGHT/2 <= yP + PICHEIGHT))
+        if ((x + BULLETWIDTH/2 >= xP && x <= xP + PICWIDTH) && (y >= yP && y <= yP + PICHEIGHT))
         {
             MyPlayer::ply2Hlt = MyPlayer::ply2Hlt - ENEMYATK + MyPlayer::plyDef;
             return true;
@@ -1297,9 +1377,10 @@ void DisplayWindow::MoveBullet(QPainter &p)
         int x = a_Bullets[i].GetX();
         int y = a_Bullets[i].GetY();
         int c = a_Bullets[i].GetCreator();
+        int d = a_Bullets[i].GetDir();
 
         //is bullet supposed to be deleted
-        if (IsOutofRange(x, y, c, cntEnemy))
+        if (IsOutofRange(x, y, d, c, cntEnemy))
         {
             DeleteBullets(a_Bullets, i, cntBullets);
             i--;

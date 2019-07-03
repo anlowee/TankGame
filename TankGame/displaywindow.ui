@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1280</width>
-    <height>1024</height>
+    <width>1024</width>
+    <height>768</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1024</width>
-    <height>1024</height>
+    <width>0</width>
+    <height>0</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -28,22 +28,22 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>1024</x>
+     <x>768</x>
      <y>0</y>
      <width>256</width>
-     <height>1024</height>
+     <height>768</height>
     </rect>
    </property>
    <property name="minimumSize">
     <size>
      <width>256</width>
-     <height>1024</height>
+     <height>768</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
      <width>256</width>
-     <height>1024</height>
+     <height>768</height>
     </size>
    </property>
    <property name="styleSheet">
@@ -56,7 +56,7 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>1056</x>
+     <x>800</x>
      <y>64</y>
      <width>192</width>
      <height>64</height>
@@ -84,7 +84,7 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>1056</x>
+     <x>800</x>
      <y>128</y>
      <width>192</width>
      <height>64</height>
@@ -112,7 +112,7 @@
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>1056</x>
+     <x>800</x>
      <y>192</y>
      <width>192</width>
      <height>64</height>
@@ -140,7 +140,7 @@
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>1060</x>
+     <x>804</x>
      <y>70</y>
      <width>108</width>
      <height>24</height>
@@ -261,7 +261,7 @@
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>1060</x>
+     <x>804</x>
      <y>134</y>
      <width>108</width>
      <height>24</height>
@@ -382,7 +382,7 @@
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>1060</x>
+     <x>804</x>
      <y>198</y>
      <width>141</width>
      <height>24</height>
@@ -503,7 +503,7 @@
   <widget class="QLabel" name="lbl_health">
    <property name="geometry">
     <rect>
-     <x>1104</x>
+     <x>848</x>
      <y>92</y>
      <width>108</width>
      <height>24</height>
@@ -570,7 +570,7 @@
   <widget class="QLabel" name="lbl_money">
    <property name="geometry">
     <rect>
-     <x>1104</x>
+     <x>848</x>
      <y>156</y>
      <width>108</width>
      <height>24</height>
@@ -637,7 +637,7 @@
   <widget class="QLabel" name="lbl_killenemy">
    <property name="geometry">
     <rect>
-     <x>1104</x>
+     <x>848</x>
      <y>220</y>
      <width>108</width>
      <height>24</height>
@@ -704,7 +704,7 @@
   <widget class="QLabel" name="label_8">
    <property name="geometry">
     <rect>
-     <x>1056</x>
+     <x>800</x>
      <y>256</y>
      <width>192</width>
      <height>64</height>
@@ -732,7 +732,7 @@
   <widget class="QLabel" name="label_9">
    <property name="geometry">
     <rect>
-     <x>1060</x>
+     <x>804</x>
      <y>262</y>
      <width>108</width>
      <height>24</height>
@@ -853,7 +853,7 @@
   <widget class="QLabel" name="lbl_factoryhlt">
    <property name="geometry">
     <rect>
-     <x>1104</x>
+     <x>848</x>
      <y>284</y>
      <width>108</width>
      <height>24</height>
@@ -920,7 +920,7 @@
   <widget class="QLabel" name="label_10">
    <property name="geometry">
     <rect>
-     <x>1056</x>
+     <x>800</x>
      <y>320</y>
      <width>192</width>
      <height>64</height>
@@ -948,7 +948,7 @@
   <widget class="QLabel" name="label_11">
    <property name="geometry">
     <rect>
-     <x>1060</x>
+     <x>804</x>
      <y>324</y>
      <width>108</width>
      <height>24</height>
@@ -1069,7 +1069,7 @@
   <widget class="QLabel" name="lbl_enemyremain">
    <property name="geometry">
     <rect>
-     <x>1104</x>
+     <x>848</x>
      <y>346</y>
      <width>108</width>
      <height>24</height>
@@ -1136,7 +1136,7 @@
   <widget class="QLabel" name="label_12">
    <property name="geometry">
     <rect>
-     <x>1056</x>
+     <x>800</x>
      <y>512</y>
      <width>192</width>
      <height>64</height>
@@ -1164,7 +1164,7 @@
   <widget class="QLabel" name="label_13">
    <property name="geometry">
     <rect>
-     <x>1056</x>
+     <x>800</x>
      <y>640</y>
      <width>192</width>
      <height>64</height>
@@ -1192,7 +1192,7 @@
   <widget class="QLabel" name="label_14">
    <property name="geometry">
     <rect>
-     <x>1060</x>
+     <x>804</x>
      <y>518</y>
      <width>108</width>
      <height>24</height>
@@ -1313,7 +1313,7 @@
   <widget class="QLabel" name="label_15">
    <property name="geometry">
     <rect>
-     <x>1060</x>
+     <x>804</x>
      <y>644</y>
      <width>108</width>
      <height>24</height>
@@ -1434,7 +1434,7 @@
   <widget class="QLabel" name="lbl_2Phealth">
    <property name="geometry">
     <rect>
-     <x>1104</x>
+     <x>848</x>
      <y>538</y>
      <width>108</width>
      <height>24</height>
@@ -1501,7 +1501,7 @@
   <widget class="QLabel" name="lbl_2Pkillenemy">
    <property name="geometry">
     <rect>
-     <x>1104</x>
+     <x>848</x>
      <y>664</y>
      <width>108</width>
      <height>24</height>
@@ -1568,7 +1568,7 @@
   <widget class="QLabel" name="label_16">
    <property name="geometry">
     <rect>
-     <x>1056</x>
+     <x>800</x>
      <y>576</y>
      <width>192</width>
      <height>64</height>
@@ -1596,7 +1596,7 @@
   <widget class="QLabel" name="label_17">
    <property name="geometry">
     <rect>
-     <x>1060</x>
+     <x>804</x>
      <y>582</y>
      <width>108</width>
      <height>24</height>
@@ -1717,7 +1717,7 @@
   <widget class="QLabel" name="lbl_2Pmoney">
    <property name="geometry">
     <rect>
-     <x>1104</x>
+     <x>848</x>
      <y>602</y>
      <width>108</width>
      <height>24</height>

@@ -41,7 +41,6 @@ Tank_reinforce::Tank_reinforce(QWidget *parent) :
     ui->attackLabel->setFont(ft);
     ui->defenceLabel->setFont(ft);
     ui->fastLabel->setFont(ft);
-    ui->backButton->setFont(ft);
     QPalette pa;
     pa.setColor(QPalette::WindowText,Qt::white);
     ui->attackLabel->setPalette(pa);
@@ -73,12 +72,6 @@ Tank_reinforce::Tank_reinforce(QWidget *parent) :
 Tank_reinforce::~Tank_reinforce()
 {
     delete ui;
-}
-
-void Tank_reinforce::on_backButton_clicked()
-{
-    Shop *b = new Shop(this);
-    b->show();
 }
 
 

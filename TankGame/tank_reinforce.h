@@ -23,7 +23,6 @@ public:
     ~Tank_reinforce();
 
 private slots:
-    void on_backButton_clicked();
 
     void on_attackButton_clicked();
 

@@ -69,11 +69,10 @@ void MainWindow::on_btn_high_clicked()
 
 void MainWindow::on_pushButton_clicked()
 {
-    Shop *a = new Shop;
-    a->show();
-    this->hide();
-    connect(a,SIGNAL(sendClose()),this,SLOT(reshow()));
+    MyGlobal::shopW = new Shop;
+    connect(MyGlobal::shopW,SIGNAL(sendClose()),this,SLOT(reshow()));
+    MyGlobal::shopW->show();
 }
 void MainWindow::reshow(){
-    this->show();
+   this->show();
 }

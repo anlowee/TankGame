@@ -12,8 +12,8 @@
 #define PICHEIGHT 32
 #define CELLWIDTH 32
 #define CELLHEIGHT 32
-#define INUM 32 //line
-#define JNUM 32 //row
+#define INUM 24 //line
+#define JNUM 24 //row
 namespace Ui {
 class DisplayWindow;
 }

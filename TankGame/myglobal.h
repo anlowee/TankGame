@@ -3,6 +3,7 @@
 
 #include <QSettings>
 #include <QImage>
+#include "shop.h"
 
 class MyGlobal
 {
@@ -57,7 +58,8 @@ public:
     static QImage img2PBulletLeft;
     static QImage img2PBulletRight;
 
-
+    //shop window
+    static Shop* shopW;
 
     static void SaveData();
 };

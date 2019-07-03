@@ -102,7 +102,6 @@ Tank_budget::Tank_budget(QWidget *parent) :
     QFont ft("Microsoft YaHei",10,75);
     ui->recoverLabel->setFont(ft);
     ui->tankLable->setFont(ft);
-    ui->backButton->setFont(ft);
     QPalette pa;
     pa.setColor(QPalette::WindowText,Qt::white);
     ui->recoverLabel->setPalette(pa);
@@ -194,12 +193,6 @@ Tank_budget::Tank_budget(QWidget *parent) :
 Tank_budget::~Tank_budget()
 {
     delete ui;
-}
-
-void Tank_budget::on_backButton_clicked()
-{
-  Shop *a = new Shop(this);
-  a->show();
 }
 
 void Tank_budget::on_recoverButton_clicked()

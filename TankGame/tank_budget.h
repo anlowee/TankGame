@@ -43,7 +43,6 @@ public:
     ~Tank_budget();
 
 private slots:
-    void on_backButton_clicked();
 
     void on_recoverButton_clicked();
 

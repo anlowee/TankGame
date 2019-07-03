@@ -30,6 +30,7 @@ QImage MyGlobal::img2PBulletUp;
 QImage MyGlobal::img2PBulletDown;
 QImage MyGlobal::img2PBulletLeft;
 QImage MyGlobal::img2PBulletRight;
+Shop* MyGlobal::shopW;
 QSettings* MyGlobal::configIni = new QSettings("save.sav", QSettings::IniFormat);;
 
 MyGlobal::MyGlobal()
