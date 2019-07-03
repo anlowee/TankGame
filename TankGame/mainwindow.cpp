@@ -56,6 +56,7 @@ void MainWindow::on_btn_start_clicked()
 {
     SelectLevelWindow *new_w = new SelectLevelWindow;
      new_w->show();
+     this->hide();
 }
 
 void MainWindow::on_btn_high_clicked()
@@ -68,4 +69,9 @@ void MainWindow::on_pushButton_clicked()
 {
     Shop *a = new Shop;
     a->show();
+    this->hide();
+    connect(a,SIGNAL(sendClose()),this,SLOT(reshow()));
+}
+void MainWindow::reshow(){
+    this->show();
 }

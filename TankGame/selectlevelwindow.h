@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QPaintEvent>
-
+#include "mainwindow.h"
 namespace Ui {
 class SelectLevelWindow;
 }
@@ -19,14 +19,16 @@ public:
 private slots:
 
     void paintEvent(QPaintEvent *event);
+
     void on_pushButton_clicked();
 
     void on_pushButton_2_clicked();
 
-
+    void on_pushButton_3_clicked();
 
 private:
     Ui::SelectLevelWindow *ui;
+    MainWindow *back;
 };
 
 #endif // SELECTLEVELWINDOW_H
