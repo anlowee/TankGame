@@ -107,7 +107,7 @@ DisplayWindow::DisplayWindow(QWidget *parent) :
     //set enemy creat frequency
     QTimer *enemyCreat = new QTimer;
     connect(enemyCreat, SIGNAL(timeout()), this, SLOT(EnemyCreate()));
-    enemyCreat->start(2000);
+    enemyCreat->start(100);
 
 }
 
@@ -119,8 +119,6 @@ DisplayWindow::~DisplayWindow()
 void DisplayWindow::paintEvent(QPaintEvent *event)
 {
     QPainter p(this);
-
-    QImage imgTankBoom("tankboom.png");
 
     //display parameter
     if (MyFactory::ftrHlt < 0)
@@ -155,7 +153,7 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
         int y = MyPlayer::plyY;
         if (MyPlayer::plyHlt <= 0)
         {
-            p.drawImage(x, y, imgTankBoom);
+            p.drawImage(x, y, MyGlobal::imgTankBoom);
             close();
             QMessageBox::information(this, "Haw", "YOU LOST");
             return ;
@@ -168,7 +166,7 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
         int y = MyPlayer::plyY;
         if (MyPlayer::plyHlt <= 0 || flagwin == 1)
         {
-            p.drawImage(x, y, imgTankBoom);
+            p.drawImage(x, y, MyGlobal::imgTankBoom);
             close();
             QMessageBox::information(this, "1P LOST", "2P WIN");
             return ;
@@ -178,7 +176,7 @@ void DisplayWindow::paintEvent(QPaintEvent *event)
         y = MyPlayer::ply2Y;
         if (MyPlayer::ply2Hlt <= 0 || flagwin == 0)
         {
-            p.drawImage(x, y, imgTankBoom);
+            p.drawImage(x, y, MyGlobal::imgTankBoom);
             MyGlobal::SaveData();
             close();
             QMessageBox::information(this, "2P LOST", "1P WIN");

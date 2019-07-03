@@ -8,6 +8,7 @@ ReadmeWindow::ReadmeWindow(QWidget *parent) :
     ui(new Ui::ReadmeWindow)
 {
     ui->setupUi(this);
+    ui->textEdit->setReadOnly(true);
 }
 
 ReadmeWindow::~ReadmeWindow()
