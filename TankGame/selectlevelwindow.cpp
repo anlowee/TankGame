@@ -17,9 +17,10 @@ int MyFactory::ftrY;
 double MyFactory::ftrHlt;
 
 MyEnemy a_EnemyTank[1000];//fix
-//int MyGlobal::dfsMap[1005][1005];
+inline void EnemyCreate();
 
 bool b_PutMap[1005][1005];
+bool bossFlag;
 struct PutPos
 {
     int x, y;
@@ -74,6 +75,60 @@ void CreatPos2P(int mark)
     }
 }
 
+inline void EnemyCreate()
+{
+    bossFlag = false;
+
+    //load tankImg
+    QImage imgTank1Up("etank1up.png");
+    QImage imgTank1Down("etank1down.png");
+    QImage imgTank1Left("etank1left.png");
+    QImage imgTank1Right("etank1right.png");
+
+    QImage imgTank2Up("etank2up.png");
+    QImage imgTank2Down("etank2down.png");
+    QImage imgTank2Left("etank2left.png");
+    QImage imgTank2Right("etank2right.png");
+
+    //enemy's pos
+    for (int i = 0; i < ENEMYNUMBER; i++)
+    {
+        a_EnemyTank[i].SetX((a_PutPos[i].y)*PICWIDTH);
+        a_EnemyTank[i].SetY((a_PutPos[i].x)*PICHEIGHT);
+        a_EnemyTank[i].SetDir(rand()%4);
+
+        int ran = rand()%100;
+        //promise at least 1 boss at begin
+        if (i == ENEMYNUMBER - 1 && !bossFlag)
+            ran = 1;
+        if (ran < 5)
+        {
+            bossFlag = true;
+            a_EnemyTank[i].SetAtk(ENEMYATK + 10);
+            a_EnemyTank[i].SetDef(ENEMYDEF + 10);
+            a_EnemyTank[i].SetHlt(ENEMYLIFE + 100);
+            a_EnemyTank[i].SetMaxHlt(ENEMYLIFE + 100);
+            a_EnemyTank[i].imgTankUp = imgTank1Up;
+            a_EnemyTank[i].imgTankDown = imgTank1Down;
+            a_EnemyTank[i].imgTankLeft = imgTank1Left;
+            a_EnemyTank[i].imgTankRight = imgTank1Right;
+            a_EnemyTank[i].tankType = 2;
+        }
+        else
+        {
+            a_EnemyTank[i].SetAtk(ENEMYATK);
+            a_EnemyTank[i].SetDef(ENEMYDEF);
+            a_EnemyTank[i].SetHlt(ENEMYLIFE);
+            a_EnemyTank[i].SetMaxHlt(ENEMYLIFE);
+            a_EnemyTank[i].imgTankUp = imgTank2Up;
+            a_EnemyTank[i].imgTankDown = imgTank2Down;
+            a_EnemyTank[i].imgTankLeft = imgTank2Left;
+            a_EnemyTank[i].imgTankRight = imgTank2Right;
+            a_EnemyTank[i].tankType = 1;
+        }
+    }
+}
+
 void SelectLevelWindow::on_pushButton_clicked()
 {
     //pre
@@ -106,16 +161,7 @@ void SelectLevelWindow::on_pushButton_clicked()
     MyPlayer::plyD = rand()%4;
     MyPlayer::plyHlt = MyPlayer::plyMaxHlt;
 
-    //enemy's pos
-    for (int i = 0; i < ENEMYNUMBER; i++)
-    {
-        a_EnemyTank[i].SetX((a_PutPos[i].y)*PICWIDTH);
-        a_EnemyTank[i].SetY((a_PutPos[i].x)*PICHEIGHT);
-        a_EnemyTank[i].SetDir(rand()%4);
-        a_EnemyTank[i].SetAtk(ENEMYATK);
-        a_EnemyTank[i].SetDef(ENEMYDEF);
-        a_EnemyTank[i].SetHlt(ENEMYLIFE);
-    }
+    EnemyCreate();
 
     MyPlayer::LoadImg();
     new_w->cntBullets = 0;
@@ -178,16 +224,7 @@ void SelectLevelWindow::on_pushButton_2_clicked()
     MyPlayer::ply2Def = PLAYERDEF;
     MyPlayer::ply2Hlt = PLAYERLIFE;
 
-    //enemy's pos
-    for (int i = 0; i < ENEMYNUMBER; i++)
-    {
-        a_EnemyTank[i].SetX((a_PutPos[i].y)*PICWIDTH);
-        a_EnemyTank[i].SetY((a_PutPos[i].x)*PICHEIGHT);
-        a_EnemyTank[i].SetDir(rand()%4);
-        a_EnemyTank[i].SetAtk(ENEMYATK);
-        a_EnemyTank[i].SetDef(ENEMYDEF);
-        a_EnemyTank[i].SetHlt(ENEMYLIFE);
-    }
+    EnemyCreate();
 
     MyPlayer::LoadImg();
     new_w->cntBullets = 0;

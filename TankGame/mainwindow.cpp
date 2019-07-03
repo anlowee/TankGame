@@ -38,6 +38,8 @@ MainWindow::MainWindow(QWidget *parent) :
     //0~11
     MyPlayer::tankForm = MyGlobal::configIni->value("Player/TankForm", 1).toInt();
 
+    //load map img
+    MyGlobal::LoadMapImg();
     //qDebug() << MyPlayer::plyMoney << MyPlayer::plyKill << MyPlayer::plyAtk << MyPlayer::plyDef << MyPlayer::plySpeed << MyPlayer::plyMaxHlt;
 }
 

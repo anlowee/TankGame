@@ -38,7 +38,7 @@ struct BoomPos
     bool b_isBoom;
 } s_boomPos[1000];
 
-MyBullet a_Bullets[10000];
+MyBullet a_Bullets[100000];
 extern MyEnemy a_EnemyTank[1000];
 
 inline void DeleteBullets(MyBullet*, int, int&);
@@ -107,7 +107,7 @@ DisplayWindow::DisplayWindow(QWidget *parent) :
     //set enemy creat frequency
     QTimer *enemyCreat = new QTimer;
     connect(enemyCreat, SIGNAL(timeout()), this, SLOT(EnemyCreate()));
-    enemyCreat->start(100);
+    enemyCreat->start(2000);
 
 }
 
@@ -211,16 +211,6 @@ void DisplayWindow::keyPressEvent(QKeyEvent *event)
 
 void DisplayWindow::PaintMap(QPainter &p)
 {
-    //load map img
-    QImage imgGrass("grass.png");
-    QImage imgRock("rock.png");
-    QImage imgMarsh("marsh.png");
-    QImage imgBlood("blood.png");
-    QImage imgCoin("coin.png");
-    QImage imgFactory("factory.png");
-    QImage imgHealth("life2.png");
-    QImage imgFactoryBoom("factoryboom.png");
-
     //paint map
     qsrand(time(NULL));
     for (int i = 0; i < INUM; i++)
@@ -231,25 +221,25 @@ void DisplayWindow::PaintMap(QPainter &p)
 
             switch (n)
             {
-                case 'G':p.drawImage(x, y, imgGrass); break;
-                case 'R':p.drawImage(x, y, imgRock); break;
-                case 'M':p.drawImage(x, y, imgMarsh); break;
-                default:p.drawImage(x, y, imgGrass);
+                case 'G':p.drawImage(x, y, MyGlobal::imgGrass); break;
+                case 'R':p.drawImage(x, y, MyGlobal::imgRock); break;
+                case 'M':p.drawImage(x, y, MyGlobal::imgMarsh); break;
+                default:p.drawImage(x, y, MyGlobal::imgGrass);
             }
 
             //is there a blood or money or factory
             if (MyGlobal::objMap[i][j] == 1)
-                p.drawImage(x, y, imgBlood);
+                p.drawImage(x, y, MyGlobal::imgBlood);
             if (MyGlobal::objMap[i][j] == 2)
-                p.drawImage(x, y, imgCoin);
+                p.drawImage(x, y, MyGlobal::imgCoin);
 
             //is factory boom
             if (MyGlobal::objMap[i][j] == 3)
             {
                 if (b_factoryboom)
-                    p.drawImage(x, y, imgFactoryBoom);
+                    p.drawImage(x, y, MyGlobal::imgFactoryBoom);
                 else
-                    p.drawImage(x, y, imgFactory);
+                    p.drawImage(x, y, MyGlobal::imgFactory);
                 double percent = 0;
                 if (MyFactory::ftrHlt <= 0)
                 {
@@ -259,7 +249,7 @@ void DisplayWindow::PaintMap(QPainter &p)
                 else
                     percent = MyFactory::ftrHlt/FACTORYHEALTH;
                 QRectF target(x, y - 8, percent*PICWIDTH, 8);
-                p.drawImage(target, imgHealth);
+                p.drawImage(target, MyGlobal::imgHealth);
             }
 
             //random create blood&money
@@ -283,7 +273,7 @@ void DisplayWindow::MoveTank(QPainter &p)
     //blood display
     double percent = MyPlayer::plyHlt/MyPlayer::plyMaxHlt;
     QRectF target(x, y - 8, percent*PICWIDTH, 8);
-    p.drawImage(target, MyPlayer::imgHealth);
+    p.drawImage(target, MyGlobal::img1PHlt);
 
     switch (d)
     {
@@ -406,11 +396,13 @@ void DisplayWindow::MoveTank(QPainter &p)
 void DisplayWindow::MoveTank2P(QPainter &p)
 {
     //load tank img
+    /*
     QImage imgTank7Up("tank7up.png");
     QImage imgTank7Down("tank7down.png");
     QImage imgTank7Left("tank7left.png");
     QImage imgTank7Right("tank7right.png");
     QImage imgHealth("life.png");
+    */
 
     //paint current pos&dir
     int &x = MyPlayer::ply2X;
@@ -420,14 +412,14 @@ void DisplayWindow::MoveTank2P(QPainter &p)
     //blood display
     double percent = MyPlayer::ply2Hlt/MyPlayer::plyMaxHlt;
     QRectF target(x, y - 8, percent*PICWIDTH, 8);
-    p.drawImage(target, imgHealth);
+    p.drawImage(target, MyGlobal::img2PHlt);
 
     switch (d)
     {
-        case 0:p.drawImage(x, y, imgTank7Up); break;
-        case 1:p.drawImage(x, y, imgTank7Down); break;
-        case 2:p.drawImage(x, y, imgTank7Left); break;
-        case 3:p.drawImage(x, y, imgTank7Right); break;
+        case 0:p.drawImage(x, y, MyPlayer::imgTankUp); break;
+        case 1:p.drawImage(x, y, MyPlayer::imgTankDown); break;
+        case 2:p.drawImage(x, y, MyPlayer::imgTankLeft); break;
+        case 3:p.drawImage(x, y, MyPlayer::imgTankRight); break;
     }
 
     int n_isCollide = Is2PCollide(x, y, cntEnemy);
@@ -454,7 +446,7 @@ void DisplayWindow::MoveTank2P(QPainter &p)
 
         if (y - MyPlayer::plySpeed + additionalSpeed >= 0 && b_isCollideMap && n_isCollide != 0)
         {
-            p.drawImage(x, y - MyPlayer::plySpeed + additionalSpeed, imgTank7Up);
+            p.drawImage(x, y - MyPlayer::plySpeed + additionalSpeed, MyPlayer::imgTankUp);
             y -= MyPlayer::plySpeed - additionalSpeed;
         }
     }
@@ -479,7 +471,7 @@ void DisplayWindow::MoveTank2P(QPainter &p)
 
         if (y + MyPlayer::plySpeed - additionalSpeed <= 992 && b_isCollideMap && n_isCollide != 1)
         {
-            p.drawImage(x, y + MyPlayer::plySpeed - additionalSpeed, imgTank7Down);
+            p.drawImage(x, y + MyPlayer::plySpeed - additionalSpeed, MyPlayer::imgTankDown);
             y += MyPlayer::plySpeed - additionalSpeed;
         }
     }
@@ -504,7 +496,7 @@ void DisplayWindow::MoveTank2P(QPainter &p)
 
         if (x - MyPlayer::plySpeed + additionalSpeed >= 0 && b_isCollideMap && n_isCollide != 2)
         {
-            p.drawImage(x - MyPlayer::plySpeed + additionalSpeed, y, imgTank7Left);
+            p.drawImage(x - MyPlayer::plySpeed + additionalSpeed, y, MyPlayer::imgTankLeft);
             x -= MyPlayer::plySpeed - additionalSpeed;
         }
     }
@@ -529,7 +521,7 @@ void DisplayWindow::MoveTank2P(QPainter &p)
 
         if (x + MyPlayer::plySpeed - additionalSpeed <= 992 && b_isCollideMap && n_isCollide != 3)
         {
-            p.drawImage(x + MyPlayer::plySpeed - additionalSpeed, y, imgTank7Right);
+            p.drawImage(x + MyPlayer::plySpeed - additionalSpeed, y, MyPlayer::imgTankRight);
             x += MyPlayer::plySpeed - additionalSpeed;
         }
     }
@@ -548,8 +540,8 @@ void DisplayWindow::PlayerAtk()
 
     //shoot
     a_Bullets[cntBullets].m_bulletForm = 0;
-    a_Bullets[cntBullets].SetX(x);
-    a_Bullets[cntBullets].SetY(y);
+    a_Bullets[cntBullets].SetX(x + PICWIDTH/2);
+    a_Bullets[cntBullets].SetY(y + PICHEIGHT/2);
     a_Bullets[cntBullets].SetDir(d);
     a_Bullets[cntBullets].SetCreator(-1);
     cntBullets++;
@@ -566,8 +558,8 @@ void DisplayWindow::Player2Atk()
     int &d = MyPlayer::ply2D;
 
     a_Bullets[cntBullets].m_bulletForm = 1;
-    a_Bullets[cntBullets].SetX(x);
-    a_Bullets[cntBullets].SetY(y);
+    a_Bullets[cntBullets].SetX(x + PICWIDTH/2);
+    a_Bullets[cntBullets].SetY(y + PICHEIGHT/2);
     a_Bullets[cntBullets].SetDir(d);
     a_Bullets[cntBullets].SetCreator(-2);
     cntBullets++;
@@ -580,7 +572,7 @@ void DisplayWindow::EnemyCreate()
     //time ctrl
     QDateTime Now = QDateTime::currentDateTime();
 
-    if (cntEnemy >= 15) {
+    if (cntEnemy >= 10) {
         NextSpawnTime=Now.addSecs(1+rand()%3);
         return ;
     }
@@ -589,6 +581,17 @@ void DisplayWindow::EnemyCreate()
     if (Now<NextSpawnTime) return ;
 
     NextSpawnTime=Now.addSecs(6+rand()%6);
+
+    //load tankImg
+    QImage imgTank1Up("etank1up.png");
+    QImage imgTank1Down("etank1down.png");
+    QImage imgTank1Left("etank1left.png");
+    QImage imgTank1Right("etank1right.png");
+
+    QImage imgTank2Up("etank2up.png");
+    QImage imgTank2Down("etank2down.png");
+    QImage imgTank2Left("etank2left.png");
+    QImage imgTank2Right("etank2right.png");
 
     //randomly create
     int cd = rand()%4;
@@ -614,9 +617,32 @@ void DisplayWindow::EnemyCreate()
     a_EnemyTank[cntEnemy].SetX(x);
     a_EnemyTank[cntEnemy].SetY(y);
     a_EnemyTank[cntEnemy].SetDir(cd);
-    a_EnemyTank[cntEnemy].SetAtk(ENEMYATK);
-    a_EnemyTank[cntEnemy].SetDef(ENEMYDEF);
-    a_EnemyTank[cntEnemy].SetHlt(ENEMYLIFE);
+    int ran = rand()%100;
+    if (ran < 5)
+    {
+        a_EnemyTank[cntEnemy].SetAtk(ENEMYATK + 10);
+        a_EnemyTank[cntEnemy].SetDef(ENEMYDEF + 10);
+        a_EnemyTank[cntEnemy].SetHlt(ENEMYLIFE + 100);
+        a_EnemyTank[cntEnemy].SetMaxHlt(ENEMYLIFE + 100);
+        a_EnemyTank[cntEnemy].imgTankUp = imgTank1Up;
+        a_EnemyTank[cntEnemy].imgTankDown = imgTank1Down;
+        a_EnemyTank[cntEnemy].imgTankLeft = imgTank1Left;
+        a_EnemyTank[cntEnemy].imgTankRight = imgTank1Right;
+        a_EnemyTank[cntEnemy].tankType = 2;
+    }
+    else
+    {
+        a_EnemyTank[cntEnemy].SetAtk(ENEMYATK);
+        a_EnemyTank[cntEnemy].SetDef(ENEMYDEF);
+        a_EnemyTank[cntEnemy].SetHlt(ENEMYLIFE);
+        a_EnemyTank[cntEnemy].SetMaxHlt(ENEMYLIFE);
+        a_EnemyTank[cntEnemy].imgTankUp = imgTank2Up;
+        a_EnemyTank[cntEnemy].imgTankDown = imgTank2Down;
+        a_EnemyTank[cntEnemy].imgTankLeft = imgTank2Left;
+        a_EnemyTank[cntEnemy].imgTankRight = imgTank2Right;
+        a_EnemyTank[cntEnemy].tankType = 1;
+    }
+
     cntEnemy++;
 }
 
@@ -629,25 +655,29 @@ inline void DeleteTank(MyEnemy* ae, int index, int &cnt)
         int y = ae[i + 1].GetY();
         int d = ae[i + 1].GetDir();
         double hlt = ae[i + 1].GetHlt();
+        double maxhlt = ae[i + 1].GetMaxHlt();
+        double atk = ae[i + 1].GetAtk();
+        double def = ae[i + 1].GetDef();
 
+
+        ae[i].tankType = ae[i + 1].tankType;
+        ae[i].imgTankUp = ae[i + 1].imgTankUp;
+        ae[i].imgTankDown = ae[i + 1].imgTankDown;
+        ae[i].imgTankLeft = ae[i + 1].imgTankLeft;
+        ae[i].imgTankRight = ae[i + 1].imgTankRight;
         ae[i].SetX(x);
         ae[i].SetY(y);
         ae[i].SetDir(d);
         ae[i].SetHlt(hlt);
+        ae[i].SetMaxHlt(maxhlt);
+        ae[i].SetAtk(atk);
+        ae[i].SetDef(def);
     }
     cnt--;
 }
 
 void DisplayWindow::MoveEnemyTank(QPainter &p)
 {
-    //load tank img
-    QImage imgTank6Up("tank6up.png");
-    QImage imgTank6Down("tank6down.png");
-    QImage imgTank6Left("tank6left.png");
-    QImage imgTank6Right("tank6right.png");
-    QImage imgTankBoom("tankboom.png");
-    QImage imgHealth("life.png");
-
     //display boom time
     for (int i = 0; i < cntKill; i++)
     {
@@ -657,7 +687,7 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
         bool isBoom = s_boomPos[i].b_isBoom;
         int cut = QTime::currentTime().msec();
         if (abs(cut - t) < 500 && isBoom)
-            p.drawImage(x, y, imgTankBoom);
+            p.drawImage(x, y, MyGlobal::imgTankBoom);
         else
             s_boomPos[i].b_isBoom = false;
     }
@@ -667,24 +697,31 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
 
     for (int i = 0; i < cntEnemy; i++)
     {
-        //if (a_EnemyTank[i].IsDisappear())
-        //    continue;
+        //load img
+        QImage imgTankUp = a_EnemyTank[i].imgTankUp;
+        QImage imgTankDown = a_EnemyTank[i].imgTankDown;
+        QImage imgTankLeft = a_EnemyTank[i].imgTankLeft;
+        QImage imgTankRight = a_EnemyTank[i].imgTankRight;
 
+        //get parameter
         int x = a_EnemyTank[i].GetX();
         int y = a_EnemyTank[i].GetY();
         int d = a_EnemyTank[i].GetDir();
 
         //blood display
-        double percent = a_EnemyTank[i].GetHlt()/ENEMYLIFE;
+        double percent = a_EnemyTank[i].GetHlt()/a_EnemyTank[i].GetMaxHlt();
         QRectF target(x, y - 8, percent*PICWIDTH, 8);
-        p.drawImage(target, imgHealth);
+        if (a_EnemyTank[i].tankType == 1)
+            p.drawImage(target, MyGlobal::imgEnemyHlt);
+        else
+            p.drawImage(target, MyGlobal::imgBossHlt);
 
         switch (d)
         {
-            case 0:p.drawImage(x, y, imgTank6Up); break;
-            case 1:p.drawImage(x, y, imgTank6Down); break;
-            case 2:p.drawImage(x, y, imgTank6Left); break;
-            case 3:p.drawImage(x, y, imgTank6Right); break;
+            case 0:p.drawImage(x, y, imgTankUp); break;
+            case 1:p.drawImage(x, y, imgTankDown); break;
+            case 2:p.drawImage(x, y, imgTankLeft); break;
+            case 3:p.drawImage(x, y, imgTankRight); break;
         }
 
         //set boom
@@ -729,7 +766,7 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
             DeleteTank(a_EnemyTank, i, cntEnemy);
             cntKill++;
 
-            p.drawImage(x, y, imgTankBoom);
+            p.drawImage(x, y, MyGlobal::imgTankBoom);
             s_boomPos[cntKill-1].x = x;
             s_boomPos[cntKill-1].y = y;
             s_boomPos[cntKill-1].time = QTime::currentTime().msec();
@@ -765,7 +802,7 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
 
             if (y - ENEMYSPEED + additionalSpeed >= 0 && b_isCollideMap && n_isCollide != 0)
             {
-                p.drawImage(x, y - ENEMYSPEED + additionalSpeed, imgTank6Up);
+                p.drawImage(x, y - ENEMYSPEED + additionalSpeed, imgTankUp);
                 y -= ENEMYSPEED - additionalSpeed;
                 a_EnemyTank[i].SetY(y);
             }
@@ -791,7 +828,7 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
 
             if (y + ENEMYSPEED - additionalSpeed <= 992 && b_isCollideMap && n_isCollide != 1)
             {
-                p.drawImage(x, y + ENEMYSPEED - additionalSpeed, imgTank6Down);
+                p.drawImage(x, y + ENEMYSPEED - additionalSpeed, imgTankDown);
                 y += ENEMYSPEED - additionalSpeed;
                 a_EnemyTank[i].SetY(y);
             }
@@ -817,7 +854,7 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
 
             if (x - ENEMYSPEED + additionalSpeed >= 0 && b_isCollideMap && n_isCollide != 2)
             {
-                p.drawImage(x - ENEMYSPEED + additionalSpeed, y, imgTank6Left);
+                p.drawImage(x - ENEMYSPEED + additionalSpeed, y, imgTankLeft);
                 x -= ENEMYSPEED - additionalSpeed;
                 a_EnemyTank[i].SetX(x);
             }
@@ -844,7 +881,7 @@ void DisplayWindow::MoveEnemyTank(QPainter &p)
 
             if (x + ENEMYSPEED - additionalSpeed <= 992 && b_isCollideMap && n_isCollide != 3)
             {
-                p.drawImage(x + ENEMYSPEED - additionalSpeed, y, imgTank6Right);
+                p.drawImage(x + ENEMYSPEED - additionalSpeed, y, imgTankRight);
                 x += ENEMYSPEED - additionalSpeed;
                 a_EnemyTank[i].SetX(x);
             }
@@ -863,9 +900,13 @@ void DisplayWindow::EnemyAtk()
         int y = a_EnemyTank[i].GetY();
         int d = a_EnemyTank[i].GetDir();
 
-        a_Bullets[cntBullets].m_bulletForm = 2;
-        a_Bullets[cntBullets].SetX(x);
-        a_Bullets[cntBullets].SetY(y);
+        if (a_EnemyTank[i].tankType == 2)
+            a_Bullets[cntBullets].m_bulletForm = 3;
+        else
+            a_Bullets[cntBullets].m_bulletForm = 2;
+
+        a_Bullets[cntBullets].SetX(x + PICWIDTH/2);
+        a_Bullets[cntBullets].SetY(y + PICHEIGHT/2);
         a_Bullets[cntBullets].SetDir(d);
         a_Bullets[cntBullets].SetCreator(i);
         cntBullets++;
@@ -1251,10 +1292,6 @@ inline bool IsOutofRange(int x, int y, int creator, int &cnt)
 void DisplayWindow::MoveBullet(QPainter &p)
 {
     //load bullet img
-    QImage imgBullet0("bullet1.png");
-    QImage imgBullet1("bullet2.png");
-    QImage imgBullet2("bullet3.png");
-
     for (int i = 0; i < cntBullets; i++)
     {
         int x = a_Bullets[i].GetX();
@@ -1272,12 +1309,37 @@ void DisplayWindow::MoveBullet(QPainter &p)
     //move bullets
     for (int i = 0; i < cntBullets; i++)
     {
-        QImage imgBullet;
+        QImage imgBulletUp;
+        QImage imgBulletDown;
+        QImage imgBulletLeft;
+        QImage imgBulletRight;
+
         switch(a_Bullets[i].m_bulletForm)
         {
-            case 0:imgBullet = imgBullet0; break;
-            case 1:imgBullet = imgBullet1; break;
-            case 2:imgBullet = imgBullet2; break;
+            case 0:
+                imgBulletUp = MyGlobal::imgPlayerBulletUp;
+                imgBulletDown = MyGlobal::imgPlayerBulletDown;
+                imgBulletLeft = MyGlobal::imgPlayerBulletLeft;
+                imgBulletRight = MyGlobal::imgPlayerBulletRight;
+                break;
+            case 1:
+                imgBulletUp = MyGlobal::img2PBulletUp;
+                imgBulletDown = MyGlobal::img2PBulletDown;
+                imgBulletLeft = MyGlobal::img2PBulletLeft;
+                imgBulletRight = MyGlobal::img2PBulletRight;
+                break;
+            case 2:
+                imgBulletUp = MyGlobal::imgEnemyBulletUp;
+                imgBulletDown = MyGlobal::imgEnemyBulletDown;
+                imgBulletLeft = MyGlobal::imgEnemyBulletLeft;
+                imgBulletRight = MyGlobal::imgEnemyBulletRight;
+                break;
+            case 3:
+                imgBulletUp = MyGlobal::imgBossBulletUp;
+                imgBulletDown = MyGlobal::imgBossBulletDown;
+                imgBulletLeft = MyGlobal::imgBossBulletLeft;
+                imgBulletRight = MyGlobal::imgBossBulletRight;
+                break;
         }
         int x = a_Bullets[i].GetX();
         int y = a_Bullets[i].GetY();
@@ -1286,19 +1348,19 @@ void DisplayWindow::MoveBullet(QPainter &p)
         switch (d)
         {
             case 0:
-                p.drawImage(x, y - BULLETSPEED, imgBullet);
+                p.drawImage(x, y - BULLETSPEED, imgBulletUp);
                 y -= BULLETSPEED;
                 break;
             case 1:
-                p.drawImage(x, y + BULLETSPEED, imgBullet);
+                p.drawImage(x, y + BULLETSPEED, imgBulletDown);
                 y += BULLETSPEED;
                 break;
             case 2:
-                p.drawImage(x - BULLETSPEED, y, imgBullet);
+                p.drawImage(x - BULLETSPEED, y, imgBulletLeft);
                 x -= BULLETSPEED;
                 break;
             case 3:
-                p.drawImage(x + BULLETSPEED, y, imgBullet);
+                p.drawImage(x + BULLETSPEED, y, imgBulletRight);
                 x += BULLETSPEED;
                 break;
         }

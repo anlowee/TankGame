@@ -13,6 +13,11 @@ public:
     int GetCreator() {return m_creator;}
     void SetCreator(int x) {m_creator = x;}
     int m_bulletForm;//choose one of outlooks
+    void LoadImg();
+    QImage imgBulletUp;
+    QImage imgBulletDown;
+    QImage imgBulletLeft;
+    QImage imgBulletRight;
 
 protected:
     int m_creator;

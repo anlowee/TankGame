@@ -11,8 +11,12 @@ public:
     QImage imgTankDown;
     QImage imgTankLeft;
     QImage imgTankRight;
+    int tankType;
+    void SetMaxHlt(double x) {m_maxHlt = x;}
+    double GetMaxHlt() {return m_maxHlt;}
 
 protected:
+    double m_maxHlt;
 
 };
 
