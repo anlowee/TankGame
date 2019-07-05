@@ -1,7 +1,7 @@
 #ifndef MYBULLET_H
 #define MYBULLET_H
 #include "base.h"
-#define BULLETSPEED 5
+#define BULLETSPEED 8
 #define BULLETWIDTH 8
 #define BULLETHEIGHT 16
 

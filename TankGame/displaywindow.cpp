@@ -657,6 +657,7 @@ void DisplayWindow::EnemyCreate()
     a_EnemyTank[cntEnemy].SetY(y);
     a_EnemyTank[cntEnemy].SetDir(cd);
     int ran = rand()%100;
+    //5%生成boss
     if (ran < 5)
     {
         a_EnemyTank[cntEnemy].SetAtk(ENEMYATK + 10);
@@ -1271,16 +1272,20 @@ inline bool IsOutofRange(int x, int y, int d, int creator, int &cnt)
 {
     switch (d)
     {
+            //up
         case 0:
             x = x + BULLETWIDTH/2;
             break;
+            //down
         case 1:
             x = x + BULLETWIDTH/2;
             y = y + BULLETHEIGHT;
             break;
+            //left
         case 2:
             y = y + BULLETWIDTH/2;
             break;
+            //right
         case 3:
             x = x + BULLETHEIGHT;
             y = y + BULLETWIDTH/2;

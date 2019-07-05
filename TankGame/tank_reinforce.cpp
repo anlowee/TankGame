@@ -61,7 +61,7 @@ Tank_reinforce::Tank_reinforce(QWidget *parent) :
         ui->stackedWidget_2->setCurrentWidget(b2);
     }
 
-    if (k >= 2 || MyPlayer::plyAtkSpeed <= 300)
+    if (k >= 2 || MyPlayer::plyAtkSpeed <= 550)
     {
         ui->fastLabel->setVisible(true);
         ui->fastButton->setEnabled(false);
@@ -138,7 +138,7 @@ void Tank_reinforce::on_defenceButton_clicked()
 void Tank_reinforce::on_fastButton_clicked()
 {
     //is exceed max reinfore times(1)
-    if (k >= 2 || MyPlayer::plyAtkSpeed <= 300)
+    if (k >= 2 || MyPlayer::plyAtkSpeed <= 550)
     {
         ui->fastLabel->setVisible(true);
         ui->fastButton->setEnabled(false);

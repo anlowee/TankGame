@@ -67,9 +67,10 @@ void MyMap::CreateMap()
     double ** map = ds.process();
 
     for (int i = 0; i < INUM; i++)
+    {
         for (int j = 0; j < JNUM; j++)
         {
-
+            std::cout << map[i][j] << " ";
             int n = round(map[i][j]);
             n %= 3;
             //0-Marsh-M
@@ -89,6 +90,8 @@ void MyMap::CreateMap()
             //3-factory
             MyGlobal::objMap[i][j] = 0;
         }
+        std::cout << std::endl;
+    }
 
     //pre
     for (int i = 0; i < INUM; i++)

@@ -45,11 +45,11 @@ void CreatPos(int mark)
     qsrand(time(NULL));
     for (int i = 0; i <= ENEMYNUMBER + 1; i++)
     {
-        int x = rand()%32, y = rand()%32;
+        int x = rand()%JNUM, y = rand()%INUM;
         while (MyGlobal::dfsMap[x][y] != mark || !b_PutMap[x][y])
         {
-            x = rand()%32;
-            y = rand()%32;
+            x = rand()%JNUM;
+            y = rand()%INUM;
         }
 
         b_PutMap[x][y] = false;
@@ -63,11 +63,11 @@ void CreatPos2P(int mark)
     qsrand(time(NULL));
     for (int i = 0; i <= ENEMYNUMBER + 2; i++)
     {
-        int x = rand()%32, y = rand()%32;
+        int x = rand()%JNUM, y = rand()%INUM;
         while (MyGlobal::dfsMap[x][y] != mark || !b_PutMap[x][y])
         {
-            x = rand()%32;
-            y = rand()%32;
+            x = rand()%JNUM;
+            y = rand()%INUM;
         }
 
         b_PutMap[x][y] = false;
