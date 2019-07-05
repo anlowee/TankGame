@@ -329,35 +329,6 @@
     <string>移动速度已达上限</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>630</x>
-     <y>370</y>
-     <width>421</width>
-     <height>271</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">border-image: url(:/sample/photo/Shop_pic/Tank_reinforce_bg.jpg);</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="backButton">
-   <property name="geometry">
-    <rect>
-     <x>160</x>
-     <y>430</y>
-     <width>93</width>
-     <height>28</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Back</string>
-   </property>
-  </widget>
  </widget>
  <resources/>
  <connections/>

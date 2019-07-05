@@ -25,8 +25,6 @@ private slots:
 
     void reshow();
 
-    void on_shopButton_clicked();
-
 private:
     Ui::MainWindow *ui;
 };
